@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Three.js ドットエフェクトの実装</title>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.module.js",
+            "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/loaders/GLTFLoader.js",
+            "three/examples/jsm/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/EffectComposer.js",
+            "three/examples/jsm/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/RenderPass.js",
+            "three/examples/jsm/postprocessing/ShaderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/ShaderPass.js"
+        }
+    }
+    </script>
+    <script type="module">
+    import * as THREE from "three";
+    import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+    import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+    import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+    import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+
+    // シーン、カメラ、レンダラーの設定
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({
+        canvas: document.querySelector("#myCanvas"),
+        antialias: true
+    });
+    renderer.setSize(width, height);
+
+    // カメラの位置設定
+    camera.position.set(1, 1.5, 5);
+
+    // ライトの追加
+    const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 7);
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
+
+    // メッシュの追加
+    const geometry = new THREE.BoxGeometry(2, 1, 2);
+    const material = new THREE.MeshLambertMaterial({ color: "rgb(0%, 0%, 100%)" });
+    const cube = new THREE.Mesh(geometry, material);
+    cube.position.set(0, 0, 0);
+    scene.add(cube);
+
+    const material2 = new THREE.MeshBasicMaterial({ color: 0x00ff10 });
+    const cube2 = new THREE.Mesh(geometry, material2);
+    cube2.position.set(3, 0, 0);
+    scene.add(cube2);
+
+    const material3 = new THREE.MeshBasicMaterial({ color: 0x6699FF });
+    const geometry2 = new THREE.BoxGeometry(3, 1, 2);
+    const cube3 = new THREE.Mesh(geometry2, material3);
+    cube3.position.set(4, 0.5, -1);
+    scene.add(cube3);
+
+    const geometry3 = new THREE.BoxGeometry(0.5, 1, 0.1);
+    const cube4 = new THREE.Mesh(geometry3, material3);
+    const cube5 = new THREE.Mesh(geometry3, material);
+    cube4.position.set(1, 1, 3);
+    cube5.position.set(1.5, 1, -3);
+    scene.add(cube4);
+    scene.add(cube5);
+
+    const geometry0 = new THREE.BoxGeometry(1, 1, 1);
+    const character = new THREE.Mesh(geometry0, material2);
+    character.position.set(0, 1, 0);
+    scene.add(character);
+
+    // GLTFモデルの読み込み
+    const loader = new GLTFLoader();
+    let model = null;
+    loader.load(
+        "models/background2.gltf",
+        function (gltf) {
+            model = gltf.scene;
+            model.scale.set(1.5, 1.5, 1.5);
+            model.position.set(1, -2.5, -5.5);
+            model.rotation.set(Math.PI, Math.PI, Math.PI);
+            scene.add(gltf.scene);
+        },
+        undefined,
+        function (error) {
+            console.error('Error loading the GLTF model:', error);
+        }
+    );
+
+    // カスタムドットシェーダーの定義
+    const DotShader = {
+      uniforms: {
+        "tDiffuse": { value: null },
+        "resolution": { value: new THREE.Vector2(width, height) },
+        "pixelSize": { value: 50 }
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform vec2 resolution;
+        uniform float pixelSize;
+        varying vec2 vUv;
+
+        void main() {
+          vec2 dxy = pixelSize / resolution;
+          vec2 coord = dxy * floor(vUv / dxy);
+          gl_FragColor = texture2D(tDiffuse, coord);
+        }
+      `
+    };
+
+    // Composerの設定ドットのピクセルサイズ調整
+    const renderPass = new RenderPass(scene, camera);
+    const dotPass = new ShaderPass(DotShader);
+    dotPass.uniforms["resolution"].value = new THREE.Vector2(width, height);
+    dotPass.uniforms["pixelSize"].value = 6;
+
+    const composer = new EffectComposer(renderer);
+    composer.addPass(renderPass);
+    composer.addPass(dotPass);
+
+    // キーの押下状態を管理するフラグ
+    let isMovingLeft = false;
+    let isMovingRight = false;
+    let isMovingUp = false;
+    let isMovingDown = false;
+
+    // キーが押された際にフラグを更新
+    window.addEventListener("keydown", (event) => {
+        if (event.code === "ArrowLeft") {
+            isMovingLeft = true;
+            event.preventDefault();
+        }
+        if (event.code === "ArrowRight") {
+            isMovingRight = true;
+            event.preventDefault();
+        }
+        if (event.code === "ArrowUp") {
+            isMovingUp = true;
+            event.preventDefault();
+        }
+        if (event.code === "ArrowDown") {
+            isMovingDown = true;
+            event.preventDefault();
+        }
+    });
+
+    // キーが離された際にフラグをリセット
+    window.addEventListener("keyup", (event) => {
+        if (event.code === "ArrowLeft") {
+            isMovingLeft = false;
+            event.preventDefault();
+        }
+        if (event.code === "ArrowRight") {
+            isMovingRight = false;
+            event.preventDefault();
+        }
+        if (event.code === "ArrowUp") {
+            isMovingUp = false;
+            event.preventDefault();
+        }
+        if (event.code === "ArrowDown") {
+            isMovingDown = false;
+            event.preventDefault();
+        }
+    });
+
+    // カメラを移動させる関数
+    function moveCamera() {
+        if (isMovingLeft) {
+            camera.position.x -= 0.1;
+            character.position.x -= 0.1;
+            if (model) model.position.x -= 0.094;
+        }
+        if (isMovingRight) {
+            camera.position.x += 0.1;
+            character.position.x += 0.1;
+            if (model) model.position.x += 0.094;
+        }
+        if (isMovingUp) {
+            camera.position.z += 0.1;
+            character.position.z += 0.1; 
+        }
+        if (isMovingDown) {
+            camera.position.z -= 0.1;
+            character.position.z -= 0.1;
+        }
+    }
+
+    // アニメーションループ
+    function animate() {
+        requestAnimationFrame(animate);
+
+        // キーが押されている場合にカメラを動かす
+        moveCamera();
+
+        // Composerを使用してレンダリング
+        composer.render();
+    }
+
+    animate();
+
+    // リサイズ処理の追加
+    window.addEventListener('resize', () => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+
+        composer.setSize(width, height);
+        dotPass.uniforms["resolution"].value.set(width, height);
+    });
+    </script>
+</head>
+<body>
+    <canvas id="myCanvas"></canvas>
+</body>
+</html>
