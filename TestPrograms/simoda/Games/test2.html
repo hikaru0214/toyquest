@@ -35,7 +35,7 @@
     renderer.setSize(width, height);
 
     // カメラの位置設定
-    camera.position.set(1, 1.5, 5);
+    camera.position.set(1, 1.5, 5.5);
 
     // ライトの追加
     const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
@@ -88,7 +88,7 @@
         function (gltf) {
             model = gltf.scene;
             model.scale.set(1.5, 1.5, 1.5);
-            model.position.set(1, -2.5, -5.5);
+            model.position.set(1, -2.5, -4.5);
             model.rotation.set(Math.PI, Math.PI, Math.PI);
             scene.add(gltf.scene);
         },
@@ -240,13 +240,13 @@
         if (isMovingLeft) {
             camera.position.x -= 0.1;
             character.position.x -= 0.1;
-            if (model) model.position.x -= 0.094;
+            if (model) model.position.x -= 0.097;
         }
 
         if (isMovingRight) {
             camera.position.x += 0.1;
             character.position.x += 0.1;
-            if (model) model.position.x += 0.094;
+            if (model) model.position.x += 0.097;
         }
         if (isMovingUp) {
             camera.position.z += 0.1;
