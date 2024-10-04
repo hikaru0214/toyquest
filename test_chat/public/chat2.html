@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>チャットアプリを作ってみよう</title>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+
+<body>
+    <h1>チャットアプリを作ってみよう</h1>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+        <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+    <script>
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+
+        const socket = io();
+        
+        // ルームへの参加
+        socket.emit('joinRoom', 'room2');
+
+        socket.on('message', (message) => {
+            const item = document.createElement('li');
+            item.textContent = message;
+            messages.appendChild(item);
+        })
+
+
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          if (input.value) {
+            socket.emit('chatMessage', 'room2', input.value);
+            input.value = '';
+          }
+        });
+
+        
+      </script>
+</body>
+</html>
