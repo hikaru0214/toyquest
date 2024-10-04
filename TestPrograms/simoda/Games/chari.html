@@ -80,7 +80,7 @@
 
 
 
-    // GLTFモデルの読み込み。GLTFLoaderインポートが必要
+    // GLTFモデルの読み込み。GLTFLoaderのインポートが必要
     const loader = new GLTFLoader();
     let model = null;
     loader.load(
@@ -106,7 +106,7 @@
       uniforms: {
         "tDiffuse": { value: null },
         "resolution": { value: new THREE.Vector2(width, height) },
-        "pixelSize": { value: 50 }//初期値。Composerですぐに変更される
+        "pixelSize": { value: 50 }//初期値。Composerですぐに変更されるのでここでのvalueにあまり意味がない
       },
       vertexShader: `
         varying vec2 vUv;
@@ -152,6 +152,8 @@
     let isKey_a=false;
     let isKey_s=false;
     let isKey_d=false;
+    let isKey_Space=false;
+    let keyLockSpace = false;
 
 
     // キーが押された際にフラグを更新。Arrowは矢印(移動)
@@ -189,6 +191,10 @@
             isKey_s = true;
         }if (event.code === "KeyD") {
             isKey_d = true;
+        }
+
+        if (event.code === "Space"&&!keyLockSpace) {
+            isKey_Space = true;
         }
     });
 
