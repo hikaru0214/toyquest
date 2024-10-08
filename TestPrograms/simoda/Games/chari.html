@@ -66,7 +66,9 @@
     scene.add(cube3);
 
     const geometry3 = new THREE.BoxGeometry(0.5, 1, 0.1);
-    const cube4 = new THREE.Mesh(geometry3, material3);
+    const tex=new THREE.TextureLoader().load("textures/icons.png")
+    const mateTex = new THREE.MeshBasicMaterial({map: tex});
+    const cube4 = new THREE.Mesh(geometry3, mateTex);
     const cube5 = new THREE.Mesh(geometry3, material);
     cube4.position.set(1, 1, 3);
     cube5.position.set(1.5, 1, -3);
@@ -74,7 +76,9 @@
     scene.add(cube5);
 
     const geometry0 = new THREE.BoxGeometry(1, 1, 1);
-    const character = new THREE.Mesh(geometry0, material2);
+    const texture=new THREE.TextureLoader().load("textures/textures.jpg")
+    const materialTex = new THREE.MeshBasicMaterial({map: texture});
+    const character = new THREE.Mesh(geometry0, materialTex);
     character.position.set(0, 1, 0);
     scene.add(character);
 
@@ -90,6 +94,20 @@
             model.scale.set(1.5, 1.5, 1.5);
             model.position.set(1, -2.5, -4.5);
             model.rotation.set(Math.PI, Math.PI, Math.PI);
+            model.traverse(function (node) {
+            if (node.isMesh) {
+                // マテリアルが複数の場合もあるので、配列かどうか確認
+                if (Array.isArray(node.material)) {
+                    node.material.forEach((mat) => {
+                        mat.map = texture;
+                        mat.needsUpdate = true;
+                    });
+                } else {
+                    node.material.map = texture;
+                    node.material.needsUpdate = true;
+                }
+            }
+        });
             scene.add(gltf.scene);
         },
         undefined,
@@ -152,12 +170,13 @@
     let isKey_a=false;
     let isKey_s=false;
     let isKey_d=false;
-    let isKey_Space=false;
-    let keyLockSpace = false;
 
 
     // キーが押された際にフラグを更新。Arrowは矢印(移動)
     window.addEventListener("keydown", (event) => {
+        if (event.code === "Space") {
+            event.preventDefault();//キーのデフォルトの操作を無効化。ここではスペースキー押下時の下スクロールを制限
+        }
         if (event.code === "ArrowLeft") {
             isMovingLeft = true;
             event.preventDefault();
@@ -193,9 +212,7 @@
             isKey_d = true;
         }
 
-        if (event.code === "Space"&&!keyLockSpace) {
-            isKey_Space = true;
-        }
+        
     });
 
 
@@ -236,6 +253,8 @@
         }if (event.code === "KeyD") {
             isKey_d = false;
         }
+        
+        
     });
 
 
