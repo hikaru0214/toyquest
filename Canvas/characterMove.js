@@ -1,10 +1,3 @@
-const requestAnimationFrame =
-  window.requestAnimationFrame ||
-  window.mozRequestAnimationFrame ||
-  window.webkitRequestAnimationFrame ||
-  window.msRequestAnimationFrame;
-const cancelAnimationFrame =
-  window.cancelAnimationFrame || window.mozCancelAnimationFrame;
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -83,9 +76,14 @@ const player = {
         let onGround = false;
 
         // 足場の判定を足場一つごとに行う
-        for(let terrainObject of terrainObjects){
+        // 全ての足場を判定する必要性は？
+        // キャラクターは50から動かない
+        // そのため判定を行うのはその周辺に位置する足場だけでいいのでは？
+        // for(let terrainObject of terrainObjects){
+        // キャラクターの位置から足場3つ分の判定だけを行う
+        for(var i = 0;i<2;i++){
             // 足場との衝突判定
-            if (checkCollision(player, terrainObject)) {
+            if (checkCollision(player, terrainObjects[i])) {
                 if(player.velocityY > 0){
                     // プレイヤーを足場に
                     player.y = ground - player.height;
@@ -95,10 +93,11 @@ const player = {
                     player.isJumping = false;
                     onGround = true;
                 }
+                console.log(terrainObjects[i]);
                 break;
             }else {
                 // ゲームオーバー判定
-                if((player.x - xOffset < terrainObject.x && player.y > terrainObject.y) && player.y > canvas.height){
+                if(player.x - xOffset < terrainObjects[i].x && player.y > terrainObjects[i].y && player.y > canvas.height){
                     // ゲーム終了フラグ
                     gameOverFlg = false;
                 }
@@ -183,8 +182,10 @@ const player = {
         }
     });
 
+    // 足場初期設定
     function createTerrainData(){
         for(var i = 0;i<9;i++){
+            // 足場の情報を設定する
             terrainObjects[i] = {x: "", y: ground, width: getRandomBlockWidth(), height: canvas.height};
         }
     }
