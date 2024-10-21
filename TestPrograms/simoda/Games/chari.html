@@ -124,7 +124,7 @@
       uniforms: {
         "tDiffuse": { value: null },
         "resolution": { value: new THREE.Vector2(width, height) },
-        "pixelSize": { value: 50 }//初期値。Composerですぐに変更されるのでここでのvalueにあまり意味がない
+        "pixelSize": { value: 50 }//初期値。Composerですぐに変更されるのでここでのvalueの値の初期化
       },
       vertexShader: `
         varying vec2 vUv;
@@ -180,10 +180,12 @@
         if (event.code === "ArrowLeft") {
             isMovingLeft = true;
             event.preventDefault();
+            se.play();
         }
         if (event.code === "ArrowRight") {
             isMovingRight = true;
             event.preventDefault();
+            se.play();
         }
         if (event.code === "ArrowUp") {
             isMovingUp = true;
@@ -347,7 +349,22 @@
         composer.setSize(width, height);
         dotPass.uniforms["resolution"].value.set(width, height);
     });
+
+
+    var seurl= 'bgm/se_shot_002.wav';
+    var se=new Audio(seurl);
+    
+    var url = 'bgm/bgm.wav';
+    var audio = new Audio(url);  // 直接Audioオブジェクトを定義
+    function roops(){
+    audio.play();  // オーディオを再生
+    audio.loop = true;  // ループ再生
+    }
+    audio.addEventListener('canplaythrough', function() {
+    roops();
+    });
     </script>
+
 </head>
 <body>
     <canvas id="myCanvas"></canvas>
