@@ -17,13 +17,18 @@
 
         <h1>新規作成</h1>
         <div style="margin-top: 20vh;">
-            プレイヤー名 <input type="text">
+
+            <form action="signup_confirm.html" method="post">
+
+                プレイヤー名 <input id="player_name" name="player_name" type="text">
             <br>
-            メールアドレス <input type="text">
+            メールアドレス <input id="email" name="email" type="text">
             <br>
-            パスワード <input type="text">
+            パスワード <input id="password" name="password" type="text">
             <br>
-            <button>確認画面へ</button>
+            <button type="submit">確認画面へ</button>
+
+            </form>
         </div>
 
     </div>
