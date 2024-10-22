@@ -4,8 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>G1-1</title>
+
+    <style>
+        html,body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
+
+    <canvas id="canvas" style="position: absolute;"></canvas>
+
+    <div style="width: 50vw; height: 50vh; margin-left: auto; margin-right: auto; text-align: center; font-size: large; position: relative;">
+        メールアドレス <input type="text" style="margin-top: 50vh;">
+        <br>
+        パスワード <input type="text">
+        <br>
+        <button>ログイン</button>
+        <br>
+        <button>パスワードを忘れた方</button>
+        <br>
+        <button>新規</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+
+        context.canvas.width = window.innerWidth;
+        context.canvas.height = window.innerHeight;
+        context.imageSmoothingEnabled=false;
+
+        const imageData = context.getImageData(0,0,canvas.width/2,canvas.height/2);
+        const width = imageData.width;
+        const height = imageData.height;
+        const pixels = imageData.data;
+
+        var mouse_x = 0;
+        var mouse_y = 0;
+
+        function update_mouse(e){
+            var rect = canvas.getBoundingClientRect();
+            mouse_x = (e.clientX/2)-rect.x;
+            mouse_y = (e.clientY/2)-rect.y;
+            console.log("mouse x : "+mouse_x+" mouse y : "+mouse_y);
+        }
+
+        document.addEventListener("mousemove",update_mouse);
+
+        function draw(){
+
+            for(var i = 0;i < width*height;i++){
+            var x = i*4;
+            var color = i;
+            pixels[x+0] = (color&0xff0000)>>16;
+            pixels[x+1] = (color&0x00ff00)>>8;
+            pixels[x+2] = (color&0x0000ff);
+            pixels[x+3] = 255;
+            }
+
+            //context.drawImage(imageData,0,0,width*2,height*2);
+        }
+
+        const redraw_interval = 1000.0/10.0;
+        setInterval(draw,redraw_interval);
+
+    </script>
     
 </body>
 </html>
