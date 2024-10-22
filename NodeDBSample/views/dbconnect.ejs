@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul>
+        <% items.forEach((item) => { %>
+          <li>
+            <div>
+              <span><%= item.food_id %></span>
+              <span><%= item.food_name %></span>
+              <span><%= item.category %></span>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+</body>
+</html>

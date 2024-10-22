@@ -76,16 +76,18 @@ const player = {
         let onGround = false;
 
         // 足場の判定を足場一つごとに行う
+        // for(let terrainObject of terrainObjects){
         // 全ての足場を判定する必要性は？
         // キャラクターは50から動かない
         // そのため判定を行うのはその周辺に位置する足場だけでいいのでは？
-        // for(let terrainObject of terrainObjects){
-        // キャラクターの位置から足場3つ分の判定だけを行う
+        // キャラクターの位置から足場2つ分の判定だけを行う
         for(var i = 0;i<2;i++){
             // 足場との衝突判定
+            // console.log(terrainObjects[i])
+            // console.log(checkCollision(player, terrainObjects[i]))
             if (checkCollision(player, terrainObjects[i])) {
                 if(player.velocityY > 0){
-                    // プレイヤーを足場に
+                    // プレイヤーを足場に(ここに問題があり)
                     player.y = ground - player.height;
                     // 落下速度を0に
                     player.velocityY = 0;
@@ -93,15 +95,17 @@ const player = {
                     player.isJumping = false;
                     onGround = true;
                 }
-                console.log(terrainObjects[i]);
                 break;
             }else {
-                // ゲームオーバー判定
-                if(player.x - xOffset < terrainObjects[i].x && player.y > terrainObjects[i].y && player.y > canvas.height){
+                // ゲームオーバー判定(プレイヤーのY座標がcanvasの縦幅を超えたら)
+                // もしかしたら、canvasの縦幅を超えるステージ構造にする可能性があるため残しておく
+                if(/*player.x - xOffset < terrainObjects[i].x && player.y > terrainObjects[i].y && */player.y > canvas.height){
                     // ゲーム終了フラグ
                     gameOverFlg = false;
                 }
             }
+            // console.log(terrainObjects[i]);
+
         }
         // 落下判定
         if (!onGround) {
@@ -117,10 +121,9 @@ const player = {
 
     // 足場の描画
     function drawGround(){
-        ctx.fillStyle = 'black';
         // startXはなぜ膨らむのか？
         // Q.画面左にフェードアウトしていった足場の枚数を数えているため
-        // ただそのあと足場描画でxOffsetで相殺する
+        // ただそのあと足場描画でxOffsetで相殺して0にする
         // ではstartX生成時にxOffsetで相殺すれば、endXが膨れずに済むのでは？
         // 結果、行けた
         // xOffset(移動量)が足場一枚分(200)かどうか割ることで検証
@@ -129,14 +132,24 @@ const player = {
         // 300分の移動があった場合
         // xOffsetは300でstartXは-100になる
         // 足場の幅(200)を定数として移動量がどの程度かを計る
-        const startX = (Math.floor(xOffset / groundBlockWidth) * groundBlockWidth) - xOffset;
+        // 足場区間（200）何個分進んだか確認
+        const moveTerrainNum = Math.trunc(Math.abs(xOffset / groundBlockWidth));
+        console.log("moveTerrainNum: " + moveTerrainNum);
+        // 進んだ足場の幅分を算出、足場のスタート位置は0から
+        const proceedNum = moveTerrainNum * groundBlockWidth;
+        // そこから実際に進んだ分を引き、差分から足場区間のどの位置にいるのかを割り出す
+        // 問題点：xOffsetがマイナスになった時にstartXがマイナスに
+        // startXは足場の描画地点を表す
+        const startX = proceedNum - xOffset;
+        console.log("xOffset: " + xOffset);
+        console.log(Math.trunc(Math.abs(xOffset / groundBlockWidth)));
         // 足場が左にフェードアウトするタイミング
-        if((xOffset-2)%groundBlockWidth===0){
-            terrainObjects.splice(0,1);
+        if((xOffset-2)%(groundBlockWidth)===0){
             // Xは毎フレームごとに変わるため足場フェードアウトするタイミングでは入れない
             // widthは足場が右から出てきたタイミングで決まるためこのタイミングで値を入れる
-            terrainObjects.push({x: 1500, y: ground, width: getRandomBlockWidth(), height: canvas.height});
-            // console.log(Math.floor((xOffset-2)/groundBlockWidth)+1);
+            terrainObjects.splice(0,1);
+            terrainObjects.push({x: 1500, y: ground/*+getRandomBlockHeight()*/, width: getRandomBlockWidth(), height: canvas.height});
+            console.log("throw");
             // terrainData.push(getRandomBlockWidth());            
         }
         // 本来、足場描画地点のx座標と足場の幅に差があった時に穴ができる
@@ -146,23 +159,42 @@ const player = {
         // 描画地点(200ずつ増加)は足場の幅(200)で描画地点と幅が同じなため、
         // 結果、足場が幅一杯に敷き詰められた状態に
         for (let x = startX; x < canvas.width; x += groundBlockWidth) {
+            // それぞれの足場情報を保存しているterrainObjectの配列番号
+            let index = Math.floor((x)/groundBlockWidth)+1;
+            // 検証用
+            // 1つ目の足場の位置を確認
+            if (index === 0) {
+                ctx.fillStyle = "red";
+                console.log(terrainObjects[index]);
+                // console.log("playerMove:"+(xOffset))
+                // console.log("terrainX:"+x)
+                // console.log("terrainX+width:"+(x+terrainObjects[index].width))
+            }else {
+                ctx.fillStyle = 'black';
+            }
+            console.log("x:"+x+" index:"+index);
             // terrainObjectの一つオブジェクト(足場)ごとのプロパティを足場一つずつに適応していく
             // xだけはプレイヤーの移動量でひたすら変化し続けるのでstartXのものを使う
-            ctx.fillRect(x, terrainObjects[Math.floor(x/groundBlockWidth)+1].y, terrainObjects[Math.floor(x/groundBlockWidth)+1].width, terrainObjects[Math.floor(x/groundBlockWidth)+1].height);
+            ctx.fillRect(x, terrainObjects[index].y, terrainObjects[index].width, terrainObjects[index].height);
             // xはここで入れる以外思いつかない...
-            terrainObjects[Math.floor(x/groundBlockWidth)+1].x = x;
+            terrainObjects[index].x = x;
         }
         
     }
-
+    // 足場の幅をランダムな幅にする
     function getRandomBlockWidth(){
         // Math.random() * ( 最大値 - 最小値 ) + 最小値;
         return Math.floor(Math.random() * ( 150 - 50 ) + 50);
 
     }
+    // 足場の幅をランダムな幅にする
+    function getRandomBlockHeight(){
+        // Math.random() * ( 最大値 - 最小値 ) + 最小値;
+        return Math.floor(Math.random() * ( 50 - 10 ) + 10);
+    }
 
     function checkCollision(player, ground) {
-        // console.log("playerX:"+player.x+" playerY:"+player.y+" playerwidth:"+player.width);
+        // console.log("playerX:"+(player.x - xOffset)+" playerY:"+player.y+" playerwidth:"+player.width);
         // console.log("groundX:"+ground.x+" groundY:"+ground.y+" groundwidth:"+ground.width);
         // プレイヤーと足場の位置が重なっている場合、trueを返す
         return player.x - xOffset < ground.x + ground.width &&
@@ -186,8 +218,9 @@ const player = {
     function createTerrainData(){
         for(var i = 0;i<9;i++){
             // 足場の情報を設定する
-            terrainObjects[i] = {x: "", y: ground, width: getRandomBlockWidth(), height: canvas.height};
+            terrainObjects[i] = {x: (i*200)+50, y: ground/*+getRandomBlockHeight()*/, width: getRandomBlockWidth(), height: canvas.height};
         }
     }
+
 createTerrainData();
 animationId = requestAnimationFrame(gameLoop);
