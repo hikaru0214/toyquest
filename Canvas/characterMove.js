@@ -21,7 +21,7 @@ let animationId = null;
 // プレイヤーの情報
 const player = {
     x: 0,
-    y: 325,
+    y: 335,
     width: 15,
     height: 15,
     // 加速度の状態
@@ -87,8 +87,9 @@ const player = {
             // console.log(checkCollision(player, terrainObjects[i]))
             if (checkCollision(player, terrainObjects[i])) {
                 if(player.velocityY > 0){
-                    // プレイヤーを足場に(ここに問題があり)
-                    player.y = ground - player.height;
+                    // プレイヤーを足場に
+                    // 足場のランダムな高さにプレイヤーの着地位置を設定
+                    player.y = terrainObjects[i].y-player.height;
                     // 落下速度を0に
                     player.velocityY = 0;
                     // 着地状態に変更
@@ -144,7 +145,7 @@ const player = {
         console.log("xOffset: " + xOffset);
         console.log(Math.trunc(Math.abs(xOffset / groundBlockWidth)));
         // 足場が左にフェードアウトするタイミング
-        if((xOffset-2)%(groundBlockWidth)===0){
+        if((xOffset/*-2*/)%(groundBlockWidth)===0){
             // Xは毎フレームごとに変わるため足場フェードアウトするタイミングでは入れない
             // widthは足場が右から出てきたタイミングで決まるためこのタイミングで値を入れる
             terrainObjects.splice(0,1);
@@ -218,7 +219,7 @@ const player = {
     function createTerrainData(){
         for(var i = 0;i<9;i++){
             // 足場の情報を設定する
-            terrainObjects[i] = {x: (i*200)+50, y: ground/*+getRandomBlockHeight()*/, width: getRandomBlockWidth(), height: canvas.height};
+            terrainObjects[i] = {x: (i*200)+50, y: ground+getRandomBlockHeight(), width: getRandomBlockWidth(), height: canvas.height};
         }
     }
 
