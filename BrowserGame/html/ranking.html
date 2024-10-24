@@ -7,10 +7,10 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #000;
-            background-image: url('background-image.jpg'); /* 背景に画像を指定 */
+            
+            background-image: url(../img/rankingu.png); /* 背景に画像を指定 */
             background-size: cover;
-            color: white;
+            color: black;
             margin: 0;
             padding: 0;
             display: flex;
@@ -20,18 +20,18 @@
         }
 
         .container {
-            width: 80%;
+            width: 100%;
             max-width: 500px;
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
-            padding: 20px;
+            padding: 250px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
             color: black;
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 45px;
         }
 
         .back-button {
@@ -45,18 +45,21 @@
         .tabs {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            width: 140%;
         }
 
         .tabs button {
-            background-color: white;
-            color: black;
+            background-color: #1192ee;
+            color: white;
             border: 1px solid #ccc;
             padding: 10px 20px;
             cursor: pointer;
             flex-grow: 1;
             margin-right: 5px;
+            margin-left: 10px;
             border-radius: 5px;
+            width: 100%;
         }
 
         .tabs button:last-child {
@@ -72,6 +75,7 @@
             border: 1px solid #ccc;
             padding: 20px;
             border-radius: 5px;
+            width: 100%;
         }
 
         table {
@@ -89,52 +93,52 @@
             text-align: center;
         }
         .selectbox-1 {
-    position: relative;
-}
+            position: relative;
+        }
 
-.selectbox-1::before,
-.selectbox-1::after {
-    position: absolute;
-    content: '';
-    pointer-events: none;
-}
+        .selectbox-1::before,
+        .selectbox-1::after {
+            position: absolute;
+            content: '';
+            pointer-events: none;
+        }
 
-.selectbox-1::before {
-    display: inline-block;
-    right: 0;
-    width: 2.8em;
-    height: 2.8em;
-    border-radius: 0 3px 3px 0;
-    background-color: #1192ee;
-}
+        .selectbox-1::before {
+            display: inline-block;
+            right: 0;
+            width: 2.8em;
+            height: 2.8em;
+            border-radius: 0 3px 3px 0;
+            background-color: #1192ee;
+        }
 
-.selectbox-1::after {
-    position: absolute;
-    top: 50%;
-    right: 1.4em;
-    transform: translate(50%, -50%) rotate(45deg);
-    width: 6px;
-    height: 6px;
-    border-bottom: 3px solid #fff;
-    border-right: 3px solid #fff;
-}
+        .selectbox-1::after {
+            position: absolute;
+            top: 50%;
+            right: 1.4em;
+            transform: translate(50%, -50%) rotate(45deg);
+            width: 6px;
+            height: 6px;
+            border-bottom: 3px solid #fff;
+            border-right: 3px solid #fff;
+        }
 
-.selectbox-1 select {
-    appearance: none;
-    min-width: 230px;
-    height: 2.8em;
-    padding: .4em 3.6em .4em .8em;
-    border: none;
-    border-radius: 3px;
-    background-color: #efebeb;
-    color: #333;
-    font-size: 1em;
-    cursor: pointer;
-}
+        .selectbox-1 select {
+            appearance: none;
+            min-width: 230px;
+            height: 2.8em;
+            padding: .4em 3.6em .4em .8em;
+            border: none;
+            border-radius: 3px;
+            background-color: #efebeb;
+            color: #333;
+            font-size: 1em;
+            cursor: pointer;
+        }
 
-.selectbox-1 select:focus {
-    outline: 2px solid #1192ee;
-}
+        .selectbox-1 select:focus {
+            outline: 2px solid #1192ee;
+        }
     </style>
 </head>
 <body>
@@ -154,6 +158,7 @@
             </label>  
             <button>マイスコア</button>
             <button>フレンドスコア</button>
+            <button>マルチスコア</button>
         </div>
 
         <div class="table-container">
