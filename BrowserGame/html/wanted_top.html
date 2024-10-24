@@ -3,25 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wanted Game Menu</title>
+    <title>Wanted top</title>
     <style>
         body{
             background-image:url(../img/wanted_top.jpg);
-            background-size: cover;
-            width:100%;
-            
+            background-size:cover;/*全画面*/
+            background-attachment: fixed;         /* 固定 */
+            background-position: center center;   /* 縦横中央 */
         }
+    
         .container {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            text-shadow: 2px 2px 4px rgb(0, 0, 0);
         }
 
         h1 {
-            font-size: 90px;
+            color: white;
+            -webkit-text-stroke: 1px black;
+            font-size: 100px;
             margin-bottom: 80px;
             font-family: 'Courier New', Courier, monospace;
         }
@@ -35,14 +37,18 @@
             font-size: 30px;
             margin: 20px 0;
             text-decoration: none;
-            color: white;
+            color: black;
+            -webkit-text-stroke: 1px white;
         }
         .top-left {
             position: absolute;
             top: 10px;
             left: 10px;
             font-size: 20px;
-            color: rgb(249, 4, 4);
+        }
+        .top-left a{
+            color:white;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -53,7 +59,7 @@
         </div>
         <h1>WANTED</h1>
         <div class="menu">
-            <a href="#">1 PLAYER</a>
+            <a href="top.html">1 PLAYER</a>
             <a href="#">MULTI BATTLE</a>
             <a href="#">HOW TO PLAY</a>
         </div>
