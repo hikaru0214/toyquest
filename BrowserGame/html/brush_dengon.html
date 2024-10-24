@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        #game {
+            margin: auto;
+            width:800px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body style=" background-color: white; color:white;">
+
+    <div id="game">
+        <canvas id="canvas" width="800" height="600" style="margin: auto;"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+        context.imageSmoothingEnabled=false;
+
+        const title_image = new Image();
+        title_image.onload = showTitle;
+        title_image.src = "../img/BrushDengon.png";
+
+        var loaded_img = 0;
+
+        var title_y = 0;
+        var inc = 0;
+
+        function showTitle(){
+            loaded_img = this;
+            var title_scale = 3;
+            var title_width = loaded_img.width*title_scale;
+            var title_height = loaded_img.height*title_scale;
+            context.drawImage(loaded_img,(canvas.width/2)-title_width/2,64+title_y,title_width,title_height);
+        }
+
+        function update(){
+            context.fillStyle="yellow";
+            context.fillRect(0,0,canvas.width,canvas.height);
+            
+            var title_scale = 3;
+            var title_width = loaded_img.width*title_scale;
+            var title_height = loaded_img.height*title_scale;
+            context.drawImage(loaded_img,(canvas.width/2)-title_width/2,64+title_y,title_width,title_height);
+            title_y+=Math.sin(inc);
+            inc+=0.1;
+        }
+
+        const update_interval = 1000.0/60.0;
+
+        setInterval(update,update_interval);
+
+
+
+    </script>
+    
+</body>
+</html>
