@@ -21,24 +21,28 @@
 
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 1200px;
+            margin: 0 auto;
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
-            padding: 250px;
+            padding: 150px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
             color: black;
+            
+
         }
 
         h1 {
             text-align: center;
-            margin-bottom: 45px;
+            margin-bottom: 100px;
+            
         }
 
         .back-button {
             position: absolute;
             top: 10px;
             left: 10px;
-            color: white;
+            color: rgb(232, 248, 4);
             text-decoration: none;
         }
 
@@ -46,7 +50,7 @@
             display: flex;
             justify-content: space-around;
             margin-bottom: 30px;
-            width: 140%;
+            width: 100%;
         }
 
         .tabs button {
@@ -59,7 +63,8 @@
             margin-right: 5px;
             margin-left: 10px;
             border-radius: 5px;
-            width: 100%;
+            width: 120%;
+            margin: 0 auto;
         }
 
         .tabs button:last-child {
@@ -75,7 +80,8 @@
             border: 1px solid #ccc;
             padding: 20px;
             border-radius: 5px;
-            width: 100%;
+            width: 95%;
+            margin: 0 auto;
         }
 
         table {
@@ -143,7 +149,7 @@
 </head>
 <body>
 
-    <a href="#" class="back-button">戻る</a>
+    <a href="" onclick="history.back()" class="back-button">戻る</a>
 
     <div class="container">
         <h1>ランキング</h1>
