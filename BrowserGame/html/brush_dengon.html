@@ -8,7 +8,7 @@
     <style>
         #game {
             margin: auto;
-            width:800px;
+            width: 800px;
             height: 600px;
             cursor: none;
         }
@@ -37,12 +37,19 @@
         var last_mouse_y = 0;
         var mouse_pressed = false;
 
-        var title_y = 0;
+        var title_y = 64;
+        var title_x = 0;
+
+        var vx = 0;
+        var vy = 0;
+        var bouncearound = false;
+
         var inc = 0;
 
         const buttons = [];
         buttons.push(new ui_button("設定",canvas.width/3,canvas.height-180,0,function(){console.log("button pressed");}));
         buttons.push(new ui_button("オープンキャンバス",canvas.width/2,canvas.height-180,0,function(){console.log("opencanvas pressed");}));
+        buttons.push(new ui_button("  ?  ",canvas.width-64,canvas.height-64,0,function(){vx=canvas.width/canvas.height;vy=1;bouncearound=true;}));
 
         function update(){
             context.fillStyle="yellow";
@@ -51,18 +58,34 @@
             var title_scale = 3;
             var title_width = title_image.getImage().width*title_scale;
             var title_height = title_image.getImage().height*title_scale;
-            context.drawImage(title_image.getImage(),(canvas.width/2)-title_width/2,64+title_y,title_width,title_height);
+
+            if(title_x==0&&!bouncearound)title_x=(canvas.width/2)-title_width/2;
+
+            context.drawImage(title_image.getImage(),title_x,title_y,title_width,title_height);
 
             for(var i = 0;i < buttons.length;i++){
                 buttons[i].interact(current_mouse_x,current_mouse_y,mouse_pressed);
                 buttons[i].show(context);
             }
 
+            if(!bouncearound){
             title_y+=Math.sin(inc);
             inc+=0.1;
+            }
 
             const cursor = normal_cursor_img.getImage();
             context.drawImage(cursor,current_mouse_x,current_mouse_y,cursor.width*3,cursor.height*3);
+
+            if(bouncearound){
+            title_x += vx;
+            title_y += vy;
+
+            if(title_x+title_width+vx > canvas.width)vx = -vx;
+            if(title_y+title_height+vy > canvas.height)vy = -vy;
+
+            if(title_x+vx < 0)vx=-vx;
+            if(title_y+vy < 0)vy=-vy;
+            }
         }
 
         function mouse_move(e){

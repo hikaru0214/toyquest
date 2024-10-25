@@ -1,3 +1,7 @@
+class GameState { //ゲーム状態　(タイトル画面、設定画面、ゲーム画面などの状態)
+
+}
+
 class ImageLoader { //超テキトーに書いた画像読み込みを簡単にするクラス、適切でないかも
     constructor(filename){
         this.img = new Image();
