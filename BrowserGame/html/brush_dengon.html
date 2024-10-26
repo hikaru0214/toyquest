@@ -6,104 +6,38 @@
     <title>Document</title>
 
     <style>
-        #game {
-            margin: auto;
-            width: 800px;
-            height: 600px;
-            cursor: none;
+        body{
+            background-image:url(../img/brush_top.jpg);
+            background-size:cover;/*全画面*/
+            background-attachment: fixed;         /* 固定 */
+            background-position: center center;   /* 縦横中央 */
+        }
+
+        #title{
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            margin-left: 25%;
+            margin-right: 25%;
+            width: 50%;
+        }
+
+        #title_menu {
+            text-align: center;
+        }
+
+        #title_menu button {
+            margin: 15px;
         }
     </style>
 </head>
 <body style=" background-color: white; color:white;">
 
-    <div id="game">
-        <canvas id="canvas" width="800" height="600" style="margin: auto;"></canvas>
+    <img src="../img/BrushDengon.png" alt="" id="title">
+
+    <div id="title_menu">
+    <button>プレイ</button>
+    <button>部屋作成</button>
     </div>
-
-    <script type="text/javascript" src="../javascript/gameUtils.js"></script>
-
-    <script>
-
-        const canvas = document.getElementById("canvas");
-        const context = canvas.getContext("2d");
-        context.imageSmoothingEnabled=false;
-
-        const title_image = new ImageLoader("../img/BrushDengon.png");
-        const normal_cursor_img = new ImageLoader("../img/cursor.png");
-
-        var current_mouse_x = 0;
-        var current_mouse_y = 0;
-        var last_mouse_x = 0;
-        var last_mouse_y = 0;
-        var mouse_pressed = false;
-
-        var title_y = 64;
-        var title_x = 0;
-
-        var vx = 0;
-        var vy = 0;
-        var bouncearound = false;
-
-        var inc = 0;
-
-        const buttons = [];
-        buttons.push(new ui_button("設定",canvas.width/3,canvas.height-180,0,function(){console.log("button pressed");}));
-        buttons.push(new ui_button("オープンキャンバス",canvas.width/2,canvas.height-180,0,function(){console.log("opencanvas pressed");}));
-        buttons.push(new ui_button("  ?  ",canvas.width-64,canvas.height-64,0,function(){vx=canvas.width/canvas.height;vy=1;bouncearound=true;}));
-
-        function update(){
-            context.fillStyle="yellow";
-            context.fillRect(0,0,canvas.width,canvas.height);
-
-            var title_scale = 3;
-            var title_width = title_image.getImage().width*title_scale;
-            var title_height = title_image.getImage().height*title_scale;
-
-            if(title_x==0&&!bouncearound)title_x=(canvas.width/2)-title_width/2;
-
-            context.drawImage(title_image.getImage(),title_x,title_y,title_width,title_height);
-
-            for(var i = 0;i < buttons.length;i++){
-                buttons[i].interact(current_mouse_x,current_mouse_y,mouse_pressed);
-                buttons[i].show(context);
-            }
-
-            if(!bouncearound){
-            title_y+=Math.sin(inc);
-            inc+=0.1;
-            }
-
-            const cursor = normal_cursor_img.getImage();
-            context.drawImage(cursor,current_mouse_x,current_mouse_y,cursor.width*3,cursor.height*3);
-
-            if(bouncearound){
-            title_x += vx;
-            title_y += vy;
-
-            if(title_x+title_width+vx > canvas.width)vx = -vx;
-            if(title_y+title_height+vy > canvas.height)vy = -vy;
-
-            if(title_x+vx < 0)vx=-vx;
-            if(title_y+vy < 0)vy=-vy;
-            }
-        }
-
-        function mouse_move(e){
-            let rect = canvas.getBoundingClientRect();
-            last_mouse_x = current_mouse_x;
-            last_mouse_y = current_mouse_y;
-            current_mouse_x = e.clientX-rect.x;
-            current_mouse_y = e.clientY-rect.y;
-        }
-
-        document.addEventListener('mousemove',mouse_move);
-        document.addEventListener('mousedown',function(e){mouse_pressed=true;});
-        document.addEventListener('mouseup',function(e){mouse_pressed=false;});
-
-        const update_interval = 1000.0/60.0;
-        setInterval(update,update_interval);
-
-    </script>
     
 </body>
 </html>

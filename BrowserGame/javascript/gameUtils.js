@@ -1,6 +1,3 @@
-class GameState { //ゲーム状態　(タイトル画面、設定画面、ゲーム画面などの状態)
-
-}
 
 class ImageLoader { //超テキトーに書いた画像読み込みを簡単にするクラス、適切でないかも
     constructor(filename){
@@ -38,14 +35,20 @@ class ui_button { //Canvasボタンクラス
     show(context){
         if(this.stroke<0)this.stroke++;
 
+        var position_x = this.x;
+        var position_y = this.y;
+
         context.font = "24px serif";
         this.width = context.measureText(this.text).width;
 
+        if(this.alignment=="center")position_x-=this.width/2;
+        if(this.alignment=="right")position_x-=this.width;
+
         context.fillStyle = "gray";
-        context.fillRect(this.x,this.y,this.width,this.height);
+        context.fillRect(position_x,position_y,this.width,this.height);
 
         context.fillStyle = "white";
-        context.fillText(this.text,this.x,this.y+24);
+        context.fillText(this.text,position_x,position_y+24);
     }
 
     interact(x,y,pressed){
