@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <style>
+        body{
+            background-image:url(../img/brush_white_yellow.png);
+            background-size:cover;/*全画面*/
+            background-attachment: fixed;         /* 固定 */
+            background-position: center center;   /* 縦横中央 */
+        }
+
+        .content-box {
+            box-sizing: content-box;
+        }
+        .border-box {
+            box-sizing: border-box;
+        }
+
+        #word_board {
+            width: 100%;
+            height: 48px;
+            border: 1px solid black;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            background-color: white;
+            text-align: center;
+            
+        }
+
+        #game_elements {
+            width: 100%;
+            height: 80vh;
+            border: 1px solid black;
+            vertical-align: top;
+        }
+
+        #drawing_canvas {
+            max-width: 90%;
+            min-width: none;
+            width: auto;
+            display: inline-block;
+            vertical-align: top;
+            border: 1px solid black;
+            margin: 5px;
+        }
+
+        #drawing_canvas canvas{
+            max-width: 100%;
+            min-width: none;
+            width: 100%;
+            display: inline-block;
+        }
+
+        #right-bar {
+            width: 300px;
+            height: 95%;
+            margin: 5px;
+            border: 1px solid black;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        #palette {
+            margin: 5px;
+            border: 1px solid black;
+            background-color: white;
+            height: calc(60% - 10px);
+        }
+
+        #chat {
+            margin: 5px;
+            border: 1px solid black;
+            background-color: white;
+            height: calc(40% - 10px);
+        }
+
+        #log {
+            background-color: gainsboro;
+            height: calc(100% - 24px);
+        }
+
+        #scoreboard {
+            min-height: 64px;
+            width: 200px;
+            height: auto;
+            background-color: white;
+            margin: 5px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .palette_color {
+            margin: 4px;
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="word_board"><p style="top: 50%;">ミッフィー</p></div> <!-- お題単語表示-->
+
+    <div id="game_elements"> <!-- ゲーム画面要素(スコアボード、キャンバス、チャット)をまとめるdiv -->
+
+    <div id="scoreboard">スコアボード</div> <!-- スコアボード　-->
+
+    <div id="drawing_canvas"> <!--キャンバス-->
+        <canvas id="canvas" width="640" height="480"></canvas>
+    </div>
+
+    <div id="right-bar">
+
+        <div id="palette">パレット
+
+            <br>
+
+            <button class="palette_color" style="background-color: red;"></button>
+            <button class="palette_color" style="background-color: blue;"></button>
+            <button class="palette_color" style="background-color: aqua;"></button>
+            <button class="palette_color" style="background-color: yellow;"></button>
+            <button class="palette_color" style="background-color: green;"></button>
+            <button class="palette_color" style="background-color: burlywood;"></button>
+            <button class="palette_color" style="background-color: darkred;"></button>
+            <button class="palette_color" style="background-color: darkblue;"></button>
+            <button class="palette_color" style="background-color: skyblue;"></button>
+            <button class="palette_color" style="background-color: darkkhaki;"></button>
+            <button class="palette_color" style="background-color: darkgreen;"></button>
+            <button class="palette_color" style="background-color: brown;"></button>
+            <button class="palette_color" style="background-color: burlywood;"></button>
+            <button class="palette_color" style="background-color: pink;"></button>
+            <button class="palette_color" style="background-color: magenta;"></button>
+            <button class="palette_color" style="background-color: violet;"></button>
+            <button class="palette_color" style="background-color: purple;"></button>
+            <button class="palette_color" style="background-color: #871F78;"></button>
+            <button class="palette_color" style="background-color: white; color: black;"></button>
+            <button class="palette_color" style="background-color: gainsboro;"></button>
+            <button class="palette_color" style="background-color: gray;"></button>
+            <button class="palette_color" style="background-color: black;"></button>
+
+        </div>
+
+        <div id="chat">
+            <div id="log"></div>
+            <input type="text" style="width:90%; height: 18px; margin: 0px;">
+        </div>
+
+
+    </div>
+
+    </div>
+
+    <script type="text/javascript" src="../javascript/gameUtils.js"></script>
+    <script type="text/javascript" src="../javascript/BrushDengonClient.js"></script>
+    
+</body>
+</html>
