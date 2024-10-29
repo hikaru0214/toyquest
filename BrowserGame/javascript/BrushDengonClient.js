@@ -13,6 +13,14 @@ var paint_color = "black";
 var brush_thickness = 8;
 var cursor_type = "brush"; //brush か bucket か spray ブラシ、　バケツ、スプレー
 
+function getClientData(){
+    var cx = current_mouse_x;
+    var cy = current_mouse_y;
+    var lx = last_mouse_x;
+    var ly = last_mouse_y;
+    const client = [cx,cy,lx,ly,mouse_pressed,paint_color,brush_thickness,cursor_type];
+}
+
 
 context.fillStyle = "white";
 context.fillRect(0,0,canvas.width,canvas.height);
