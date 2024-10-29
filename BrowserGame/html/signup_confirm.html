@@ -26,16 +26,18 @@
     <div style="text-align: center;">
 
         <h1>新規作成確認</h1>
-        <div style="margin-top: 20vh;">
-            プレイヤー名 : abcde
-            <br>
-            メールアドレス : abcde@mail.com
-            <br>
-            パスワード : *******
-            <br>
-            <button>戻る</button><button>確定</button>
-        </div>
-
+        <form action="signup_complete.html" method="post">
+            <div style="margin-top: 20vh;">
+                プレイヤー名 : abcde
+                <br>
+                メールアドレス : abcde@mail.com
+                <br>
+                パスワード : *******
+                <br>
+                <button type="button" onclick="history.back()">戻る</button>
+                <button type="submit">確定</button>    
+            </div>
+        </form>
     </div>
     
 </body>
