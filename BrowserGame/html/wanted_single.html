@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wanted_single</title>
+    <style>
+        body {
+            background-image:url(../img/ori.jpg);
+            background-size:cover;/*全画面*/
+            background-attachment: fixed;         /* 固定 */
+            background-position: center center;   /* 縦横中央 */
+        }
+        .out{
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 25px;
+        }
+        .out a{
+            color:white;
+            text-decoration: none;
+        }
+        .time {
+            top: 30px;
+            left: 10px;
+            color: #D9D700;
+        }
+        .stage {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 40px;
+            color: white;
+        }
+        .wanted {
+            position: absolute;
+            left: 100px;
+            top: 50px;
+            width: 300px;
+            height: 380px;
+            background-color: white;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .wanted-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .wanted_canvas {
+            position: absolute;
+            right: 5px;
+            top: 62px;
+            max-width: 90%;
+            min-width: none;
+            width: auto;
+            display: inline-block;
+            vertical-align: top;
+            background-color: black;
+            border: 1px solid white;
+            margin: 5px;
+        }
+
+        .wanted_canvas canvas{
+            right: 20px;
+            top: 80px;
+            max-width: 100%;
+            min-width: none;
+            width: 100%;
+            display: inline-block;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="out">
+        <a href="wanted.html">GET OUT</a>
+    </div>
+        <div class="time">TIME 60</div>
+        <div class="stage">STAGE 99</div>
+        <div class="wanted">
+            <div class="wanted-image" style="width: 90%; height: 80%; background-color: black;"></div>
+            <div class="wanted-title">WANTED</div>
+        </div>
+        <div class="wanted_canvas"> <!--キャンバス-->
+            <canvas id="canvas" width="900" height="610"></canvas>
+        </div>
+</body>
+</html>
