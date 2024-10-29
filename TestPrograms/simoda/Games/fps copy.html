@@ -35,7 +35,7 @@
     renderer.setSize(width, height);
 
     // カメラの位置設定
-    camera.position.set(1, 1.5, 5.5);
+    camera.position.set(4, 3, 4);
 
     // ライトの追加
     const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
@@ -47,61 +47,27 @@
 
 
 
-    // メッシュの追加
-    const geometry = new THREE.BoxGeometry(2, 1, 2);
-    const material = new THREE.MeshLambertMaterial({ color: "rgb(0%, 0%, 100%)" });
-    const cube = new THREE.Mesh(geometry, material);
-    cube.position.set(0, 0, 0);
-    scene.add(cube);
-
-    const material2 = new THREE.MeshBasicMaterial({ color: 0x00ff10 });
-    const cube2 = new THREE.Mesh(geometry, material2);
-    cube2.position.set(3, 0, 0);
-    scene.add(cube2);
-
-    const material3 = new THREE.MeshBasicMaterial({ color: 0x6699FF });
+    const tex=new THREE.TextureLoader().load("textures/タイトルなし.png")
+    const mateTex = new THREE.MeshBasicMaterial({map: tex});
     const geometry2 = new THREE.BoxGeometry(3, 1, 2);
-    const cube3 = new THREE.Mesh(geometry2, material3);
+    const cube3 = new THREE.Mesh(geometry2, mateTex);
     cube3.position.set(4, 0.5, -1);
     scene.add(cube3);
 
-    const geometry3 = new THREE.BoxGeometry(0.5, 1, 0.1);
-    const tex=new THREE.TextureLoader().load("textures/タイトルなし.png")
-    const mateTex = new THREE.MeshBasicMaterial({map: tex});
-    const cube4 = new THREE.Mesh(geometry3, mateTex);
-    const cube5 = new THREE.Mesh(geometry3, material);
-    cube4.position.set(1, 1, 3);
-    cube5.position.set(1.5, 1, -3);
-    scene.add(cube4);
-    scene.add(cube5);
-
-
-
-
-
-
-
-    const geometry0 = new THREE.BoxGeometry(1, 1, 1);
     const texture=new THREE.TextureLoader().load("textures/タイトルなし.png")
-    const materialTex = new THREE.MeshBasicMaterial({map: texture});
-    const character = new THREE.Mesh(geometry0, materialTex);
-    character.position.set(2, 2, 0);
-    scene.add(character);
-
-
-
     // GLTFモデルの読み込み。GLTFLoaderのインポートが必要
     let gltf; // GLTFオブジェクトを格納する変数
+    let mixer; // アニメーションミキサー
     let model = null;
     const loader = new GLTFLoader();
     loader.load(
-        "models/background2.gltf",
+        "models/animate_test.glb",
         function (loadedGltf) {
-            gltf = loadedGltf; // gltf変数に読み込んだモデルを格納
+            gltf = loadedGltf;
             model = gltf.scene;
-            model.scale.set(1.5, 1.5, 1.5);
-            model.position.set(1, -2.5, -4.5);
-            model.rotation.set(Math.PI, Math.PI, Math.PI);
+            model.scale.set(0.1, 0.1, 0.1);
+            model.position.set(0, 1, 0);
+            model.rotation.set(Math.PI, 90, Math.PI);
             model.traverse(function (node) {
                 if (node.isMesh) {
                     if (Array.isArray(node.material)) {
@@ -116,38 +82,8 @@
                 }
             });
             scene.add(model);
-        },
-        undefined,
-        function (error) {
-            console.error('Error loading the GLTF model:', error);
-        }
-    );
-
-    let mixer; // アニメーションミキサー
-    let model2 = null;
-    loader.load(
-        "models/animate_test.glb",
-        function (loadedGltf) {
-            gltf = loadedGltf;
-            model2 = gltf.scene;
-            model2.scale.set(0.1, 0.1, 0.1);
-            model2.position.set(0, 1, 0);
-            model2.rotation.set(Math.PI, 90, Math.PI);
-            model2.traverse(function (node) {
-                if (node.isMesh) {
-                    if (Array.isArray(node.material)) {
-                        node.material.forEach((mat) => {
-                            mat.map = texture;
-                            mat.needsUpdate = true;
-                        });
-                    } else {
-                        node.material.map = texture;
-                        node.material.needsUpdate = true;
-                    }
-                }
-            });
-            scene.add(model2);
-            mixer = new THREE.AnimationMixer(model2); // アニメーションミキサーをここで作成
+            camera.lookAt(model.position);//カメラがモデルに注目するようにする
+            mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
             playAnimation('Walk'); // アニメーションを再生
         },
         undefined,
@@ -162,63 +98,6 @@
 
 
 
-    let model3 = null;
-    loader.load(
-        "models/家.glb",
-        function (loadedGltf) {
-            gltf = loadedGltf; // gltf変数に読み込んだモデルを格納
-            model3 = gltf.scene;
-            model3.scale.set(0.05, 0.05, 0.05);
-            model3.position.set(1, 0, 1);
-            model3.rotation.set(0, 4.8, 0);
-            
-                
-            scene.add(model3);
-        undefined,
-        function (error) {
-            console.error('Error loading the GLTF model:', error);
-        }
-    });
-
-
-/*
-    let cloud = null;
-    let textureLoader = new THREE.TextureLoader();
-    let texture_cloud = textureLoader.load("textures/textures.jpg"); 
-    // テクスチャのスケールを設定（1未満にすると拡大されて表示）
-    texture_cloud.repeat.set(50, 50); // この値を調整してスケールを変更
-
-    // テクスチャの拡大・縮小フィルタ設定
-    texture_cloud.minFilter = THREE.LinearFilter; // 拡大・縮小のときのフィルタ設定
-    texture_cloud.magFilter = THREE.LinearFilter;
-    loader.load(
-        "models/雲.gltf",
-        function (loadedGltf) {
-            gltf = loadedGltf; // gltf変数に読み込んだモデルを格納
-            cloud = gltf.scene;
-            cloud.scale.set(0.5, 0.5, 0.5);
-            cloud.position.set(1, 1.5, 3);
-            cloud.rotation.set(90, 90, 90);
-            cloud.traverse(function (node) {
-                if (node.isMesh) {
-                    if (Array.isArray(node.material)) {
-                        node.material.forEach((mat) => {
-                            mat.map =texture_cloud;
-                            mat.needsUpdate = true;
-                        });
-                    } else {
-                        node.material.map = texture_cloud;
-                        node.material.needsUpdate = true;
-                    }
-                }
-            });
-            scene.add(cloud);
-        },
-        undefined,
-        function (error) {
-            console.error('Error loading the GLTF model:', error);
-        }
-    );*/
 
     // アニメーションの名前を指定して再生する関数
     function playAnimation(name) {
@@ -232,10 +111,6 @@
     }
 
     // アニメーションの更新
-    
-
-    
-    
 
 
 
@@ -388,24 +263,70 @@
         if (isMovingLeft) {
             camera.position.x -= 0.1;
             //character.position.x -= 0.1;
-            if (model2) model2.position.x -= 0.1;
+            if (model) model.position.x -= 0.1;
             if (model) model.position.x -= 0.097;
         }
 
         if (isMovingRight) {
             camera.position.x += 0.1;
             //character.position.x += 0.1;
-            if (model2) model2.position.x += 0.1;
+            if (model) model.position.x += 0.1;
             if (model) model.position.x += 0.097;
         }
         if (isMovingUp) {
             camera.position.z += 0.1;
-             
+            //character.position.z += 0.1; 
         }
         if (isMovingDown) {
             camera.position.z -= 0.1;
+            //character.position.z -= 0.1;
         }
     }
+
+
+
+
+let rot = 0; // 角度
+let mouseX = 0; // マウス座標
+
+// マウス座標はマウスが動いた時のみ取得できる
+document.addEventListener("mousemove", (event) => {
+  mouseX = event.pageX;
+});
+
+tick();
+
+// 毎フレーム時に実行されるループイベントです
+function tick() {
+  // マウスの位置に応じて角度を設定
+  // マウスのX座標がステージの幅の何%の位置にあるか調べてそれを360度で乗算する
+  const targetRot = (mouseX / window.innerWidth) * 360;
+  // イージングの公式を用いて滑らかにする
+  // 値 += (目標値 - 現在の値) * 減速値
+  rot += (targetRot - rot) * 0.02;
+
+  // ラジアンに変換する
+  const radian = rot * Math.PI / 180;
+  // 角度に応じてカメラの位置を設定
+  camera.position.x = 4* Math.sin(radian);
+  camera.position.z = 4* Math.cos(radian);
+  if(model)camera.lookAt(model.position);
+
+
+  const minDistance = 4; // カメラとモデルの最小距離を設定
+
+function adjustCameraDistance() {
+    const distance = camera.position.distanceTo(model.position);
+    if (distance < minDistance) {
+        const direction = camera.position.clone().sub(model.position).normalize();
+        camera.position.copy(model.position).add(direction.multiplyScalar(minDistance));
+    }
+}
+  // レンダリング
+  renderer.render(scene, camera);
+
+  requestAnimationFrame(tick);
+}
 
 
 
@@ -478,18 +399,7 @@
     });
 
 
-    var seurl= 'bgm/se_shot_002.wav';
-    var se=new Audio(seurl);
-    
-    var url = 'bgm/bgm.wav';
-    var audio = new Audio(url);  // 直接Audioオブジェクトを定義
-    function roops(){
-    audio.play();  // オーディオを再生
-    audio.loop = true;  // ループ再生
-    }
-    audio.addEventListener('canplaythrough', function() {
-    roops();
-    });
+
     </script>
 
 </head>
