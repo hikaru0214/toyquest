@@ -33,7 +33,7 @@
 
         #game_elements {
             width: 100%;
-            height: 80vh;
+            height: 85vh;
             border: 1px solid black;
             vertical-align: top;
         }
@@ -100,6 +100,16 @@
             height: 36px;
             border-radius: 50%;
             color: white;
+            border: 0px;
+        }
+
+        .thickness_button {
+            margin: 1px;
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            border: 2px solid black;
+            background-color: white;
         }
 
     </style>
@@ -118,32 +128,21 @@
 
     <div id="right-bar">
 
-        <div id="palette">パレット
+        <div id="palette">
 
             <br>
+            <button style="display: inline-block; width:32px; height: 48px; margin: 4px;"><img style="width:32px; height: 32px;" src="../img/eraser.png" alt=""></button>
+            <button id="thickness_thick" class="thickness_button"><div style="border-radius: 50%; width: 32px; height: 32px; background-color: black; margin: 3px; padding: 0px;"></div></button>
+            <button id="thickness_medium" class="thickness_button"><div style="border-radius: 50%; width: 24px; height: 24px; background-color: black; margin: 3px; padding: 0px;"></div></button>
+            <button id="thickness_small" class="thickness_button"><div style="border-radius: 50%; width: 16px; height: 16px; background-color: black; margin: 3px; padding: 0px;"></div></button>
+            <button id="thickness_thin" class="thickness_button"><div style="border-radius: 50%; width: 8px; height: 8px; background-color: black; margin: 3px; padding: 0px;"></div></button>
+            <button id="paint_bucket"style="display: inline-block; width:32px; height: 48px; margin: 4px;"><img style="width:32px; height: 32px;" src="../img/paint_bucket.png" alt=""></button>
 
-            <button class="palette_color" style="background-color: red;"></button>
-            <button class="palette_color" style="background-color: blue;"></button>
-            <button class="palette_color" style="background-color: aqua;"></button>
-            <button class="palette_color" style="background-color: yellow;"></button>
-            <button class="palette_color" style="background-color: green;"></button>
-            <button class="palette_color" style="background-color: burlywood;"></button>
-            <button class="palette_color" style="background-color: darkred;"></button>
-            <button class="palette_color" style="background-color: darkblue;"></button>
-            <button class="palette_color" style="background-color: skyblue;"></button>
-            <button class="palette_color" style="background-color: darkkhaki;"></button>
-            <button class="palette_color" style="background-color: darkgreen;"></button>
-            <button class="palette_color" style="background-color: brown;"></button>
-            <button class="palette_color" style="background-color: burlywood;"></button>
-            <button class="palette_color" style="background-color: pink;"></button>
-            <button class="palette_color" style="background-color: magenta;"></button>
-            <button class="palette_color" style="background-color: violet;"></button>
-            <button class="palette_color" style="background-color: purple;"></button>
-            <button class="palette_color" style="background-color: #871F78;"></button>
-            <button class="palette_color" style="background-color: white; color: black;"></button>
-            <button class="palette_color" style="background-color: gainsboro;"></button>
-            <button class="palette_color" style="background-color: gray;"></button>
-            <button class="palette_color" style="background-color: black;"></button>
+            <br>
+            <button id="brush" style="display: inline-block; width:32px; height: 32px; margin: 4px;"></button>
+            <button style="display: inline-block; width:32px; height: 32px; margin: 4px;">←</button>
+            <button style="display: inline-block; width:32px; height: 32px; margin: 4px;">→</button>
+            <button id="clear" style="display: inline-block; width:32px; height: 32px; margin: 4px;"></button>
 
         </div>
 
