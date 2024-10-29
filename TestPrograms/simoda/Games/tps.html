@@ -34,6 +34,7 @@
     });
     renderer.setSize(width, height);
 
+    
     // カメラの位置設定
     camera.position.set(4, 3, 4);
 
@@ -311,9 +312,18 @@ function tick() {
   camera.position.x = 4* Math.sin(radian);
   camera.position.z = 4* Math.cos(radian);
   if(model)camera.lookAt(model.position);
+  //adjustCameraDistance();
+  
 
 
-  const minDistance = 4; // カメラとモデルの最小距離を設定
+  
+  // レンダリング
+  renderer.render(scene, camera);
+
+  requestAnimationFrame(tick);
+}
+
+const minDistance = 4; // カメラとモデルの最小距離を設定
 
 function adjustCameraDistance() {
     const distance = camera.position.distanceTo(model.position);
@@ -322,13 +332,6 @@ function adjustCameraDistance() {
         camera.position.copy(model.position).add(direction.multiplyScalar(minDistance));
     }
 }
-  // レンダリング
-  renderer.render(scene, camera);
-
-  requestAnimationFrame(tick);
-}
-
-
 
     //ピクセルサイズ変更処理
     let pixels=0;
