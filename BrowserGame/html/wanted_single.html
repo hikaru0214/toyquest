@@ -15,30 +15,33 @@
             position: absolute;
             top: 10px;
             left: 10px;
-            font-size: 25px;
+            font-size: 18px;
         }
         .out a{
             color:white;
             text-decoration: none;
         }
         .time {
-            top: 30px;
-            left: 10px;
+            position: absolute;
+            top: 60px;
+            left: 150px;
+            font-size: 48px;
             color: #D9D700;
         }
         .stage {
             position: absolute;
             top: 10px;
-            right: 10px;
-            font-size: 40px;
+            right: 500px;
+            font-size: 30px;
+            font-family: 'Papyrus';
             color: white;
         }
         .wanted {
             position: absolute;
             left: 100px;
-            top: 50px;
+            top: 130px;
             width: 300px;
-            height: 380px;
+            height: 350px;
             background-color: white;
             color: black;
             display: flex;
@@ -46,15 +49,29 @@
             align-items: center;
             justify-content: center;
         }
+        .wanted-image {
+            width: 90%;
+            height: 80%;
+            background-color: black;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .wanted-image img {
+            width: 280px;
+            height: 260px;
+        }
         .wanted-title {
-            text-align: center;
-            font-size: 24px;
+            -webkit-text-stroke: 0.6px rgb(106, 0, 0);
+            font-size: 34px;
+            font-family: 'Papyrus';
             font-weight: bold;
-            margin-top: 20px;
+            margin-top: 5px;
         }
         .wanted_canvas {
             position: absolute;
-            right: 5px;
+            right: 100px;
             top: 62px;
             max-width: 90%;
             min-width: none;
@@ -62,10 +79,9 @@
             display: inline-block;
             vertical-align: top;
             background-color: black;
-            border: 1px solid white;
+            border: 1px solid rgb(115, 2, 2);
             margin: 5px;
         }
-
         .wanted_canvas canvas{
             right: 20px;
             top: 80px;
@@ -84,11 +100,13 @@
         <div class="time">TIME 60</div>
         <div class="stage">STAGE 99</div>
         <div class="wanted">
-            <div class="wanted-image" style="width: 90%; height: 80%; background-color: black;"></div>
+            <div class="wanted-image">
+                <img src="../img/zono.png" alt="zono">
+            </div>
             <div class="wanted-title">WANTED</div>
         </div>
         <div class="wanted_canvas"> <!--キャンバス-->
-            <canvas id="canvas" width="900" height="610"></canvas>
+            <canvas id="canvas" width="1000" height="610"></canvas>
         </div>
 </body>
 </html>
