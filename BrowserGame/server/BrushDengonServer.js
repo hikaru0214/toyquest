@@ -9,7 +9,6 @@ app.get('../', (req, res) => {
     res.sendFile(__dirname + '/html/brush_dengon_draw.html');
 });
 
-
 io.on('connection', (socket) => {
     console.log('a user connected');
 });
