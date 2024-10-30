@@ -59,7 +59,7 @@
     // GLTFモデルの読み込み。GLTFLoaderのインポートが必要
     let gltf; // GLTFオブジェクトを格納する変数
     let mixer; // アニメーションミキサー
-    let model = null;
+    var model = null;
     const loader = new GLTFLoader();
     loader.load(
         "models/animate_test.glb",
@@ -68,7 +68,7 @@
             model = gltf.scene;
             model.scale.set(0.1, 0.1, 0.1);
             model.position.set(0, 1, 0);
-            model.rotation.set(Math.PI, 90, Math.PI);
+            model.rotation.set(0, 0, 0);
             model.traverse(function (node) {
                 if (node.isMesh) {
                     if (Array.isArray(node.material)) {
@@ -177,12 +177,10 @@
         if (event.code === "ArrowLeft") {
             isMovingLeft = true;
             event.preventDefault();
-            se.play();
         }
         if (event.code === "ArrowRight") {
             isMovingRight = true;
             event.preventDefault();
-            se.play();
         }
         if (event.code === "ArrowUp") {
             isMovingUp = true;
@@ -258,30 +256,43 @@
 
 
 
-
+    let posix=0;
+    let posiz=0;
     // カメラを移動させる関数
     function moveCamera() {
         if (isMovingLeft) {
-            camera.position.x -= 0.1;
+            //camera.position.x -= 0.1;
             //character.position.x -= 0.1;
-            if (model) model.position.x -= 0.1;
+            model.position.x -= 0.1;
+            posix-=0.1;
         }
 
         if (isMovingRight) {
-            camera.position.x += 0.1;
+            //camera.position.x += 0.1;
             //character.position.x += 0.1;
-            if (model) model.position.x += 0.1;
+            model.position.x += 0.1;
+            posix+=0.1;
         }
         if (isMovingUp) {
-            camera.position.z += 0.1;
-            if (model) model.position.z+= 0.1;
-            //character.position.z += 0.1; 
+            //camera.position.z += 0.1;
+            model.position.z+= 0.1;
+            //character.position.z += 0.1;
+            posiz+=0.1 
         }
         if (isMovingDown) {
-            camera.position.z -= 0.1;
-            if (model) model.position.z-= 0.1;
+            //camera.position.z -= 0.1;
+            model.position.z-= 0.1;
             //character.position.z -= 0.1;
+            posiz-=0.1
         }
+
+
+        // ラジアンに変換する
+  let radian = rot * Math.PI / 180;
+  // 角度に応じてカメラの位置を設定
+  camera.position.x = posix+Math.sin(radian)*-4;
+  camera.position.z = posiz+Math.cos(radian)*-4;
+  if(model)camera.lookAt(model.position);
     }
 
 
@@ -306,13 +317,8 @@ function tick() {
   // 値 += (目標値 - 現在の値) * 減速値
   rot += (targetRot - rot) * 0.02;
 
-  // ラジアンに変換する
-  const radian = rot * Math.PI / 180;
-  // 角度に応じてカメラの位置を設定
-  camera.position.x = 4* Math.sin(radian);
-  camera.position.z = 4* Math.cos(radian);
-  if(model)camera.lookAt(model.position);
-  //adjustCameraDistance();
+  
+  adjustCameraDistance();
   
 
 
@@ -323,10 +329,12 @@ function tick() {
   requestAnimationFrame(tick);
 }
 
-const minDistance = 4; // カメラとモデルの最小距離を設定
+
 
 function adjustCameraDistance() {
+    if(!model)return;
     const distance = camera.position.distanceTo(model.position);
+    const minDistance = 4; // カメラとモデルの最小距離を設定
     if (distance < minDistance) {
         const direction = camera.position.clone().sub(model.position).normalize();
         camera.position.copy(model.position).add(direction.multiplyScalar(minDistance));
@@ -365,6 +373,11 @@ function adjustCameraDistance() {
             dotPass.uniforms["pixelSize"].value = pixels;
         }
     }
+
+
+
+
+
 
 
     const clock = new THREE.Clock();
