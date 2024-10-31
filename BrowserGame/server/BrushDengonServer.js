@@ -4,9 +4,10 @@ const http = require('http');
 const server= http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+const path = require('path');
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/brush_dengon_draw.html');
+    res.sendFile(path.join(__dirname,'../html/brush_dengon_draw.html'));
 });
 
 io.on('connection', (socket) => {
