@@ -17,7 +17,7 @@ let scrollWeight = 4;
 let gameOverFlg = true;
 // アニメーションの判別ID
 let animationId = null;
-// const terrainData = [];
+
 // プレイヤーの情報
 const player = {
     x: 0,
@@ -43,7 +43,11 @@ const player = {
         update();
         // プレイヤーの描画
         drawPlayer(player.x, player.y);
+        // スコアの表示
+        drawScore();
         if(gameOverFlg){
+            // スコアをNode側に送信
+            // sendScore();
             // ディスプレイのリフレッシュレイトに合わせて
             animationId = requestAnimationFrame(gameLoop);
         }else if(!gameOverFlg){
@@ -52,6 +56,23 @@ const player = {
         }
     }
 
+    // スコアをNode側に送信
+    function sendScore(){
+        fetch('/api/score', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({score: xOffset})
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("success: "/* + data*/);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
     function movePlayer(){
         player.x += scrollWeight;
     }
@@ -83,8 +104,6 @@ const player = {
         // キャラクターの位置から足場2つ分の判定だけを行う
         for(var i = 0;i<2;i++){
             // 足場との衝突判定
-            // console.log(terrainObjects[i])
-            // console.log(checkCollision(player, terrainObjects[i]))
             if (checkCollision(player, terrainObjects[i])) {
                 if(player.velocityY > 0){
                     // プレイヤーを足場に
@@ -105,8 +124,6 @@ const player = {
                     gameOverFlg = false;
                 }
             }
-            // console.log(terrainObjects[i]);
-
         }
         // 落下判定
         if (!onGround) {
@@ -135,23 +152,18 @@ const player = {
         // 足場の幅(200)を定数として移動量がどの程度かを計る
         // 足場区間（200）何個分進んだか確認
         const moveTerrainNum = Math.trunc(Math.abs(xOffset / groundBlockWidth));
-        console.log("moveTerrainNum: " + moveTerrainNum);
         // 進んだ足場の幅分を算出、足場のスタート位置は0から
         const proceedNum = moveTerrainNum * groundBlockWidth;
         // そこから実際に進んだ分を引き、差分から足場区間のどの位置にいるのかを割り出す
         // 問題点：xOffsetがマイナスになった時にstartXがマイナスに
         // startXは足場の描画地点を表す
         const startX = proceedNum - xOffset;
-        console.log("xOffset: " + xOffset);
-        console.log(Math.trunc(Math.abs(xOffset / groundBlockWidth)));
         // 足場が左にフェードアウトするタイミング
-        if((xOffset/*-2*/)%(groundBlockWidth)===0){
+        if((xOffset-2)%(groundBlockWidth)===0){
             // Xは毎フレームごとに変わるため足場フェードアウトするタイミングでは入れない
             // widthは足場が右から出てきたタイミングで決まるためこのタイミングで値を入れる
             terrainObjects.splice(0,1);
-            terrainObjects.push({x: 1500, y: ground/*+getRandomBlockHeight()*/, width: getRandomBlockWidth(), height: canvas.height});
-            console.log("throw");
-            // terrainData.push(getRandomBlockWidth());            
+            terrainObjects.push({x: 1500, y: ground+getRandomBlockHeight(), width: getRandomBlockWidth(), height: canvas.height});
         }
         // 本来、足場描画地点のx座標と足場の幅に差があった時に穴ができる
         // 例えば、描画地点0(40ずつ増加)、幅20だと
@@ -166,14 +178,9 @@ const player = {
             // 1つ目の足場の位置を確認
             if (index === 0) {
                 ctx.fillStyle = "red";
-                console.log(terrainObjects[index]);
-                // console.log("playerMove:"+(xOffset))
-                // console.log("terrainX:"+x)
-                // console.log("terrainX+width:"+(x+terrainObjects[index].width))
             }else {
                 ctx.fillStyle = 'black';
             }
-            console.log("x:"+x+" index:"+index);
             // terrainObjectの一つオブジェクト(足場)ごとのプロパティを足場一つずつに適応していく
             // xだけはプレイヤーの移動量でひたすら変化し続けるのでstartXのものを使う
             ctx.fillRect(x, terrainObjects[index].y, terrainObjects[index].width, terrainObjects[index].height);
@@ -195,14 +202,21 @@ const player = {
     }
 
     function checkCollision(player, ground) {
-        // console.log("playerX:"+(player.x - xOffset)+" playerY:"+player.y+" playerwidth:"+player.width);
-        // console.log("groundX:"+ground.x+" groundY:"+ground.y+" groundwidth:"+ground.width);
         // プレイヤーと足場の位置が重なっている場合、trueを返す
         return player.x - xOffset < ground.x + ground.width &&
                player.x - xOffset + player.width > ground.x &&
                player.y < ground.y &&
                player.y + player.height > ground.y;
     }
+
+    // スコアを描画する関数
+    function drawScore() {
+        ctx.font = '24px Arial'; // フォントサイズとフォントファミリーを設定
+        ctx.fillStyle = 'black'; // テキストの色を設定
+        ctx.textAlign = 'right'; // テキストの配置を右揃えに
+        ctx.fillText(`Score: ${xOffset}`, canvas.width - 10, 30); // 右端から10px、上から30pxの位置に描画
+    }
+  
 
     // ジャンプ機能
     document.addEventListener('keydown', function(event) {
@@ -222,6 +236,8 @@ const player = {
             terrainObjects[i] = {x: (i*200)+50, y: ground+getRandomBlockHeight(), width: getRandomBlockWidth(), height: canvas.height};
         }
     }
+
+    
 
 createTerrainData();
 animationId = requestAnimationFrame(gameLoop);

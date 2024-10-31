@@ -6,8 +6,11 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const path = require('path');
 
+app.use(express.static('../public'));
+
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname,'../html/brush_dengon_draw.html'));
+    console.log(path.join(__dirname,'../html/brush_dengon_draw.html'))
+    res.sendFile(path.join(__dirname,'../public/html/brush_dengon_draw.html'));
 });
 
 io.on('connection', (socket) => {

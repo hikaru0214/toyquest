@@ -31,13 +31,14 @@ io.on('connection', (socket) => {
     
     // ルームへの参加を処理する
     socket.on('joinRoom', (roomId) => {
-        //ルームに参加する
+        // ルームに参加する
         socket.join(roomId);
+        // ルーム内のメッセージが存在するか
         if(!messages[roomId]){
+            // なければ空の配列を作成
             messages[roomId] = [];
         }
-        // 過去に送信されたメッセージがあるか
-        // あればメッセージを新規参加者に送信
+        // 過去のメッセージを送信
         socket.emit("previousMessages", messages[roomId]);
         // ルームのソケットを取得
         const room = io.sockets.adapter.rooms.get(roomId);
