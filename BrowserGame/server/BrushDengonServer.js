@@ -9,7 +9,7 @@ const path = require('path');
 app.use(express.static('../public'));
 
 app.get('/', (req, res) => {
-    //console.log(path.join(__dirname,'../html/brush_dengon_draw.html'));
+    console.log(path.join(__dirname,'../html/brush_dengon_draw.html'));
     res.sendFile(path.join(__dirname,'../public/html/brush_dengon_draw.html'));
 });
 
@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
     //io.to(id).emit('connection established',id);
     socket.emit('connection established',{id,room});
 
-    //socket.join(room_name);
+    socket.join(room_name);
     gamerooms[room].addPlayer(id);
 
     console.log('a user connected, id : '+id+" ipaddress : "+ipaddress);
