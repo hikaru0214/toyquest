@@ -1,3 +1,11 @@
+var socket = io();
+let own_id = "";
+
+socket.on('connection established',(id)=>{
+    console.log("connection established with server! this is my id : "+id);
+    own_id = id;
+});
+
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 context.imageSmoothingEnabled=false;
@@ -20,7 +28,6 @@ function getClientData(){
     var ly = last_mouse_y;
     const client = [cx,cy,lx,ly,mouse_pressed,paint_color,brush_thickness,cursor_type];
 }
-
 
 context.fillStyle = "white";
 context.fillRect(0,0,canvas.width,canvas.height);
@@ -50,35 +57,8 @@ context.fillRect(0,0,canvas.width,canvas.height);
         context.fillRect(0,0,canvas.width,canvas.height);
     }
 
-    function setPixel(x,y,color){
-        const raster = context.getImageData(0,0,context.canvas.width,context.canvas.height);
-        const index = (x+y*raster.width)*4;
-        raster.data[index] = color[0];
-        raster.data[index+1] = color[1];
-        raster.data[index+2] = color[2];
-        raster.data[index+3] = color[3];
-    }
-
     function colorEqual(color0,color1){
         return color0[0] === color1[0] && color0[1] === color1[1] && color0[2] === color1[2] && color0[3] === color1[3];
-    }
-
-    function fillNeighbor(x,y,targetcolor){
-        var area_color = context.getImageData(x,y,1,1).data;
-        if(colorEqual(area_color,targetcolor)&&!colorEqual(area_color,paint_color)){
-            context.fillStyle = paint_color;
-            context.fillRect(x,y,1,1);
-            setPixel(x,y,paint_color);
-            fillNeighbor(x+1,y,targetcolor);
-            fillNeighbor(x-1,y,targetcolor);
-            fillNeighbor(x,y+1,targetcolor);
-            fillNeighbor(x,y-1,targetcolor);
-        }
-    }
-
-    function FloodFill(mx,my){
-        var target = context.getImageData(mx,my,1,1).data;
-        fillNeighbor(mx,my,target);
     }
 
     let initialized = false;
