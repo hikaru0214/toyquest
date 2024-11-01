@@ -56,6 +56,7 @@ io.on('connection', (socket) => {
         var initdata = {name,score};
         gamerooms[room].addPlayer(id,initdata);
         io.to(room_name).emit("player join",name);
+        console.log("player "+name+" joined in the room "+room);
     });
 
     socket.on("player_draw",(client)=>{
