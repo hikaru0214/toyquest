@@ -100,6 +100,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
       console.log('user disconnected');
+      gamerooms[room].removePlayer(socket.id);
     });
 });
 
