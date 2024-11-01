@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
     var room_name = "room_"+room;
 
     //io.to(id).emit('connection established',id);
-    socket.emit('connection established',id);
+    socket.emit('connection established',{id,room});
 
     socket.join(room_name);
     gamerooms[room].addPlayer(id);

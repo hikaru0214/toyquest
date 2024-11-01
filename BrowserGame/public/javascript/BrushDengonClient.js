@@ -1,9 +1,9 @@
 var socket = io();
 let own_id = "";
 
-socket.on('connection established',(id)=>{
-    console.log("connection established with server! this is my id : "+id);
-    own_id = id;
+socket.on('connection established',(data)=>{
+    console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
+    own_id = data.id;
 });
 
 const canvas = document.getElementById("canvas");
