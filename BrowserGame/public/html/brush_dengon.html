@@ -38,6 +38,24 @@
     <a href="http://52.68.111.88:7000/"><button>プレイ</button></a>
     <a href="http://52.68.111.88:7000/newroom"></a><button>部屋作成</button></a>
     </div>
+
+    <div id="player_profile" style="color: black;">
+        プレイヤー名<input id="player_name" type="text">
+        <button id="profile_save">保存</button>
+    </div>
+
+    <script>
+        var player_name = 0;
+        var avatar_eye = 0;
+        var avatar_mouth = 0;
+        var avatar_color = 0;
+
+        document.getElementById('profile_save').onclick = function(){
+            player_name = document.getElementById('player_name').value;
+            sessionStorage.setItem('player_name',player_name);
+            console.log("player_name set to : "+player_name);
+        };
+    </script>
     
 </body>
 </html>
