@@ -87,6 +87,7 @@ io.on('connection', (socket) => {
     var id = socket.id;
     var room = getAvailableRoomIndex();
     var room_name = "room_"+room;
+    var ipaddress = socket.handshake.address;
     connections++;
 
     //io.to(id).emit('connection established',id);
@@ -95,7 +96,7 @@ io.on('connection', (socket) => {
     socket.join(room_name);
     gamerooms[room].addPlayer(id);
 
-    console.log('a user connected');
+    console.log('a user connected, id : '+id+" ipaddress : "+ipaddress);
 
     socket.on("player_draw",(client)=>{
 
