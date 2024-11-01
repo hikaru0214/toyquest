@@ -28,7 +28,7 @@ function getRandomString(length){ //ランダム文字列
 class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを用意する
     constructor(room_id){
         this.room_id = room_id;
-        this.player_limit = 2; //プレイヤー数制限
+        this.player_limit = 4; //プレイヤー数制限
         this.time_limit = 60; //時間制限
         this.round = 0; //ラウンドカウンター
         this.rounds = 0; //ラウンド数
@@ -81,10 +81,13 @@ function getAvailableRoomIndex(){
     return -1;
 }
 
+var connections = 0;
+
 io.on('connection', (socket) => {
     var id = socket.id;
     var room = getAvailableRoomIndex();
     var room_name = "room_"+room;
+    connections++;
 
     //io.to(id).emit('connection established',id);
     socket.emit('connection established',{id,room});
@@ -101,6 +104,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
       console.log('user disconnected');
       gamerooms[room].removePlayer(socket.id);
+      connections--;
     });
 });
 
@@ -118,6 +122,10 @@ function update(){
     if(Date.now() >= last+1000){
         last+=1000;
         timer++;
+        console.log("total of connected player : "+connections);
+        for(var i = 0;i < gamerooms.length;i++){
+            console.log("room_"+i+" players : "+gamerooms[i].getPlayerCount());
+        }
     }
 }
 
