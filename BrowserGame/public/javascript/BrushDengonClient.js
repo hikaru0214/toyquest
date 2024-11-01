@@ -1,6 +1,7 @@
 var socket = io();
 let own_id = "";
 let player_name = sessionStorage.getItem('player_name');
+console.log('player name on sessionStorage : '+player_name);
 
 socket.on('connection established',(data)=>{
     console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
