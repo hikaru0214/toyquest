@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
     //io.to(id).emit('connection established',id);
     socket.emit('connection established',{id,room});
 
-    socket.join(room_name);
+    //socket.join(room_name);
     gamerooms[room].addPlayer(id);
 
     console.log('a user connected, id : '+id+" ipaddress : "+ipaddress);
