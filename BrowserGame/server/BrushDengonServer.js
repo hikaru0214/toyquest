@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
 
     socket.on('return player data',(data)=>{
         socket.join(room_name);
-        var name = data.name;
+        var name = getRandomString(7);
         var score = 0;
         var initdata = {name,score};
         gamerooms[room].addPlayer(id,initdata);
