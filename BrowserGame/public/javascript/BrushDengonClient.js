@@ -1,6 +1,6 @@
 var socket = io();
 let own_id = "";
-let player_name = sessionStorage.getItem('player_name');
+let player_name = localStorage.getItem('player_name');
 console.log('player name on sessionStorage : '+player_name);
 
 socket.on('connection established',(data)=>{
