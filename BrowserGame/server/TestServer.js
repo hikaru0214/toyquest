@@ -7,3 +7,5 @@ io.on("connection", socket => {
         console.log('user disconnected');
     });
 });
+
+io.listen(7000);
