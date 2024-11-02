@@ -45,7 +45,24 @@
     </div>
 
     <script>
-        var data = sessionStorage.getItem('player_name');
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+        var data = getCookie('username');
         if(data)document.getElementById('player_name').value = data;
         var player_name = 0;
         var avatar_eye = 0;
@@ -54,7 +71,7 @@
 
         document.getElementById('profile_save').onclick = function(){
             player_name = document.getElementById('player_name').value;
-            sessionStorage.setItem('player_name',player_name);
+            document.cookie = "username="+player_name;
             console.log("player_name set to : "+player_name);
         };
     </script>

@@ -14,7 +14,23 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
-let client_name = sessionStorage.getItem('player_name');
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+}
+
+let client_name = getCookie('username');
 
 socket.on('connection established',(data)=>{
     console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
