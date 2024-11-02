@@ -6,19 +6,19 @@
     <title>wanted_multi</title>
     <style>
         body {
-            background-image:url(../img/ori.jpg);
-            background-size:cover;/*全画面*/
-            background-attachment: fixed;         /* 固定 */
-            background-position: center center;   /* 縦横中央 */
+            background-image: url(../img/ori.jpg);
+            background-size: cover; /* Full screen */
+            background-attachment: fixed; /* Fixed */
+            background-position: center center; /* Centered vertically and horizontally */
         }
-        .out{
+        .out {
             position: absolute;
             top: 10px;
             left: 10px;
             font-size: 18px;
         }
-        .out a{
-            color:white;
+        .out a {
+            color: white;
             text-decoration: none;
         }
         .time {
@@ -72,21 +72,20 @@
             font-weight: bold;
             margin-top: 5px;
         }
-        .player{
+        .player {
             position: absolute;
-            top:470px;
-            font-size:28px;
-            color:black;
-        }
-        .name {
+            top: 470px;
             left:100px;
+            font-size: 28px;
+            color: black;
         }
-        .score{
-            left:130px;
-        }
-        .name p,.score p {
+        /*.name {
+            margin-right:25px;
+        }*/
+        
+        /*.name p,.score p {
             margin:10px; /* 各プレイヤーの間隔 */
-        }
+        
         .wanted_canvas {
             position: absolute;
             right: 100px;
@@ -100,7 +99,7 @@
             border: 1px solid white;
             margin: 5px;
         }
-        .wanted_canvas canvas{
+        .wanted_canvas canvas {
             right: 20px;
             top: 80px;
             max-width: 100%;
@@ -108,37 +107,40 @@
             width: 100%;
             display: inline-block;
         }
-
     </style>
 </head>
 <body>
     <div class="out">
         <a href="wanted.html">GET OUT</a>
     </div>
-        <div class="time">TIME 60</div>
-        <div class="stage">STAGE 99</div>
-        <div class="wanted">
-            <div class="wanted-image">
-                <img src="../img/zono.png" alt="zono">
-            </div>
-            <div class="wanted-title">WANTED</div>
+    <div class="time">TIME 60</div>
+    <div class="stage">STAGE 99</div>
+    <div class="wanted">
+        <div class="wanted-image">
+            <img src="../img/zono.png" alt="zono">
         </div>
-        <div class="player">
-        <div class="name">
-            <p style="-webkit-text-stroke: 1px #A70F0F">player 1</p>
-            <p style="-webkit-text-stroke: 1px #1511B9">player 2</p>
-            <p style="-webkit-text-stroke: 1px #999903">player 3</p>
-            <p style="-webkit-text-stroke: 1px #28980C">player 4</p>
+        <div class="wanted-title">WANTED</div>
+    </div>
+    <div class="player">
+        <div class="player-entry">
+            <p class="name" style="-webkit-text-stroke: 1px #A70F0F">player 1</p>
+            <p class="score" style="-webkit-text-stroke: 1px #A70F0F">99pt</p>
         </div>
-        <div class="score">
-            <p style="-webkit-text-stroke: 1px #A70F0F">99pt</p>
-            <p style="-webkit-text-stroke: 1px #1511B9">99pt</p>
-            <p style="-webkit-text-stroke: 1px #999903">99pt</p>
-            <p style="-webkit-text-stroke: 1px #28980C">99pt</p>
+        <div class="player-entry">
+            <p class="name" style="-webkit-text-stroke: 1px #1511B9">player 2</p>
+            <p class="score" style="-webkit-text-stroke: 1px #1511B9">99pt</p>
+        </div>
+        <div class="player-entry">
+            <p class="name" style="-webkit-text-stroke: 1px #999903">player 3</p>
+            <p class="score" style="-webkit-text-stroke: 1px #999903">99pt</p>
+        </div>
+        <div class="player-entry">
+            <p class="name" style="-webkit-text-stroke: 1px #28980C">player 4</p>
+            <p class="score" style="-webkit-text-stroke: 1px #28980C">99pt</p>
         </div>
     </div>
-        <div class="wanted_canvas"> <!--キャンバス-->
-            <canvas id="canvas" width="1000" height="610"></canvas>
-        </div>
+    <div class="wanted_canvas">
+        <canvas id="canvas" width="1000" height="610"></canvas>
+    </div>
 </body>
 </html>
