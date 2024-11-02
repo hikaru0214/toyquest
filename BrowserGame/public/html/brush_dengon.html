@@ -45,7 +45,7 @@
     </div>
 
     <script>
-        var data = localStorage.getItem('player_name');
+        var data = sessionStorage.getItem('player_name');
         if(data)document.getElementById('player_name').value = data;
         var player_name = 0;
         var avatar_eye = 0;
@@ -54,7 +54,7 @@
 
         document.getElementById('profile_save').onclick = function(){
             player_name = document.getElementById('player_name').value;
-            localStorage.setItem('player_name',player_name);
+            sessionStorage.setItem('player_name',player_name);
             console.log("player_name set to : "+player_name);
         };
     </script>
