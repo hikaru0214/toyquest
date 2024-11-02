@@ -1,5 +1,20 @@
+
 var socket = io();
 let own_id = "";
+
+const characters = "abcdefghijklmnopqrstuvwxy0123456789";
+function getRandomString(length){ //ランダム文字列
+    var x = "";
+    for(var i = 0;i < length;i++){
+        var uppercase = Math.random()*2;
+        var randomindex = Math.random()*characters.length;
+        var randomcharacter = characters.substring(randomindex,randomindex+1);
+        x+=(uppercase==0) ? randomcharacter : randomcharacter.toUpperCase();
+    }
+    return x;
+}
+
+let player_name = getRandomString(7);
 
 socket.on('connection established',(data)=>{
     console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
