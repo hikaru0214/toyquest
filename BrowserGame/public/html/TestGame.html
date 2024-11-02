@@ -14,13 +14,16 @@
     </style>
 </head>
 <body>
-    <script src="../socket.io/socket.io.js"></script>
 
     <div id="game">
         <canvas id="canvas" width="800" height="600" style="margin: auto;"></canvas>
     </div>
 
     <script type="text/javascript" src="../javascript/gameUtils.js"></script>
+    <script src="../../socket.io/socket.io.js"></script>
+    <script>
+        var socket = io.connect(':7000');
+    </script>
     
 </body>
 </html>
