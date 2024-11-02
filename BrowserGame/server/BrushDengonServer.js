@@ -1,17 +1,12 @@
-const express = require('express');
-const app = express();
-const http = require('http');
-const server= http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
-const path = require('path');
+const options = {
+    cors: {
+        origin: '*',
+    }
+};
 
-app.use(express.static('../public'));
+const io = require("socket.io")(7000,options);
 
-app.get('/', (req, res) => {
-    console.log(path.join(__dirname,'../html/brush_dengon_draw.html'));
-    res.sendFile(path.join(__dirname,'../public/html/brush_dengon_draw.html'));
-});
+const Game = require('./BrushDengonGame.js');
 
 const characters = "abcdefghijklmnopqrstuvwxy0123456789";
 function getRandomString(length){ //ランダム文字列
@@ -24,8 +19,6 @@ function getRandomString(length){ //ランダム文字列
     }
     return x;
 }
-
-const Game = require('./BrushDengonGame.js');
 
 const gamerooms = [];
 
@@ -68,10 +61,6 @@ io.on('connection', (socket) => {
       gamerooms[room].removePlayer(socket.id);
       io.to(room_name).emit("player disconnect",id);
     });
-});
-
-server.listen(7000,()=>{
-    console.log("BrushDengon Listening on port : 7000");
 });
 
 

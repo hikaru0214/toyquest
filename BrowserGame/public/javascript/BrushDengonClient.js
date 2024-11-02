@@ -1,5 +1,5 @@
 
-var socket = io();
+var socket = io.connect('http://52.68.111.88:7000');
 let own_id = "";
 
 const characters = "abcdefghijklmnopqrstuvwxy0123456789";
@@ -14,7 +14,7 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
-let client_name = getRandomString(7);
+let client_name = sessionStorage.getItem('player_name');
 
 socket.on('connection established',(data)=>{
     console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
