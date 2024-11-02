@@ -14,12 +14,12 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
-let player_name = getRandomString(7);
+let client_name = getRandomString(7);
 
 socket.on('connection established',(data)=>{
     console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
     own_id = data.id;
-    var name = player_name;
+    var name = client_name;
     socket.emit('return player data',{name});
 });
 
