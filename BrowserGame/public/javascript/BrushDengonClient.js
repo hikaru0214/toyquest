@@ -41,6 +41,9 @@ socket.on('connection established',(data)=>{
 
 socket.on('player join',(name)=>{
     console.log(name+" joined! say hello!");
+    var scoreboard = document.getElementById("scoreboard");
+    scoreboard.innerHTML += " "+name+"<br>";
+    
 });
 
 const canvas = document.getElementById("canvas");
