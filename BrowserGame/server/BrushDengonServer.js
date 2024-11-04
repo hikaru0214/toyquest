@@ -75,7 +75,9 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
       console.log('user disconnected');
+      io.to(room_name).emit("message to everyone in room",gamerooms[room].getPlayerById(id).name+"が退室しました。");
       gamerooms[room].removePlayer(socket.id);
+      socket.broadcast.to(room_name).emit("game update",gamerooms[room]);
       io.to(room_name).emit("player disconnect",id);
     });
 });
