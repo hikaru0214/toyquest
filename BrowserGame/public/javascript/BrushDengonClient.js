@@ -184,7 +184,8 @@ document.addEventListener('mousedown',function(e){
 
 document.addEventListener('mouseup',function(e){mouse_pressed=false;});
 document.getElementById('textchat').onkeydown = function(event){
-    if(event.key === "Enter")socket.emit("textchat",this.value);
+    if(event.key === "Enter"&&this.value!="")socket.emit("textchat",this.value);
+    this.value = "";
 };
 
 var updateInterval = 1000.0/60.0;
