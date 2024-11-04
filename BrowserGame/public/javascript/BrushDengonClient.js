@@ -28,7 +28,9 @@ socket.on('player join',(data)=>{
     console.log(data.name+" joined! say hello!");
     var scoreboard = document.getElementById("scoreboard");
     clientGame = data.servegame;
-    scoreboard.innerHTML += "<br>"+data.name+"";
+    for(var i = 0;i < clientGame.player_data.length;i++){
+        scoreboard.innerHTML += "<br>"+clientGame.player_data[i].name+"";
+    }
 });
 
 const canvas = document.getElementById("canvas");
