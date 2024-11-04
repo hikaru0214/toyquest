@@ -2,8 +2,6 @@
 var socket = io.connect('http://52.68.111.88:7000');
 let own_id = "";
 
-const Game = require('../public/javascript/BrushDengonGame.js');
-
 const characters = "abcdefghijklmnopqrstuvwxy0123456789";
 function getRandomString(length){ //ランダム文字列
     var x = "";
@@ -24,7 +22,7 @@ function updateScoreBoard(){ //スコアボード更新
         var scoreboard_color = "white";
         var description = "";
         if(clientGame.player_ids[i]===own_id)description+="(あなた)";
-        if(clientGame.getDrawerId()===own_id){
+        if(clientGame.player_ids[clientGame.turn]===own_id){
             scoreboard_color="red";
             description += "(お絵描き中)";
         }
