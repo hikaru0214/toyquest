@@ -20,6 +20,7 @@ function updateScoreBoard(){
     scoreboard.innerHTML = "";
     for(var i = 0;i < clientGame.player_data.length;i++){
         scoreboard.innerHTML += "<br>"+clientGame.player_data[i].name+"";
+        scoreboard.innerHTML += "<br>スコア:"+clientGame.player_data[i].score+"";
     }
 }
 
@@ -39,10 +40,7 @@ socket.on('player join',(name)=>{
 
 socket.on('game init',(game)=>{
     clientGame = game;
-    var scoreboard = document.getElementById("scoreboard");
-    for(var i = 0;i < clientGame.player_data.length;i++){
-        scoreboard.innerHTML += "<br>"+clientGame.player_data[i].name+"";
-    }
+    updateScoreBoard();
 });
 
 socket.on('game update',(game)=>{
@@ -172,10 +170,13 @@ document.addEventListener('mousemove',mouse_move);
 document.addEventListener('mousedown',function(e){
     mouse_pressed=true;
     if(cursor_type=="bucket"){
-        FloodFill(current_mouse_x,current_mouse_y);
     }
 });
+
 document.addEventListener('mouseup',function(e){mouse_pressed=false;});
+document.getElementById('textchat').onkeydown = function(event){
+    if(event.key === "Enter")socket.emit("textchat",this.value);
+};
 
 var updateInterval = 1000.0/60.0;
 setInterval(update,updateInterval);

@@ -39,6 +39,10 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         return -1;
     }
 
+    getPlayerById(player_id){
+        return this.player_data[this.getPlayerIndexById(player_id)];
+    }
+
     removePlayer(player_id){
         var index = this.getPlayerIndexById(player_id);
         if(index!=-1){

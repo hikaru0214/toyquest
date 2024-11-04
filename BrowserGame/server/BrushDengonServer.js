@@ -51,6 +51,11 @@ io.on('connection', (socket) => {
         console.log("player "+data.name+" joined in the room "+room);
     });
 
+    socket.on('textchat',(messsage)=>{
+        var name = gamerooms[room].getPlayerById(id).name;
+        console.log(name+" : "+messsage);
+    });
+
     socket.on("player_draw",(client)=>{
 
     });
