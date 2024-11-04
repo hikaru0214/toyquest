@@ -185,6 +185,7 @@ document.addEventListener('mousedown',function(e){
 document.addEventListener('mouseup',function(e){mouse_pressed=false;});
 document.getElementById('textchat').onkeydown = function(event){
     if(event.key === "Enter"&&this.value!=""){
+        event.preventDefault();
         socket.emit("textchat",this.value);
         this.value = "";
     }
