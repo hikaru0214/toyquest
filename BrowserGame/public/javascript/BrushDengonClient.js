@@ -15,7 +15,7 @@ function getRandomString(length){ //ランダム文字列
 }
 
 let client_name = getCookie('username');
-const clientGame = null;
+let clientGame = null;
 
 socket.on('connection established',(data)=>{
     console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
