@@ -74,6 +74,7 @@ io.on('connection', (socket) => {
         socket.broadcast.to(room_name).emit("player join",data.name);
         socket.emit('game init',gamerooms[room]);
         socket.broadcast.to(room_name).emit("game update",gamerooms[room]);
+        io.to(room_name).emit("message to everyone in room",data.name+"が入室しました！");
         console.log("player "+data.name+" joined in the room "+room);
 
         if(gamerooms[room].getPlayerCount()>=2)startRound(room,socket);

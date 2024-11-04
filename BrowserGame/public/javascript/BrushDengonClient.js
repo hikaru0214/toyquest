@@ -24,7 +24,7 @@ function updateScoreBoard(){ //スコアボード更新
         if(clientGame.player_ids[i]===own_id)description+="(あなた)";
         if(clientGame.player_ids[clientGame.turn]===own_id){
             scoreboard_color="red";
-            description += "(お絵描き中)";
+            //description += "(お絵描き中)";
         }
         scoreboard.innerHTML += "<div style=\"background-color:"+scoreboard_color+";\">";
         scoreboard.innerHTML += "<br>"+clientGame.player_data[i].name+" "+description;
