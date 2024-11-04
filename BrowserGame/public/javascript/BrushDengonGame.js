@@ -53,7 +53,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     getDrawerId(){
-        return this.player_ids[turn];
+        return this.player_ids[this.turn];
     }
 
     getPlayerIndexById(player_id){
