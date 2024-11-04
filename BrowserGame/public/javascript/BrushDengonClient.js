@@ -2,6 +2,8 @@
 var socket = io.connect('http://52.68.111.88:7000');
 let own_id = "";
 
+const Game = require('../public/javascript/BrushDengonGame.js');
+
 const characters = "abcdefghijklmnopqrstuvwxy0123456789";
 function getRandomString(length){ //ランダム文字列
     var x = "";
