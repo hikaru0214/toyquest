@@ -54,6 +54,8 @@ io.on('connection', (socket) => {
     socket.on('textchat',(messsage)=>{
         var name = gamerooms[room].getPlayerById(id).name;
         console.log(name+" : "+messsage);
+
+        io.to(room_name).emit("message to everyone in room");
     });
 
     socket.on("player_draw",(client)=>{
