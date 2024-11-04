@@ -14,23 +14,8 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
-function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-}
-
 let client_name = getCookie('username');
+const clientGame = null;
 
 socket.on('connection established',(data)=>{
     console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
@@ -39,11 +24,11 @@ socket.on('connection established',(data)=>{
     socket.emit('return player data',{name});
 });
 
-socket.on('player join',(name)=>{
-    console.log(name+" joined! say hello!");
+socket.on('player join',(data)=>{
+    console.log(data.name+" joined! say hello!");
     var scoreboard = document.getElementById("scoreboard");
-    scoreboard.innerHTML += " "+name+"<br>";
-    
+    clientGame = data.servegame;
+    scoreboard.innerHTML += "<br>"+data.name+"";
 });
 
 const canvas = document.getElementById("canvas");

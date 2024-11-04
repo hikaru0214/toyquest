@@ -6,7 +6,7 @@ const options = {
 
 const io = require("socket.io")(7000,options);
 
-const Game = require('./BrushDengonGame.js');
+const Game = require('../public/javascript/BrushDengonGame.js');
 
 const characters = "abcdefghijklmnopqrstuvwxy0123456789";
 function getRandomString(length){ //ランダム文字列
@@ -44,11 +44,12 @@ io.on('connection', (socket) => {
 
     socket.on('return player data',(data)=>{
         socket.join(room_name);
+        gamerooms[room].addPlayer(id,initdata);
         var name = data.name;
         var score = 0;
-        var initdata = {name,score};
-        gamerooms[room].addPlayer(id,initdata);
-        io.to(room_name).emit("player join",name);
+        var servegame = gamerooms[room];
+        var initdata = {name,score,servegame};
+        io.to(room_name).emit("player join",initdata);
         console.log("player "+name+" joined in the room "+room);
     });
 
