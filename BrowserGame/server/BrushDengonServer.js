@@ -75,7 +75,7 @@ io.on('connection', (socket) => {
         socket.broadcast.to(room_name).emit("game update",gamerooms[room]);
         console.log("player "+data.name+" joined in the room "+room);
 
-        if(gamerooms[room].getPlayerCount()>=2)startRound();
+        if(gamerooms[room].getPlayerCount()>=2)startRound(room,socket);
     });
 
     socket.on('textchat',(messsage)=>{
