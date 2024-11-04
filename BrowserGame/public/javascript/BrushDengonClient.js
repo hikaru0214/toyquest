@@ -24,15 +24,19 @@ socket.on('connection established',(data)=>{
     socket.emit('return player data',{name});
 });
 
-socket.on('player join',(data)=>{
-    console.log(data.name+" joined! say hello!");
+socket.on('player join',(name)=>{
+    console.log(name+" joined! say hello!");
+});
+
+socket.on('game init',(game)=>{
+    clientGame = game;
     var scoreboard = document.getElementById("scoreboard");
-    /*
-    clientGame = data.servegame;
     for(var i = 0;i < clientGame.player_data.length;i++){
         scoreboard.innerHTML += "<br>"+clientGame.player_data[i].name+"";
     }
-    */
+});
+
+socket.on('game update',(game)=>{
 });
 
 const canvas = document.getElementById("canvas");

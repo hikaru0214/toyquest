@@ -44,13 +44,10 @@ io.on('connection', (socket) => {
 
     socket.on('return player data',(data)=>{
         socket.join(room_name);
-        var name = data.name;
-        var score = 0;
-        var servegame = gamerooms[room];
-        var initdata = {name,score,servegame};
-        gamerooms[room].addPlayer(id,initdata);
-        io.to(room_name).emit("player join",initdata);
-        console.log("player "+name+" joined in the room "+room);
+        gamerooms[room].addPlayer(id,{name:data.name,score:0});
+        io.to(room_name).emit('player_join');
+        socket.emit('game init',gamerooms[room]);
+        console.log("player "+data.name+" joined in the room "+room);
     });
 
     socket.on("player_draw",(client)=>{
