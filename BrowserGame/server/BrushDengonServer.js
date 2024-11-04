@@ -7,18 +7,7 @@ const options = {
 const io = require("socket.io")(7000,options);
 
 const Game = require('../public/javascript/BrushDengonGame.js');
-
-const characters = "abcdefghijklmnopqrstuvwxy0123456789";
-function getRandomString(length){ //ランダム文字列
-    var x = "";
-    for(var i = 0;i < length;i++){
-        var uppercase = Math.random()*2;
-        var randomindex = Math.random()*characters.length;
-        var randomcharacter = characters.substring(randomindex,randomindex+1);
-        x+=(uppercase==0) ? randomcharacter : randomcharacter.toUpperCase();
-    }
-    return x;
-}
+require('../public/javascript/gameUtils.js');
 
 const gamerooms = [];
 
@@ -49,6 +38,17 @@ io.on('connection', (socket) => {
         socket.emit('game init',gamerooms[room]);
         socket.broadcast.to(room_name).emit("game update",gamerooms[room]);
         console.log("player "+data.name+" joined in the room "+room);
+
+        const game = gamerooms[room];
+
+        if(game.state==0){ //待機中で
+            if(game.getPlayerCount()>=2){
+                game.state = 1;
+                var turn = game.turn;
+                var painter = game.getPlayerById(game.player_ids[turn]);
+                io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！"+getRandomString(10));
+            }
+        }
     });
 
     socket.on('textchat',(messsage)=>{
