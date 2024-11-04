@@ -54,7 +54,7 @@ socket.on('message to everyone in room',message=>{
     var item = document.createElement('li');
     item.textContent = message;
     chatlog.appendChild(item);
-    window.scrollTo(0,document.body.scrollHeight);
+    chatlog.scrollTop = chatlog.scrollHeight;
 });
 
 const canvas = document.getElementById("canvas");
