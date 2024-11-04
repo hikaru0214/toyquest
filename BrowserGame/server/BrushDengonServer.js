@@ -43,7 +43,8 @@ function startRound(room,socket){
             game.state = "draw";
             game.turn = 0;
             var turn = game.turn;
-            secretword[room] = game.words[Math.random()*game.words.length];
+            secretword[room] = game.words[(Math.random()*game.words.length)];
+            console.log("next word for room "+room+" is : "+secretword[room]);
             var painter = game.getPlayerById(game.player_ids[turn]);
             io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！");
             //io.to(room_name).emit("get word",getRandomString(secretword[room].length));
@@ -103,7 +104,7 @@ function update(){
     for(var i = 0;i < gamerooms.length;i++){
         var roomname = "room_"+i;
         const game = gamerooms[i];
-        io.to(roomname).emit("update timer",game.getRemainingTime());
+        io.to(roomname).emit("update timer",parseInt(game.getRemainingTime(), 10));
     }
 }
 
