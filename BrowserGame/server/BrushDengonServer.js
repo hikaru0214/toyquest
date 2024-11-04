@@ -46,7 +46,7 @@ function startRound(room,socket){
             secretword[room] = game.words[Math.random()*game.words.length];
             var painter = game.getPlayerById(game.player_ids[turn]);
             io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！");
-            io.to(room_name).emit("get word",getRandomString(secretword[room].length));
+            //io.to(room_name).emit("get word",getRandomString(secretword[room].length));
             io.to(game.getDrawerId()).emit("get word",secretword[room]);
             game.setStartTime();
             socket.broadcast.to(room_name).emit("game update",gamerooms[room]);
