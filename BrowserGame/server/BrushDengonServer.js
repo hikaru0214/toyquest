@@ -43,7 +43,7 @@ function startRound(room,socket){
             game.state = "draw";
             game.turn = 0;
             var turn = game.turn;
-            secretword[room] = game.words[(Math.random()*game.words.length)];
+            secretword[room] = game.words[parseInt((Math.random()*game.words.length), 10)];
             console.log("next word for room "+room+" is : "+secretword[room]);
             var painter = game.getPlayerById(game.player_ids[turn]);
             io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！");
