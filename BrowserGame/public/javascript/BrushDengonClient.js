@@ -20,9 +20,14 @@ function updateScoreBoard(){ //スコアボード更新
     scoreboard.innerHTML = "";
     for(var i = 0;i < clientGame.player_data.length;i++){
         var scoreboard_color = "white";
-        if(clientGame.turn==i&&clientGame.state=="draw")scoreboard_color="red";
+        var description = "";
+        if(clientGame.player_ids[i]===own_id)description+="(あなた)";
+        if(clientGame.getDrawerId()===own_id){
+            scoreboard_color="red";
+            description += "(お絵描き中)";
+        }
         scoreboard.innerHTML += "<div style=\"background-color:"+scoreboard_color+";\">";
-        scoreboard.innerHTML += "<br>"+clientGame.player_data[i].name+"";
+        scoreboard.innerHTML += "<br>"+clientGame.player_data[i].name+" "+description;
         scoreboard.innerHTML += "<br>スコア:"+clientGame.player_data[i].score+"";
         scoreboard.innerHTML += "</div>";
     }
