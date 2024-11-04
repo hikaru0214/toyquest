@@ -3,8 +3,9 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.room_id = room_id;
         this.player_limit = 4; //プレイヤー数制限
         this.time_limit = 60; //時間制限
+        this.draw_start_time = 0;
         this.round = 0; //ラウンドカウンター
-        this.rounds = 0; //ラウンド数
+        this.rounds = 2; //ラウンド数
         this.hints = 2; //ヒント(文字の一つを表示する)
         this.words = [
             "シャワー",
@@ -21,11 +22,19 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         ]; //お題
         this.player_ids = []; //プレイヤーid
         this.player_data = []; //プレイヤー情報、名前(name),スコア (score)
-        this.access = 0; //部屋アクセスタイプ　0(公開) 1(プライベート)
-        this.state = 0; //部屋状態 //0待機中 , 1ラウンド中
+        this.access = "public"; //部屋アクセスタイプ　0(公開) 1(プライベート)
+        this.state = "standby"; //部屋状態 //0待機中 , 1ラウンド中,
         this.turn = 0;
 
         this.paint_history = []; //ペインターが書いている途中でゲッサーが入室した場合ゲッサーにそれまでの絵のデータをおくる
+    }
+
+    setStartTime(){
+        this.draw_start_time = Date.now();
+    }
+
+    getRemainingTime(){
+        return this.time_limit-(Date.now()-this.draw_start_time)/1000;
     }
 
     isFull(){ //満室か
@@ -41,6 +50,10 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             this.player_ids.push(player_id);
             this.player_data.push(player_obj);
         }
+    }
+
+    getDrawerId(){
+        return this.player_ids[turn];
     }
 
     getPlayerIndexById(player_id){

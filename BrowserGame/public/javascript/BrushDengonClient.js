@@ -14,13 +14,17 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
-function updateScoreBoard(){
+function updateScoreBoard(){ //スコアボード更新
     if(!clientGame)return;
     var scoreboard = document.getElementById("scoreboard");
     scoreboard.innerHTML = "";
     for(var i = 0;i < clientGame.player_data.length;i++){
+        var scoreboard_color = "white";
+        if(clientGame.turn==i&&clientGame.state=="draw")scoreboard_color="red";
+        scoreboard.innerHTML += "<div style=\"background-color:"+scoreboard_color+";\">";
         scoreboard.innerHTML += "<br>"+clientGame.player_data[i].name+"";
         scoreboard.innerHTML += "<br>スコア:"+clientGame.player_data[i].score+"";
+        scoreboard.innerHTML += "</div>";
     }
 }
 
@@ -46,6 +50,14 @@ socket.on('game init',(game)=>{
 socket.on('game update',(game)=>{
     clientGame = game;
     updateScoreBoard();
+});
+
+socket.on('update timer',(time)=>{
+    document.getElementById("timer").innerHTML = time;
+});
+
+socket.on("get word",(word)=>{
+    document.getElementById("word").innerHTML = word;
 });
 
 var chatlog = document.getElementById("log");

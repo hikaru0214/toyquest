@@ -21,9 +21,11 @@ function getRandomString(length){ //ランダム文字列
 }
 
 const gamerooms = [];
+const secretword = [];
 
 for(var i = 0;i < 5;i++){
     gamerooms.push(new Game(i));
+    secretword.push("");
 }
 
 function getAvailableRoomIndex(){
@@ -31,6 +33,29 @@ function getAvailableRoomIndex(){
        if(!gamerooms[i].isFull())return i;
     }
     return -1;
+}
+
+function startRound(room,socket){
+    const game = gamerooms[room];
+    const room_name = "room_"+room;
+    if(game.state=="standby"){ //待機中で二人以上になったらゲーム開始
+        if(game.getPlayerCount()>=2){
+            game.state = "draw";
+            game.turn = 0;
+            var turn = game.turn;
+            secretword[room] = game.words[Math.random()*game.words.length];
+            var painter = game.getPlayerById(game.player_ids[turn]);
+            io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！");
+            io.to(room_name).emit("get word",getRandomString(secretword[room].length));
+            io.to(game.getDrawerId()).emit("get word",secretword[room]);
+            game.setStartTime();
+            socket.broadcast.to(room_name).emit("game update",gamerooms[room]);
+        }else{
+            console.log("you need atlease 2 player to start a round in room "+room);
+        }
+    }else{
+        console.log("round already started in room "+room);
+    }
 }
 
 io.on('connection', (socket) => {
@@ -50,16 +75,7 @@ io.on('connection', (socket) => {
         socket.broadcast.to(room_name).emit("game update",gamerooms[room]);
         console.log("player "+data.name+" joined in the room "+room);
 
-        const game = gamerooms[room];
-
-        if(game.state==0){ //待機中で
-            if(game.getPlayerCount()>=2){
-                game.state = 1;
-                var turn = game.turn;
-                var painter = game.getPlayerById(game.player_ids[turn]);
-                io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！");
-            }
-        }
+        if(gameroomsp[room].getPlayerCount()>=2)startRound();
     });
 
     socket.on('textchat',(messsage)=>{
@@ -83,20 +99,13 @@ io.on('connection', (socket) => {
 });
 
 
-var start = Date.now();
-var last = Date.now();
-var timer = 0;
 function update(){
-    var now = Date.now();
-
-    if(Date.now() >= last+1000){
-        last+=1000;
-        timer++;
-        for(var i = 0;i < gamerooms.length;i++){
-            console.log("room_"+i+" players : "+gamerooms[i].getPlayerCount());
-        }
+    for(var i = 0;i < gamerooms.length;i++){
+        var roomname = "room_"+i;
+        const game = gamerooms[i];
+        io.to(roomname).emit("update timer",game.getRemainingTime());
     }
 }
 
-const updateInterval = 1000.0/60.0;
+const updateInterval = 1000.0/30.0;
 setInterval(update,updateInterval);
