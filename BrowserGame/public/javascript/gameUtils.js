@@ -30,22 +30,3 @@ function getCookie(cname) {
     }
     return "";
 }
-
-function getRandomString(length){ //ランダム文字列
-  const characters = "abcdefghijklmnopqrstuvwxy0123456789";
-    var x = "";
-    for(var i = 0;i < length;i++){
-        var uppercase = Math.random()*2;
-        var randomindex = Math.random()*characters.length;
-        var randomcharacter = characters.substring(randomindex,randomindex+1);
-        x+=(uppercase==0) ? randomcharacter : randomcharacter.toUpperCase();
-    }
-    return x;
-}
-
-module.exports = function() { 
-  this.sum = function(a,b) { return a+b };
-  this.multiply = function(a,b) { return a*b };
-  this.getCookie = getCookie;
-  this.getRandomString = getRandomString;
-}
