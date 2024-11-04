@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
         var name = gamerooms[room].getPlayerById(id).name;
         console.log(name+" : "+messsage);
 
-        io.to(room_name).emit("message to everyone in room",messsage);
+        io.to(room_name).emit("message to everyone in room",name+" : "+messsage);
     });
 
     socket.on("player_draw",(client)=>{
