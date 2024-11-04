@@ -14,6 +14,15 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
+function updateScoreBoard(){
+    if(!clientGame)return;
+    var scoreboard = document.getElementById("scoreboard");
+    scoreboard.innerHTML = "";
+    for(var i = 0;i < clientGame.player_data.length;i++){
+        scoreboard.innerHTML += "<br>"+clientGame.player_data[i].name+"";
+    }
+}
+
 let client_name = getCookie('username');
 let clientGame = null;
 
@@ -37,6 +46,8 @@ socket.on('game init',(game)=>{
 });
 
 socket.on('game update',(game)=>{
+    clientGame = game;
+    updateScoreBoard();
 });
 
 const canvas = document.getElementById("canvas");

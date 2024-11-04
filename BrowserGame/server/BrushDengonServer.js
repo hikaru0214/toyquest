@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
     socket.on('return player data',(data)=>{
         socket.join(room_name);
         gamerooms[room].addPlayer(id,{name:data.name,score:0});
-        io.to(room_name).emit('player_join');
+        socket.broadcast.to(room_name).emit("player join",data.name);
         socket.emit('game init',gamerooms[room]);
         console.log("player "+data.name+" joined in the room "+room);
     });
