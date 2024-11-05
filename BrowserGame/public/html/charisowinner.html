@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ゲーム結果画面</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+        }
+        .player-card {
+            border: 2px solid;
+            padding: 70px;
+            width: 160px;
+            text-align: center;
+            font-size: 25px;
+        }
+        .winner {
+            font-size: 40px;
+            font-weight: bold;
+            color: blue;
+        }
+        .player-card.red { border-color: red; }
+        .player-card.blue { border-color: blue; }
+        .player-card.yellow { border-color: yellow; }
+        .player-card.green { border-color: green; }
+        button {
+            margin-top: 50px;
+            padding: 20px 40px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="winner">WINNER</h1>
+    <div class="container">
+        <div class="player-card red">
+            <div>プレイヤー1</div>
+            <div>4位</div>
+            <div>9999m</div>
+            <button onclick="alert('フレンド申請を送りました')">フレンド申請</button>
+        </div>
+        <div class="player-card blue">
+            <div>プレイヤー2</div>
+            <div>1位</div>
+            <div>9999m</div>
+            <button onclick="alert('ゲームを再開します')">もう一度</button>
+            <button onclick="alert('退室します')">退室</button>
+        </div>
+        <div class="player-card yellow">
+            <div>プレイヤー3</div>
+            <div>3位</div>
+            <div>9999m</div>
+            <button onclick="alert('フレンド申請を送りました')">フレンド申請</button>
+        </div>
+        <div class="player-card green">
+            <div>プレイヤー4</div>
+            <div>2位</div>
+            <div>9999m</div>
+            <button onclick="alert('フレンド申請を送りました')">フレンド申請</button>
+        </div>
+    </div>
+</body>
+</html>
