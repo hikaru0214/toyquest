@@ -116,13 +116,16 @@
 </head>
 <body>
 
-    <script src="../socket.io/socket.io.js"></script>
+    <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
 
-    <div id="word_board"><p style="top: 50%;">ミッフィー</p></div> <!-- お題単語表示-->
+    <div id="word_board"><p id="word" style="top: 50%;">ミッフィー</p><p id="timer" style="position: fixed; float:right;"></p></div> <!-- お題単語表示-->
 
     <div id="game_elements"> <!-- ゲーム画面要素(スコアボード、キャンバス、チャット)をまとめるdiv -->
 
-    <div id="scoreboard">スコアボード</div> <!-- スコアボード　-->
+    <div id="scoreboard">
+        スコアボード
+        <br>
+    </div> <!-- スコアボード　-->
 
     <div id="drawing_canvas"> <!--キャンバス-->
         <canvas id="canvas" width="640" height="480"></canvas>
@@ -149,8 +152,8 @@
         </div>
 
         <div id="chat">
-            <div id="log"></div>
-            <input type="text" style="width:90%; height: 18px; margin: 0px;">
+            <ul id="log" style="list-style-type: none; margin: 0; padding: 0;"></ul>
+            <input id="textchat" type="text" autocomplete="off" style="width:90%; height: 18px; margin: 0px;">
         </div>
 
 
@@ -159,10 +162,8 @@
     </div>
 
     <script type="text/javascript" src="../javascript/gameUtils.js"></script>
+    <script type="text/javascript" src="../javascript/BrushDengonGame.js"></script>
     <script type="text/javascript" src="../javascript/BrushDengonClient.js"></script>
-    <script>
-    var socket = io();
-    </script>
     
 </body>
 </html>

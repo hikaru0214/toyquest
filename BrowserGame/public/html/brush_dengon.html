@@ -35,9 +35,46 @@
     <img src="../img/BrushDengon.png" alt="" id="title">
 
     <div id="title_menu">
-    <a href="http://52.68.111.88:7000/"><button>プレイ</button></a>
-    <a href="http://52.68.111.88:7000/newroom"></a><button>部屋作成</button></a>
+    <a href="http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html"><button>プレイ</button></a>
+    <a href="http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html"></a><button>部屋作成</button></a>
     </div>
+
+    <div id="player_profile" style="color: black;">
+        プレイヤー名<input id="player_name" type="text">
+        <button id="profile_save">保存</button>
+    </div>
+
+    <script>
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+        var data = getCookie('username');
+        if(data)document.getElementById('player_name').value = data;
+        var player_name = 0;
+        var avatar_eye = 0;
+        var avatar_mouth = 0;
+        var avatar_color = 0;
+
+        document.getElementById('profile_save').onclick = function(){
+            player_name = document.getElementById('player_name').value;
+            document.cookie = "username="+player_name;
+            console.log("player_name set to : "+player_name);
+        };
+    </script>
     
 </body>
 </html>

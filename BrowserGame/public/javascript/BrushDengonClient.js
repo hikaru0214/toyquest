@@ -1,3 +1,79 @@
+
+var socket = io.connect('http://52.68.111.88:7000');
+let own_id = "";
+
+const characters = "abcdefghijklmnopqrstuvwxy0123456789";
+function getRandomString(length){ //ランダム文字列
+    var x = "";
+    for(var i = 0;i < length;i++){
+        var uppercase = Math.random()*2;
+        var randomindex = Math.random()*characters.length;
+        var randomcharacter = characters.substring(randomindex,randomindex+1);
+        x+=(uppercase==0) ? randomcharacter : randomcharacter.toUpperCase();
+    }
+    return x;
+}
+
+function updateScoreBoard(){ //スコアボード更新
+    if(!clientGame)return;
+    var scoreboard = document.getElementById("scoreboard");
+    scoreboard.innerHTML = "";
+    for(var i = 0;i < clientGame.player_data.length;i++){
+        var scoreboard_color = "white";
+        var description = "";
+        if(clientGame.player_ids[i]===own_id)description+="(あなた)";
+        if(clientGame.player_ids[clientGame.turn]===own_id){
+            scoreboard_color="red";
+            //description += "(お絵描き中)";
+        }
+        scoreboard.innerHTML += "<div style=\"background-color:"+scoreboard_color+";\">";
+        scoreboard.innerHTML += "<br>"+clientGame.player_data[i].name+" "+description;
+        scoreboard.innerHTML += "<br>スコア:"+clientGame.player_data[i].score+"";
+        scoreboard.innerHTML += "</div>";
+    }
+}
+
+let client_name = getCookie('username');
+let clientGame = null;
+
+socket.on('connection established',(data)=>{
+    console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
+    own_id = data.id;
+    var name = client_name;
+    socket.emit('return player data',{name});
+});
+
+socket.on('player join',(name)=>{
+    console.log(name+" joined! say hello!");
+});
+
+socket.on('game init',(game)=>{
+    clientGame = game;
+    updateScoreBoard();
+});
+
+socket.on('game update',(game)=>{
+    clientGame = game;
+    updateScoreBoard();
+});
+
+socket.on('update timer',(time)=>{
+    document.getElementById("timer").innerHTML = time;
+});
+
+socket.on("get word",(word)=>{
+    document.getElementById("word").innerHTML = word;
+});
+
+var chatlog = document.getElementById("log");
+
+socket.on('message to everyone in room',message=>{
+    var item = document.createElement('li');
+    item.textContent = message;
+    chatlog.appendChild(item);
+    chatlog.scrollTop = chatlog.scrollHeight;
+});
+
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 context.imageSmoothingEnabled=false;
@@ -20,7 +96,6 @@ function getClientData(){
     var ly = last_mouse_y;
     const client = [cx,cy,lx,ly,mouse_pressed,paint_color,brush_thickness,cursor_type];
 }
-
 
 context.fillStyle = "white";
 context.fillRect(0,0,canvas.width,canvas.height);
@@ -50,35 +125,8 @@ context.fillRect(0,0,canvas.width,canvas.height);
         context.fillRect(0,0,canvas.width,canvas.height);
     }
 
-    function setPixel(x,y,color){
-        const raster = context.getImageData(0,0,context.canvas.width,context.canvas.height);
-        const index = (x+y*raster.width)*4;
-        raster.data[index] = color[0];
-        raster.data[index+1] = color[1];
-        raster.data[index+2] = color[2];
-        raster.data[index+3] = color[3];
-    }
-
     function colorEqual(color0,color1){
         return color0[0] === color1[0] && color0[1] === color1[1] && color0[2] === color1[2] && color0[3] === color1[3];
-    }
-
-    function fillNeighbor(x,y,targetcolor){
-        var area_color = context.getImageData(x,y,1,1).data;
-        if(colorEqual(area_color,targetcolor)&&!colorEqual(area_color,paint_color)){
-            context.fillStyle = paint_color;
-            context.fillRect(x,y,1,1);
-            setPixel(x,y,paint_color);
-            fillNeighbor(x+1,y,targetcolor);
-            fillNeighbor(x-1,y,targetcolor);
-            fillNeighbor(x,y+1,targetcolor);
-            fillNeighbor(x,y-1,targetcolor);
-        }
-    }
-
-    function FloodFill(mx,my){
-        var target = context.getImageData(mx,my,1,1).data;
-        fillNeighbor(mx,my,target);
     }
 
     let initialized = false;
@@ -148,10 +196,17 @@ document.addEventListener('mousemove',mouse_move);
 document.addEventListener('mousedown',function(e){
     mouse_pressed=true;
     if(cursor_type=="bucket"){
-        FloodFill(current_mouse_x,current_mouse_y);
     }
 });
+
 document.addEventListener('mouseup',function(e){mouse_pressed=false;});
+document.getElementById('textchat').onkeydown = function(event){
+    if(event.key === "Enter"&&this.value!=""){
+        event.preventDefault();
+        socket.emit("textchat",this.value);
+        this.value = "";
+    }
+};
 
 var updateInterval = 1000.0/60.0;
 setInterval(update,updateInterval);

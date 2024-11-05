@@ -20,7 +20,13 @@
     </div>
 
     <script type="text/javascript" src="../javascript/gameUtils.js"></script>
-    <script type="text/javascript" src="../javascript/TestGameClient.js"></script>
+    <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
+    <script>
+        var socket = io.connect('http://52.68.111.88:7000');
+        socket.on("message",message=>{
+            console.log(message);
+        });
+    </script>
     
 </body>
 </html>
