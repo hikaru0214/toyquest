@@ -5,9 +5,9 @@ const { join } = require('node:path');
 // socket.ioをインポート
 const { Server } = require('socket.io');
 // 使うクラス
-const Game = require('../public/javascript/game.js');
-const Player = require('../public/javascript/player.js');
-const Terrain = require('../public/javascript/terrain.js');
+const Game = require('../public/html/js/game.js');
+const Player = require('../public/html/js/player.js');
+const Terrain = require('../public/html/js/terrain.js');
 // クラスインスタンス格納配列
 let game = null;
 // ルームID
