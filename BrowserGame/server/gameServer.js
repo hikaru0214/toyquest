@@ -19,7 +19,9 @@ const server = createServer(app);
 
 const io = new Server(server);
 
-app.use(express.static('public'));
+app.use('/html',express.static('public'));
+
+app.use('/js',express.static('public/javascript'));
 
 // ゲーム画面のルーティング
 app.get('/', (req, res) => {
