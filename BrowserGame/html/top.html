@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Three.js ドットエフェクトの実装</title>
+    <link rel="stylesheet" href="../css/index.css">
     <script type="importmap">
     {
         "imports": {
@@ -27,7 +28,7 @@
     const height = window.innerHeight;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(65, width / height, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({
         canvas: document.querySelector("#myCanvas"),
         antialias: true
@@ -36,7 +37,8 @@
 
     
     // カメラの位置設定
-    camera.position.set(4, 3, 4);
+    camera.position.set(5, 3, 5);
+    
 
     // ライトの追加
     const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
@@ -48,46 +50,31 @@
 
 
 
-    const tex=new THREE.TextureLoader().load("textures/タイトルなし.png")
-    const mateTex = new THREE.MeshBasicMaterial({map: tex});
-    const geometry2 = new THREE.BoxGeometry(3, 1, 2);
-    const cube3 = new THREE.Mesh(geometry2, mateTex);
-    cube3.position.set(4, 0.5, -1);
-    scene.add(cube3);
 
-    const texture=new THREE.TextureLoader().load("textures/タイトルなし.png")
     // GLTFモデルの読み込み。GLTFLoaderのインポートが必要
     let gltf; // GLTFオブジェクトを格納する変数
     let mixer; // アニメーションミキサー
     var model = null;
     const loader = new GLTFLoader();
     loader.load(
-        "models/animatetest4.glb",
+        "../models/ハウス2.glb",
         function (loadedGltf) {
             gltf = loadedGltf;
             model = gltf.scene;
-            model.scale.set(0.1, 0.1, 0.1);
+            model.scale.set(0.02,0.02,0.02);
             model.position.set(0, 1, 0);
             model.rotation.set(0, 0, 0);
             model.traverse(function (node) {
-                if (node.isMesh) {
-                    if (Array.isArray(node.material)) {
-                        node.material.forEach((mat) => {
-                            mat.map = texture;
-                            mat.needsUpdate = true;
-                        });
-                    } else {
-                        node.material.map = texture;
-                        node.material.needsUpdate = true;
-                    }
-                }
+                
             });
             scene.add(model);
             camera.lookAt(model.position);//カメラがモデルに注目するようにする
 
             console.log(gltf.animations.map(clip => clip.name));
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
-            playAnimation('stopmotion'); // アニメーションを再生
+            playAnimation('feet.normal'); // アニメーションを再生
+            playAnimation('leftarm.normal');
+            playAnimation('rightarm.normal');
         },
         undefined,
         function (error) {
@@ -185,7 +172,7 @@
 
     // キーが押された際にフラグを更新。Arrowは矢印(移動)
     window.addEventListener("keydown", (event) => {
-        stopAnimation('stopmotion');//アニメーション停止
+        //stopAnimation('feet.normal');//アニメーション停止
         //playAnimation('Walk'); // アニメーションを再生
         if (event.code === "Space") {
             event.preventDefault();//キーのデフォルトの操作を無効化。ここではスペースキー押下時の下スクロールを制限
@@ -241,7 +228,7 @@
     // キーが離された際にフラグをリセット
     window.addEventListener("keyup", (event) => {
         //stopAnimation('Walk');
-        playAnimation('stopmotion'); // アニメーションを再生
+        playAnimation('feet.normal'); // アニメーションを再生
         if (event.code === "ArrowLeft") {
             isMovingLeft = false;
             event.preventDefault();
@@ -287,11 +274,12 @@
 
     function acitionmix(){
         if(isKey_u){
-            playAnimation('loweraction');
+            stopAnimation('feetrightarm.normal');
+            playAnimation('rightarm.greet');
         }
         if(isKey_i){
-            
-            playAnimation('upperaction');
+            stopAnimation('feet.normal');
+            playAnimation('feet.walk');
         }
     }
 
@@ -463,6 +451,11 @@ function adjustCameraDistance() {
 
 </head>
 <body>
+    <div class="container">
     <canvas id="myCanvas"></canvas>
+    <input type="button" class="button" onclick="location.href='../../Gamese/test1.html'" value="チャリ走"></button>
+    <input type="button" class="button2" value="ブラシ伝言"></button>
+    <input type="button" class="button3" value="あいつを探せ"></button>
+    </div>
 </body>
 </html>

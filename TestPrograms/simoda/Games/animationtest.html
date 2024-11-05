@@ -62,7 +62,7 @@
     var model = null;
     const loader = new GLTFLoader();
     loader.load(
-        "models/animatetest4.glb",
+        "models/animateblend.glb",
         function (loadedGltf) {
             gltf = loadedGltf;
             model = gltf.scene;
@@ -87,7 +87,9 @@
 
             console.log(gltf.animations.map(clip => clip.name));
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
-            playAnimation('stopmotion'); // アニメーションを再生
+            playAnimation('feet.normal'); // アニメーションを再生
+            playAnimation('leftarm.normal');
+            playAnimation('rightarm.normal');
         },
         undefined,
         function (error) {
@@ -185,7 +187,7 @@
 
     // キーが押された際にフラグを更新。Arrowは矢印(移動)
     window.addEventListener("keydown", (event) => {
-        stopAnimation('stopmotion');//アニメーション停止
+        //stopAnimation('feet.normal');//アニメーション停止
         //playAnimation('Walk'); // アニメーションを再生
         if (event.code === "Space") {
             event.preventDefault();//キーのデフォルトの操作を無効化。ここではスペースキー押下時の下スクロールを制限
@@ -241,7 +243,7 @@
     // キーが離された際にフラグをリセット
     window.addEventListener("keyup", (event) => {
         //stopAnimation('Walk');
-        playAnimation('stopmotion'); // アニメーションを再生
+        playAnimation('feet.normal'); // アニメーションを再生
         if (event.code === "ArrowLeft") {
             isMovingLeft = false;
             event.preventDefault();
@@ -287,11 +289,12 @@
 
     function acitionmix(){
         if(isKey_u){
-            playAnimation('loweraction');
+            stopAnimation('feetrightarm.normal');
+            playAnimation('rightarm.greet');
         }
         if(isKey_i){
-            
-            playAnimation('upperaction');
+            stopAnimation('feet.normal');
+            playAnimation('feet.walk');
         }
     }
 
