@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ゲームルーム作成</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #000;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .back-button {
+            display: block;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #000;
+            font-size: 14px;
+        }
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: block;
+        }
+        select, input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .checkbox-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .checkbox-group label {
+            font-size: 14px;
+        }
+        .create-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="#" class="back-button">← BACK</a>
+        <h2>ゲームルーム作成</h2>
+        <form>
+            <label for="participants">参加人数</label>
+            <select id="participants">
+                <option value="2">2人</option>
+                <option value="3">3人</option>
+                <option value="4">4人</option>
+            </select>
+
+            <label for="room-name">ルーム名</label>
+            <input type="text" id="room-name" placeholder="ルーム名を入力">
+
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="room-type" value="public"> 公開部屋</label>
+                <label><input type="checkbox" name="room-type" value="private"> 鍵部屋</label>
+            </div>
+
+            <label for="url">URL</label>
+            <input type="text" id="url" placeholder="URLを入力">
+
+            <button type="submit" class="create-button">作成</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ゲームルーム</title>
+    <style>
+        body {
+            background-image:url(../img/chariwait.png);
+            background-size:cover;/*全画面*/
+            background-attachment: fixed;         /* 固定 */
+            background-position: center center;   /* 縦横中央 */
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+        }
+        .back-button a{
+            text-decoration: none;
+        }
+        h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .player-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .player-1 { border-color: red; color: white;-webkit-text-stroke:1px red; }
+        .player-2 { border-color: blue; color: white;-webkit-text-stroke:1px blue; }
+        .player-3 { border-color: yellow; color: white;-webkit-text-stroke:1px yellow; }
+        .player-4 { border-color: green; color: white;-webkit-text-stroke:1px green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="#" class="back-button">← BACK</a>
+        <h2>ルーム1111111</h2>
+
+        <div class="player-box player-1">
+            <span>プレイヤー1</span>
+            <span>名前</span>
+        </div>
+        <div class="player-box player-2">
+            <span>プレイヤー2</span>
+            <span>名前</span>
+        </div>
+        <div class="player-box player-3">
+            <span>プレイヤー3</span>
+            <span>名前</span>
+        </div>
+        <div class="player-box player-4">
+            <span>プレイヤー4</span>
+            <span>名前</span>
+        </div>
+
+        <button class="start-button">スタート</button>
+    </div>
+</body>
+</html>
