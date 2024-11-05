@@ -23,7 +23,7 @@ app.use(express.static('public'));
 
 // ゲーム画面のルーティング
 app.get('/', (req, res) => {
-    res.sendFile(join(__dirname, '../public/bicycleRunning.html'));
+    res.sendFile(join(__dirname, '../public/html/bicycleRunning.html'));
 });
 
 io.on('connection', (socket) => {
