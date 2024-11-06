@@ -1,5 +1,3 @@
-const Game = require("./BrushDengonGame");
-
 var socket = io.connect('http://52.68.111.88:7000');
 let own_id = "";
 
