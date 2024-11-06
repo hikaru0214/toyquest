@@ -89,7 +89,7 @@ io.on('connection', (socket) => {
 
     socket.on("client draw",(data)=>{
         if(gamerooms[room].getGameState()=="standby"||gamerooms[room].isDrawing(id)){
-            socket.broadcast.to(room_name).emit("draw relay",data);
+            io.broadcast.to(room_name).emit("draw relay",data);
             console.log("relaying drawing to clients!");
         }
     });
