@@ -45,7 +45,7 @@ function startRound(room,socket){
             var turn = game.turn;
             secretword[room] = game.words[parseInt((Math.random()*game.words.length), 10)];
             console.log("next word for room "+room+" is : "+secretword[room]);
-            var painter = game.getPlayerById(game.player_ids[turn]);
+            var painter = game.getPlayerById(game.getDrawerId());
             io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！");
             io.to(room_name).emit("get word",getRandomString(secretword[room].length));
             io.to(game.getDrawerId()).emit("get word",secretword[room]);
