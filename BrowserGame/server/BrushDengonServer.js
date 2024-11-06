@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
         socket.join(room_name);
         gamerooms[room].addPlayer(id,{name:data.name,score:0});
         socket.broadcast.to(room_name).emit("player join",data.name);
-        socket.emit('game init',gamerooms[room]);
+        socket.emit('game init',JSON.stringify(gamerooms[room]));
         socket.broadcast.to(room_name).emit("game update",JSON.stringify(gamerooms[room]));
         io.to(room_name).emit("message to everyone in room",data.name+"が入室しました！");
         console.log("player "+data.name+" joined in the room "+room);
@@ -95,7 +95,7 @@ io.on('connection', (socket) => {
       console.log('user disconnected');
       io.to(room_name).emit("message to everyone in room",gamerooms[room].getPlayerById(id).name+"が退室しました。");
       gamerooms[room].removePlayer(socket.id);
-      socket.broadcast.to(room_name).emit("game update",gamerooms[room]);
+      socket.broadcast.to(room_name).emit("game update",JSON.stringify(gamerooms[room]));
       io.to(room_name).emit("player disconnect",id);
     });
 });
