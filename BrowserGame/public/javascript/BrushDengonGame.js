@@ -57,6 +57,14 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         return false;
     }
 
+    getDrawerId(){
+        return this.player_ids[this.turn];
+    }
+
+    getPlayerByIndex(index){
+        return this.player_data[index];
+    }
+
     getPlayerIndexById(player_id){
         for(var i = 0;i < this.player_ids.length;i++){
             if(this.player_ids[i]===player_id){
@@ -64,10 +72,6 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             }
         }
         return -1;
-    }
-
-    getPlayerById(player_id){
-        return this.player_data[this.getPlayerIndexById(player_id)];
     }
 
     removePlayer(player_id){
