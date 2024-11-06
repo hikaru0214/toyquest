@@ -221,8 +221,8 @@ socket.on("draw relay",(data)=>{
     context.lineWidth = data.brush_thickness;
 
     context.beginPath();
-    context.moveTo(data.last_mouse_x,data.last_mouse_y);
-    context.lineTo(data.current_mouse_x,data.current_mouse_y);
+    context.moveTo(data.lx,data.ly);
+    context.lineTo(data.cx,data.cy);
     context.stroke();
 });
 
