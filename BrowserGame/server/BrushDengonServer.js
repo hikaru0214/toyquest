@@ -87,8 +87,10 @@ io.on('connection', (socket) => {
         io.to(room_name).emit("message to everyone in room",name+" : "+messsage);
     });
 
-    socket.on("player_draw",(client)=>{
-
+    socket.on("client draw",(data)=>{
+        if(gamerooms[room].getGameState()=="standby"||gamerooms[room].isDrawing(id)){
+            socket.broadcast.to(room_name).emit("draw relay",data);
+        }
     });
 
     socket.on('disconnect', () => {

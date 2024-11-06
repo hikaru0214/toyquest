@@ -74,7 +74,7 @@ socket.on('game update',(game)=>{
     updateScoreBoard();
     switch(clientGame.state){
         case "standby":
-            showPalette(true);
+            showPalette(false);
             break;
         case "draw":
             showPalette(clientGame.isDrawing(own_id));
@@ -207,17 +207,24 @@ function mouse_move(e){
     current_mouse_x = e.clientX-rect.x;
     current_mouse_y = e.clientY-rect.y;
 
-    context.lineCap = "round";
-  context.strokeStyle = paint_color;
-  context.lineWidth = brush_thickness;
-
   if(mouse_pressed&&cursor_type=="brush"){
-  context.beginPath();
-  context.moveTo(last_mouse_x,last_mouse_y);
-  context.lineTo(current_mouse_x,current_mouse_y);
-  context.stroke();
+    if(clientGame.isDrawing(own_id)||clientGame.getGameState()==="standby"){
+        socket.emit("client draw",getClientData());
+    }
   }
 }
+
+socket.on("draw relay",(data)=>{
+
+    context.lineCap = "round";
+    context.strokeStyle = data.paint_color;
+    context.lineWidth = data.brush_thickness;
+
+    context.beginPath();
+    context.moveTo(data.last_mouse_x,data.last_mouse_y);
+    context.lineTo(data.current_mouse_x,data.current_mouse_y);
+    context.stroke();
+});
 
 document.addEventListener('mousemove',mouse_move);
 document.addEventListener('mousedown',function(e){

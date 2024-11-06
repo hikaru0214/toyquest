@@ -53,7 +53,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     isDrawing(id){
-        if(this.player_ids[this.turn]==id)return true;
+        if(this.player_ids[this.turn]===id)return true;
         return false;
     }
 
@@ -76,6 +76,10 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             }
         }
         return -1;
+    }
+
+    getGameState(){
+        return this.turn;
     }
 
     removePlayer(player_id){
