@@ -6,7 +6,7 @@
     <title>ルーム選択画面</title>
     <style>
         body {
-            background-image:url(../img/room.jpg);
+            background-image:url(../img/wanted_top.jpg);
             background-size:cover;/*全画面*/
             background-attachment: fixed;         /* 固定 */
             background-position: center center;   /* 縦横中央 */
@@ -15,39 +15,40 @@
             align-items: center;
         }
         .container {
-            width: 80%;
+            width: 65%;
         }
-        .title {
+        h1 {
             top:30px;
-            font-size: 34px;
+            font-size: 32px;
             color:white;
-            -webkit-text-stroke: 0.6px black;
             text-align: center;
             margin-bottom: 20px;
         }
         .search-bar {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .search-bar input[type="text"] {
             padding: 5px;
-            font-size: 16px;
-            width: 70%;
+            font-size: 17px;
+            width: 60%;
             border-radius: 5px;
             border: none;
+            margin-left: 20px;
         }
         .search-bar button {
             padding: 5px 10px;
-            font-size: 16px;
-            background-color: #333;
+            font-size: 17px;
+            background-color: #2E8B57;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-left: 10px;
+            margin-left: 3px;
         }
         .room-list {
+            font-size:17px;
             width: 100%;
             border-spacing: 0;
         }
@@ -57,30 +58,29 @@
             border-bottom: 1px solid #555;
         }
         .room-list th {
-            background-color: #222;
-            color: red;
+            background-color: rgba(200, 190, 4, 0.778);
+            color: #0000FF;
         }
         .room-list td {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.144);
         }
         .room-list .join-button {
-            color: red;
+            color: #c40303;
             font-weight: bold;
             cursor: pointer;
         }
         .lock-icon {
             margin-right: 5px;
-            color: yellow;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="title">ルームを選択してください</div>
+        <h1>ルームを選択してください</h1>
         <div class="search-bar">
-            <button>作成</button>
-            <input type="text" placeholder="ルーム番号を入力">
-            <button>🔍</button>
+            <button class="create" onclick="window.location.href='wanted_createroom.html';">ルーム作成</button>
+            <input type="text" class="room-number" placeholder="ルーム番号を入力">
+            <button class="search">🔍</button>
         </div>
         <table class="room-list">
             <thead>
