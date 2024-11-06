@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ルーム作成</title>
+    <style>
+        body {
+            background-image: url('jail_background.jpg'); /* Replace with your background image path */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.6); /* Dark overlay for readability */
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 1em;
+            color: #ff4b4b;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: none;
+            box-sizing: border-box;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            color: #ff4b4b;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            background-color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ルームを作成してください</h1>
+        
+        <div class="form-group">
+            <label for="points">勝利ポイント</label>
+            <input type="number" id="points" placeholder="1〜99" min="1" max="99">
+        </div>
+        
+        <div class="form-group">
+            <label for="players">参加人数</label>
+            <select id="players">
+                <option>2人</option>
+                <option>3人</option>
+                <option>4人</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="room-number">ルーム番号</label>
+            <input type="text" id="room-number" placeholder="ルーム番号を入力">
+        </div>
+        
+        <div class="checkbox-group">
+            <input type="checkbox" id="set-password">
+            <label for="set-password">パスワードを設定する</label>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">パスワード</label>
+            <input type="text" id="password" placeholder="パスワードを入力">
+        </div>
+        
+        <button class="button">作成</button>
+    </div>
+</body>
+</html>

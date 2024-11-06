@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>wanted_multi</title>
+    <title>wanted_single</title>
     <style>
         body {
-            background-image: url(../img/ori.jpg);
+            background-image: url(../img/wanted_top.jpg);
             background-size: cover; /* Full screen */
             background-attachment: fixed; /* Fixed */
             background-position: center center; /* Centered vertically and horizontally */
@@ -24,29 +24,26 @@
         .time {
             position: absolute;
             top: 40px;
-            left: 150px;
-            font-size: 60px;
-            font-family: 'Garamond';
-            -webkit-text-stroke: 0.3px black;
-            color: #8f8d04;
+            left: 155px;
+            font-size: 46px;
+            color: rgb(205, 205, 2);
         }
         .stage {
             position: absolute;
             top: 10px;
             right: 510px;
             font-size: 44px;
-            font-family: 'Garamond';
-            -webkit-text-stroke: 0.3px white;
             color: black;
         }
         .wanted {
             position: absolute;
             left: 100px;
-            top: 110px;
-            width: 300px;
-            height: 350px;
-            background-color: white;
+            top: 115px;
+            width: 290px;
+            height: 300px;
+            background-color: black;
             color: black;
+            -webkit-text-stroke: 0.1px white;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -55,18 +52,17 @@
         .wanted-image {
             width: 90%;
             height: 80%;
-            background-color: black;
+            background-color: white;
             margin-top: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .wanted-image img {
-            width: 280px;
-            height: 260px;
+            width: 230px;
+            height: 230px;
         }
         .wanted-title {
-            -webkit-text-stroke: 0.3px rgb(106, 0, 0);
             font-size: 34px;
             font-family: 'Papyrus';
             font-weight: bold;
@@ -74,21 +70,22 @@
         }
         .player {
             position: absolute;
-            top: 450px;
+            top: 420px;
             left:110px;
-            font-size: 28px;
-            color: black;
+            -webkit-text-stroke: 0px black;
+            
         }
         .player-entry {
             display: flex;
             align-items: center;
-            margin-top: 1px;
+            margin-top: 5px;
         }
         .name {
-            margin-right: 35px; /* Space between name and score */
+            font-size:30px;
+            margin-right: 35px;
         }
         .score {
-            font-size: 24px;
+            font-size: 36px;
         }
         .wanted_canvas {
             position: absolute;
@@ -99,8 +96,8 @@
             width: auto;
             display: inline-block;
             vertical-align: top;
-            background-color: black;
-            border: 1px solid white;
+            background-color: white;
+            border: 3px solid black;
             margin: 5px;
         }
         .wanted_canvas canvas {
@@ -115,7 +112,7 @@
 </head>
 <body>
     <div class="out">
-        <a href="wanted.html">GET OUT</a>
+        <a href="wanted_top.html">GET OUT</a>
     </div>
     <div class="time">TIME 60</div>
     <div class="stage">STAGE 99</div>
@@ -127,22 +124,23 @@
     </div>
     <div class="player">
         <div class="player-entry">
-            <p class="name" style="-webkit-text-stroke: 1px #A70F0F">player 1</p>
-            <p class="score" style="-webkit-text-stroke: 1px #A70F0F">99pt</p>
+            <div class="name" style="color: #A70F0F">player 1</div>
+            <div class="score" style="color:  #A70F0F">99pt</div>
         </div>
         <div class="player-entry">
-            <p class="name" style="-webkit-text-stroke: 1px #1511B9">player 2</p>
-            <p class="score" style="-webkit-text-stroke: 1px #1511B9">99pt</p>
+            <div class="name" style="color: #1511B9">player 2</div>
+            <div class="score" style="color: #1511B9">99pt</div>
+        </div>
+         <div class="player-entry">
+            <div class="name" style="color: #b8b83b">player 3</div>
+            <div class="score" style="color: #999903">99pt</div>
         </div>
         <div class="player-entry">
-            <p class="name" style="-webkit-text-stroke: 1px #999903">player 3</p>
-            <p class="score" style="-webkit-text-stroke: 1px #999903">99pt</p>
-        </div>
-        <div class="player-entry">
-            <p class="name" style="-webkit-text-stroke: 1px #28980C">player 4</p>
-            <p class="score" style="-webkit-text-stroke: 1px #28980C">99pt</p>
+            <div class="name" style="color: #3aac6b">player 4</div>
+            <div class="score" style="color: #28980C">99pt</div>
         </div>
     </div>
+
     <div class="wanted_canvas">
         <canvas id="canvas" width="1000" height="610"></canvas>
     </div>

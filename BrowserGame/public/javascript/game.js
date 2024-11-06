@@ -16,7 +16,7 @@ class Game{
     rect(){
         // 補正量を算出
         this.xOffset = this.player[0].x - 40;
-        console.log(this.xOffset)
+        // console.log(this.xOffset)
     }
 
     // プレイヤーの初期設定
