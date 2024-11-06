@@ -70,7 +70,7 @@ io.on('connection', (socket) => {
     // サーバー側で変更を行い、クライアントに返す
     function onUpdateFrame(){
         // プレイヤーの移動
-        // game.proceedProcess();
+        game.proceedProcess();
         // xOffsetを更新
         game.rect();
         // 毎フレームスクロールごとの足場情報の更新
