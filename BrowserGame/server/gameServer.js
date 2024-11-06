@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
         game.initPlayer(socket.id, Player);
 
         // 参加人数上限
-        if(numClients == 0){
+        if(numClients == 4){
             // 超えたらゲーム開始
             game.isStartFlg = true;
             // サーバー側では60Hz間隔で更新
