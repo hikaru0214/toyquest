@@ -17,23 +17,59 @@
         .player-card {
             border: 2px solid;
             padding: 70px;
-            width: 160px;
+            width: 200px;
             text-align: center;
-            font-size: 25px;
+            font-size: 30px;
+           
         }
         .winner {
             font-size: 40px;
             font-weight: bold;
             color: blue;
         }
-        .player-card.red { border-color: red; }
-        .player-card.blue { border-color: blue; }
-        .player-card.yellow { border-color: yellow; }
-        .player-card.green { border-color: green; }
-        button {
+        .player-card.red { 
+            border-color: red;
+            color: red;
+        }
+        .player-card.blue {
+             border-color: blue;
+             color: blue;
+        }
+        .player-card.yellow { 
+            border-color: yellow; 
+            color: yellow;
+        }
+        .player-card.green { 
+            border-color: green; 
+            color: green;
+        }
+        a.btn {
             margin-top: 50px;
             padding: 20px 40px;
             font-size: 16px;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid #000000;
+            background: #000000;
+            color: #fff;
+            border-radius: 5px;
+            transition: 0.5s;
+            animation: move_a 2s infinite;
+        }
+        @keyframes move_a {
+            0% {transform: translate(0px, 4px);}
+            5% {transform: translate(0px, -4px);}
+            10% {transform: translate(0px, 4px);}
+            15% {transform: translate(0px, -4px);}
+            20% {transform: translate(0px, 4px);}
+            25% {transform: translate(0px, -4px);}
+            30% {transform: translate(0px, 0px);}
+        }
+        a.btn:hover {
+            color: #000000;
+            background: #fff;
         }
     </style>
 </head>
@@ -44,26 +80,26 @@
             <div>プレイヤー1</div>
             <div>4位</div>
             <div>9999m</div>
-            <button onclick="alert('フレンド申請を送りました')">フレンド申請</button>
+            <a href=""class="btn"  onclick="alert('フレンド申請を送りました')">フレンド申請</a>
         </div>
         <div class="player-card blue">
             <div>プレイヤー2</div>
             <div>1位</div>
             <div>9999m</div>
-            <button onclick="alert('ゲームを再開します')">もう一度</button>
-            <button onclick="alert('退室します')">退室</button>
+            <a href=""class="btn" onclick="alert('ゲームを再開します')">もう一度</a>
+            <a href=""class="btn" onclick="alert('退室します')">退室</a>
         </div>
         <div class="player-card yellow">
             <div>プレイヤー3</div>
             <div>3位</div>
             <div>9999m</div>
-            <button onclick="alert('フレンド申請を送りました')">フレンド申請</button>
+            <a href=""class="btn" onclick="alert('フレンド申請を送りました')">フレンド申請</a>
         </div>
         <div class="player-card green">
             <div>プレイヤー4</div>
             <div>2位</div>
             <div>9999m</div>
-            <button onclick="alert('フレンド申請を送りました')">フレンド申請</button>
+            <a href=""class="btn" onclick="alert('フレンド申請を送りました')">フレンド申請</a>
         </div>
     </div>
 </body>
