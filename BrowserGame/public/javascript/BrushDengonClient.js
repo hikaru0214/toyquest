@@ -121,7 +121,7 @@ function getClientData(){
     var cy = current_mouse_y;
     var lx = last_mouse_x;
     var ly = last_mouse_y;
-    const client = [cx,cy,lx,ly,mouse_pressed,paint_color,brush_thickness,cursor_type];
+    const client = {cx,cy,lx,ly,mouse_pressed,paint_color,brush_thickness,cursor_type};
     return client;
 }
 
