@@ -1,3 +1,4 @@
+const Game = require("./BrushDengonGame");
 
 var socket = io.connect('http://52.68.111.88:7000');
 let own_id = "";
@@ -66,7 +67,7 @@ socket.on('player join',(name)=>{
 });
 
 socket.on('game init',(game)=>{
-    clientGame = game;
+    clientGame = receiveObject(game,Game);
     updateScoreBoard();
 });
 
