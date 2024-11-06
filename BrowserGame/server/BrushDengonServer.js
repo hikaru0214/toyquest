@@ -91,6 +91,7 @@ io.on('connection', (socket) => {
         if(gamerooms[room].getGameState()=="standby"||gamerooms[room].isDrawing(id)){
             socket.broadcast.to(room_name).emit("draw relay",data);
         }
+        console.log("drawing received on server : "+data);
     });
 
     socket.on('disconnect', () => {
