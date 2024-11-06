@@ -5,13 +5,15 @@ const { join } = require('node:path');
 // socket.ioをインポート
 const { Server } = require('socket.io');
 // 使うクラス
-const Game = require('../public/html/js/game.js');
-const Player = require('../public/html/js/player.js');
-const Terrain = require('../public/html/js/terrain.js');
+const Game = require('../public/javascript/game.js');
+const Player = require('../public/javascript/player.js');
+const Terrain = require('../public/javascript/terrain.js');
 // クラスインスタンス格納配列
 let game = null;
 // ルームID
 let roomID = null;
+// インターバル識別子
+let intervalId = null;
 // サーバーを作成
 const app = express();
 
@@ -19,7 +21,7 @@ const server = createServer(app);
 
 const io = new Server(server);
 
-app.use(express.static('public'));
+app.use(express.static('../public'));
 
 // ゲーム画面のルーティング
 app.get('/', (req, res) => {
@@ -55,7 +57,7 @@ io.on('connection', (socket) => {
             // 超えたらゲーム開始
             game.isStartFlg = true;
             // サーバー側では60Hz間隔で更新
-            setInterval(() => {onUpdateFrame()}, 1000 / 60);
+            intervalId = setInterval(() => {onUpdateFrame()}, 1000 / 60);
         }
         // Gameインスタンスを送信
         // 新しく参加者が追加されたGameインスタンスを再度送信
@@ -88,6 +90,7 @@ io.on('connection', (socket) => {
 
     socket.on("disconnect", () => {
         socket.leave(roomID);
+        clearInterval(intervalId);
         console.log(socket.id+"が退出")
     });
 
