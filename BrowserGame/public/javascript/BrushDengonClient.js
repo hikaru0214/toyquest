@@ -26,6 +26,8 @@ function updateScoreBoard(){ //スコアボード更新
             scoreboard_color="red";
             //description += "(お絵描き中)";
         }
+
+        console.log("painter id : "+clientGame.player_ids[clientGame.turn]+" your id:"+own_id);
         scoreboard.innerHTML += "<div style=\"background-color:"+scoreboard_color+";\">";
         scoreboard.innerHTML += "<br>"+clientGame.player_data[i].name+" "+description;
         scoreboard.innerHTML += "<br>スコア:"+clientGame.player_data[i].score+"";
@@ -55,6 +57,14 @@ socket.on('game init',(game)=>{
 socket.on('game update',(game)=>{
     clientGame = game;
     updateScoreBoard();
+    switch(clientGame.state){
+        case "standby":
+            break;
+        case "draw":
+            break;
+        default:
+            break;
+    }
 });
 
 socket.on('update timer',(time)=>{
