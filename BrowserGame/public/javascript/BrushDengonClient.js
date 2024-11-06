@@ -215,7 +215,7 @@ function mouse_move(e){
   }
 }
 
-socket.on("draw relay",(data)=>{
+socket.on("draw relay",function(data){
     console.log("drawing received on client : "+data);
     context.lineCap = "round";
     context.strokeStyle = data.paint_color;
@@ -225,6 +225,7 @@ socket.on("draw relay",(data)=>{
     context.moveTo(data.lx,data.ly);
     context.lineTo(data.cx,data.cy);
     context.stroke();
+
 });
 
 document.addEventListener('mousemove',mouse_move);
