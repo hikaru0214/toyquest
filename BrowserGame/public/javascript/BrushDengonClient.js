@@ -1,3 +1,4 @@
+const Game = require("./BrushDengonGame");
 
 var socket = io.connect('http://52.68.111.88:7000');
 let own_id = "";
@@ -12,6 +13,15 @@ function getRandomString(length){ //ランダム文字列
         x+=(uppercase==0) ? randomcharacter : randomcharacter.toUpperCase();
     }
     return x;
+}
+
+function receiveObject(obj,ObjClass){
+    const received = JSON.parse(obj);
+    const newobj = new ObjClass;
+    for(const key in received){
+        newobj[key] = received[key];
+    }
+    return newobj;
 }
 
 function showPalette(toggle){
@@ -62,7 +72,7 @@ socket.on('game init',(game)=>{
 });
 
 socket.on('game update',(game)=>{
-    clientGame = game;
+    clientGame = receiveObject(game,Game);
     updateScoreBoard();
     switch(clientGame.state){
         case "standby":
