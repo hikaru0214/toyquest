@@ -14,6 +14,13 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
+function showPalette(toggle){
+
+    var palette = document.getElementById("palette");
+    palette.style.display = toggle ? "block" : "none";
+
+}
+
 function updateScoreBoard(){ //スコアボード更新
     if(!clientGame)return;
     var scoreboard = document.getElementById("scoreboard");
@@ -22,7 +29,7 @@ function updateScoreBoard(){ //スコアボード更新
         var scoreboard_color = "white";
         var description = "";
         if(clientGame.player_ids[i]===own_id)description+="(あなた)";
-        if(clientGame.player_ids[clientGame.turn]===own_id){
+        if(clientGame.isDrawing(own_id)){
             scoreboard_color="red";
             //description += "(お絵描き中)";
         }
@@ -59,8 +66,10 @@ socket.on('game update',(game)=>{
     updateScoreBoard();
     switch(clientGame.state){
         case "standby":
+            showPalette(true);
             break;
         case "draw":
+            showPalette(clientGame.isDrawing(own_id));
             break;
         default:
             break;

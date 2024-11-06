@@ -52,8 +52,9 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         }
     }
 
-    getDrawerId(){
-        return this.player_ids[this.turn];
+    isDrawing(id){
+        if(this.player_ids[this.turn]==id)return true;
+        return false;
     }
 
     getPlayerIndexById(player_id){
