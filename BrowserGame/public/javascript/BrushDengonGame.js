@@ -65,6 +65,10 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         return this.player_data[index];
     }
 
+    getPlayerById(id){
+        return this.player_data[this.getPlayerIndexById(id)];
+    }
+
     getPlayerIndexById(player_id){
         for(var i = 0;i < this.player_ids.length;i++){
             if(this.player_ids[i]===player_id){
