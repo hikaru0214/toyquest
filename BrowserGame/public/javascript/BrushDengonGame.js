@@ -61,6 +61,10 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         return this.player_ids[this.turn];
     }
 
+    getPlayerIdByIndex(index){
+        return this.player_ids[index];
+    }
+
     getPlayerByIndex(index){
         return this.player_data[index];
     }

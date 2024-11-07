@@ -38,7 +38,7 @@ function updateScoreBoard(){ //スコアボード更新
         var scoreboard_color = "white";
         var description = "";
         if(clientGame.player_ids[i]===own_id)description+="(あなた)";
-        if(clientGame.isDrawing(own_id)){
+        if(clientGame.isDrawing(clientGame.getPlayerIdByIndex(i))){
             scoreboard_color="red";
             description += "(お絵描き中)";
         }
@@ -86,6 +86,7 @@ socket.on('game update',(game)=>{
 
 socket.on('update timer',(time)=>{
     document.getElementById("timer").innerHTML = time;
+    updateScoreBoard();
 });
 
 socket.on("get word",(word)=>{
@@ -182,7 +183,7 @@ context.fillRect(0,0,canvas.width,canvas.height);
             cursor_type = "brush";
         }
         document.getElementById("clear").onclick = function(){
-            clear();
+            socket.emit("clear canvas");
         }
         initialized = true;
     }
@@ -226,6 +227,10 @@ socket.on("draw relay",function(data){
     context.lineTo(data.cx,data.cy);
     context.stroke();
 
+});
+
+socket.on("clear canvas",function(){
+    clear();
 });
 
 document.addEventListener('mousemove',mouse_move);

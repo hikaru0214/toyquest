@@ -20,8 +20,29 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
+function hiddenWord(str){
+    const x = "";
+    const arr = Array.from(str);
+    for(var i = 0;i < str.length;i++){
+        x+=(arr[i]!=" ")?"_":" ";
+    }
+    return x;
+}
+
+function revealAndMergeLetter(origin,hinted){
+    const index = parseInt(Math.random()*origin.length);
+    const x = 0;
+    const org_arr = Array.from(origin);
+    const hnt_arr = Array.from(hinted);
+    for(var i = 0;i < origin.length;i++){
+        x+=i!=index?hnt_arr[i]:org_arr[index];
+    }
+    return x;
+}
+
 const gamerooms = [];
 const secretword = [];
+const wordhint = [];
 
 for(var i = 0;i < 5;i++){
     gamerooms.push(new Game(i));
@@ -41,7 +62,6 @@ function startRound(room,socket){
     if(game.state=="standby"){ //待機中で二人以上になったらゲーム開始
         if(game.getPlayerCount()>=2){
             game.state = "draw";
-            game.turn = 0;
             var turn = game.turn;
             secretword[room] = game.words[parseInt((Math.random()*game.words.length), 10)];
             console.log("next word for room "+room+" is : "+secretword[room]);
@@ -56,6 +76,22 @@ function startRound(room,socket){
         }
     }else{
         console.log("round already started in room "+room);
+    }
+}
+
+function nextTurn(room){
+    const game = gamerooms[room];
+    const room_name = "room_"+room;
+    if(game.state=="draw"){
+        game.turn++;
+        game.turn%=game.getPlayerCount();
+        secretword[room] = game.words[parseInt((Math.random()*game.words.length), 10)];
+        console.log("next word for room "+room+" is : "+secretword[room]);
+        var painter = game.getPlayerById(game.getDrawerId());
+        io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！");
+        io.to(room_name).emit("get word",getRandomString(secretword[room].length));
+        io.to(game.getDrawerId()).emit("get word",secretword[room]);
+        game.setStartTime();
     }
 }
 
@@ -94,6 +130,12 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on("clear canvas",(data)=>{
+        if(gamerooms[room].getGameState()=="standby"||gamerooms[room].isDrawing(id)){
+            io.to(room_name).emit("clear canvas");
+        }
+    });
+
     socket.on('disconnect', () => {
       console.log('user disconnected');
       io.to(room_name).emit("message to everyone in room",gamerooms[room].getPlayerById(id).name+"が退室しました。");
@@ -108,7 +150,9 @@ function update(){
     for(var i = 0;i < gamerooms.length;i++){
         var roomname = "room_"+i;
         const game = gamerooms[i];
-        io.to(roomname).emit("update timer",parseInt(game.getRemainingTime(), 10));
+        var remainingtime = parseInt(game.getRemainingTime(), 10);
+        io.to(roomname).emit("update timer",remainingtime);
+        if(remainingtime<=0)nextTurn(i);
     }
 }
 
