@@ -157,6 +157,7 @@ function update(){
         const game = gamerooms[i];
         var remainingtime = parseInt(game.getRemainingTime(), 10);
         io.to(roomname).emit("update timer",remainingtime);
+        socket.broadcast.to(room_name).emit("game update",JSON.stringify(game));
         if(remainingtime<=0)nextTurn(i);
     }
 }
