@@ -74,7 +74,7 @@ socket.on('game update',(game)=>{
     updateScoreBoard();
     switch(clientGame.state){
         case "standby":
-            showPalette(false);
+            showPalette(true);
             break;
         case "draw":
             showPalette(clientGame.isDrawing(own_id));
@@ -210,9 +210,12 @@ function mouse_move(e){
     current_mouse_y = e.clientY-rect.y;
 
   if(mouse_pressed&&cursor_type=="brush"){
+    socket.emit("client draw",getClientData());
+    /*
     if(clientGame.isDrawing(own_id)||clientGame.getGameState()=="standby"){
         socket.emit("client draw",getClientData());
     }
+    */
   }
 }
 

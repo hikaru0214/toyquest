@@ -126,10 +126,13 @@ io.on('connection', (socket) => {
     });
 
     socket.on("client draw",(data)=>{
+        io.to(room_name).emit("draw relay",data);
+        /*
         if(gamerooms[room].getGameState()=="standby"||gamerooms[room].isDrawing(id)){
             io.to(room_name).emit("draw relay",data);
             console.log("relaying drawing to clients!");
         }
+            */
     });
 
     socket.on("clear canvas",(data)=>{
