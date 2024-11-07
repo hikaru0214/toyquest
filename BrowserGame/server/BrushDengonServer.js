@@ -92,6 +92,8 @@ function nextTurn(room){
         io.to(room_name).emit("get word",getRandomString(secretword[room].length));
         io.to(game.getDrawerId()).emit("get word",secretword[room]);
         game.setStartTime();
+        console.log("game turn in room "+room+" is "+game.turn);
+        io.to(room_name).emit("clear canvas");
     }
 }
 
