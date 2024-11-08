@@ -38,7 +38,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         }else if(this.getRemainingTime()<=0){
 
             if(this.state=="round"){
-                var nextword = nextTurn(io);
+                var nextword = this.nextTurn(io);
                 return {instruction:"setword",word:nextword};
             }
 
