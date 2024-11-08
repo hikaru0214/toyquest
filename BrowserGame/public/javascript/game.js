@@ -1,5 +1,7 @@
 class Game{
-    constructor(){
+    constructor(roomId){
+        // ゲームルームのID
+        this.roomID = roomId;
         // 基準値からの差分を格納
         this.xOffset = 0;
         // プレイヤークラスを配列に格納
@@ -10,14 +12,11 @@ class Game{
         this.gravity = 0.8;
         // ゲーム開始フラグ
         this.isStartFlg = false;
+        // インターバル識別子
+        this.intervalId = null;
     }
 
-    // 描画する時にキャラクター以外のオブジェクトをその差分分動かす
-    rect(){
-        // 補正量を算出
-        this.xOffset = this.player[0].x - 40;
-        // console.log(this.xOffset)
-    }
+    
 
     // プレイヤーの初期設定
     initPlayer(socketID, Player){
@@ -31,15 +30,19 @@ class Game{
         }
     }
 
-    // スクロールのための描画位置設定
-    scrollProcess(Terrain){
-        // 足場描画開始地点
-        let startX = this.getInitRectPoint();
-        // 毎フレームごとに足場管理
-        this.terrainManage(Terrain, startX);
-        // 足場情報の更新
-        this.onUpdateTerrain(startX);
-    } 
+    onUpdateFrame(Terrain, io){
+        // プレイヤーの移動
+        this.proceedProcess();
+        // xOffsetを更新
+        this.rect();
+        // 毎フレームスクロールごとの足場情報の更新
+        this.scrollProcess(Terrain);
+        // 自由落下判定
+        this.fallProcess();
+
+        // 更新したGameインスタンスをクライアント側に送信
+        io.to(this.roomID).emit("Update-Entity", this);
+    }
 
     // プレイヤーの移動
     proceedProcess(){
@@ -49,12 +52,20 @@ class Game{
         }
     }
 
-    // ジャンプ処理
-    jumpProcess(opePlayer, keyState){
-        // ジャンプしたプレイヤーを探す
-        const playerIndex = this.player.findIndex(player => player.socketID == opePlayer);
-        // 見つけた要素番号でジャンプ処理
-        this.player[playerIndex].jump(keyState)
+    // 描画する時にキャラクター以外のオブジェクトをその差分分動かす
+    rect(){
+        // 補正量を算出
+        this.xOffset = this.player[0].x - 40;
+    }
+
+    // スクロールのための描画位置設定
+    scrollProcess(Terrain){
+        // 足場描画開始地点
+        let startX = this.getInitRectPoint();
+        // 毎フレームごとに足場管理
+        this.terrainManage(Terrain, startX);
+        // 足場情報の更新
+        this.onUpdateTerrain(startX);
     }
 
     // 自由落下の処理
@@ -64,6 +75,14 @@ class Game{
             // 自由落下させるかを判定
             this.player[i].fallPlayer(this.terrainArray, this.gravity);
         }
+    }
+
+    // ジャンプ処理
+    jumpProcess(operate_PlayerID, keyState){
+        // ジャンプしたプレイヤーを探す
+        const playerIndex = this.player.findIndex(player => player.socketID == operate_PlayerID);
+        // 見つけた要素番号でジャンプ処理
+        this.player[playerIndex].jump(keyState)
     }
 
     // 移動量から描画開始地点を算出
@@ -95,6 +114,14 @@ class Game{
             index++;
         }
     }
+
+    startInterval(Terrain, io){
+        setInterval(() => this.onUpdateFrame(Terrain, io), 1000 / 60);
+    }
+
+    // stopInterval(){
+    //     clearInterval(this.intervalId);
+    // }
 
     gameOver(){
         for(var i = 0;i<this.player.length;i++){
