@@ -38,6 +38,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         }else if(this.getRemainingTime()<=0){
 
             if(this.state=="round"){
+                this.markDrewInQueue(this.getDrawerId());
                 var nextword = this.nextTurn(io);
                 return {instruction:"setword",word:nextword};
             }
@@ -130,6 +131,15 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         for(var i = 0;i < this.drawer_queue.length;i++){
             if(this.drawer_queue[i].id==id){
                 this.drawer_queue.splice(i,1);
+                break;
+            }
+        }
+    }
+
+    markDrewInQueue(id){
+        for(var i = 0;i < this.drawer_queue.length;i++){
+            if(this.drawer_queue[i].id==id){
+                this.drawer_queue.drew = true;
                 break;
             }
         }
