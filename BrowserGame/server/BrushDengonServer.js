@@ -127,6 +127,8 @@ io.on('connection', (socket) => {
 
     socket.on("client draw",(data)=>{
         io.to(room_name).emit("draw relay",data);
+        console.log("gamestate == standby : "+gamerooms[room].getGameState()=="standby"+
+        " gamerooms[room].isDrawing(id) : "+gamerooms[room].isDrawing(id));
         /*
         if(gamerooms[room].getGameState()=="standby"||gamerooms[room].isDrawing(id)){
             io.to(room_name).emit("draw relay",data);
