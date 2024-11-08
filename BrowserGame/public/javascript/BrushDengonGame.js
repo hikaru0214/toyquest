@@ -58,7 +58,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     startRound(io){
-        var sercretword = "";
+        var secretword = "";
         //ラウンドスタート
         if(this.state=="gamestart"||this.state=="roundend"){
             this.state = "round";
@@ -67,21 +67,21 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             for(var i = 0;i < this.player_ids.length;i++){
                 this.drawer_queue.push({id:this.player_ids[i],drew:false});
             }
-            sercretword = this.nextTurn(io);
+            secretword = this.nextTurn(io);
         }
-        return sercretword;
+        return secretword;
     }
 
     nextTurn(io){
         var room_name = "room_"+this.room_id;
         var secretword = "";
         secretword = this.words[parseInt((Math.random()*this.words.length),10)];
-        console.log("next word for room "+this.room_id+" is : "+sercretword);
+        console.log("next word for room "+this.room_id+" is : "+secretword);
         var painter = this.getPlayerById(this.getDrawerId());
 
         io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！");
         io.to(room_name).emit("get word",this.hiddenWord(secretword));
-        io.to(this.getDrawerId()).emit("get word",sercretword);
+        io.to(this.getDrawerId()).emit("get word",secretword);
         this.setStartTime();
         io.to(room_name).emit("game update",JSON.stringify(this));
         return secretword;
