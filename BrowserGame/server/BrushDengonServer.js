@@ -21,8 +21,8 @@ function getRandomString(length){ //ランダム文字列
 }
 
 function hiddenWord(str){
-    const x = "";
-    const arr = Array.from(str);
+    var x = "";
+    var arr = Array.from(str);
     for(var i = 0;i < str.length;i++){
         x+=(arr[i]!=" ")?"_":" ";
     }
@@ -30,10 +30,10 @@ function hiddenWord(str){
 }
 
 function revealAndMergeLetter(origin,hinted){
-    const index = parseInt(Math.random()*origin.length);
-    const x = 0;
-    const org_arr = Array.from(origin);
-    const hnt_arr = Array.from(hinted);
+    var index = parseInt(Math.random()*origin.length);
+    var x = 0;
+    var org_arr = Array.from(origin);
+    var hnt_arr = Array.from(hinted);
     for(var i = 0;i < origin.length;i++){
         x+=i!=index?hnt_arr[i]:org_arr[index];
     }
@@ -115,7 +115,7 @@ io.on('connection', (socket) => {
         io.to(room_name).emit("message to everyone in room",data.name+"が入室しました！");
         console.log("player "+data.name+" joined in the room "+room);
 
-        if(gamerooms[room].getPlayerCount()>=2)startRound(room,socket);
+        //secretword[room] = gamerooms[room].startGame();
     });
 
     socket.on('textchat',(messsage)=>{
@@ -126,8 +126,10 @@ io.on('connection', (socket) => {
     });
 
     socket.on("client draw",(data)=>{
+        /*
         console.log("gamestate == standby : "+(gamerooms[room].getGameState()=="standby")+
         " gamerooms[room].isDrawing(id) : "+gamerooms[room].isDrawing(id));
+        */
         
         if(gamerooms[room].getGameState()=="standby"||gamerooms[room].isDrawing(id)){
             io.to(room_name).emit("draw relay",data);
@@ -154,11 +156,16 @@ io.on('connection', (socket) => {
 function update(){
     for(var i = 0;i < gamerooms.length;i++){
         var roomname = "room_"+i;
-        const game = gamerooms[i];
+        var game = gamerooms[i];
         var remainingtime = parseInt(game.getRemainingTime(), 10);
         io.to(roomname).emit("update timer",remainingtime);
         io.to(roomname).emit("game update",JSON.stringify(game));
-        if(remainingtime<=0)nextTurn(i);
+        var response = game.gameupdate(io);
+        switch(response.instruction){
+            case "setword":
+                secretword[i] = response.word;
+                break;
+        }
     }
 }
 

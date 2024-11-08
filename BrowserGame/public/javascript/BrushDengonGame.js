@@ -2,11 +2,13 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     constructor(room_id){
         this.room_id = room_id;
         this.player_limit = 4; //プレイヤー数制限
+        this.minimum_players = 2; //最小プレイヤー数
         this.time_limit = 60; //時間制限
         this.draw_start_time = 0;
-        this.round = 0; //ラウンドカウンター
-        this.rounds = 2; //ラウンド数
+        this.round = -1; //ラウンドカウンター
+        this.rounds = 3; //ラウンド数
         this.hints = 2; //ヒント(文字の一つを表示する)
+        this.drawer_queue = []; //描き手キュー,IDを保存,(ラウンド開始時に居たプレイヤーのみ)
         this.words = [
             "シャワー",
             "きょうしつ",
@@ -23,10 +25,66 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.player_ids = []; //プレイヤーid
         this.player_data = []; //プレイヤー情報、名前(name),スコア (score)
         this.access = "public"; //部屋アクセスタイプ　0(公開) 1(プライベート)
-        this.state = "standby"; //部屋状態 //0待機中 , 1ラウンド中,
+        this.state = "standby"; //部屋状態 //standby待機中 , roundstart,ラウンド中,
         this.turn = 0;
 
         this.paint_history = []; //ペインターが書いている途中でゲッサーが入室した場合ゲッサーにそれまでの絵のデータをおくる
+    }
+
+    gameupdate(io){
+        if(this.state=="standby"){
+            var firstword = this.startGame(io);
+            return {instruction:"setword",word:firstword};
+        }else if(this.getRemainingTime()<=0){
+
+            if(this.state=="round"){
+                var nextword = nextTurn(io);
+                return {instruction:"setword",word:nextword};
+            }
+
+
+        }
+
+        return "nil";
+    }
+
+    startGame(io){
+        if(this.state=="standby"){
+            if(this.getPlayerCount()>=this.minimum_players){
+                this.state = "gamestart"
+                return this.startRound(io);
+            }
+        }
+    }
+
+    startRound(io){
+        var sercretword = "";
+        //ラウンドスタート
+        if(this.state=="gamestart"||this.state=="roundend"){
+            this.state = "round";
+            this.round++;
+            //描き手キュー
+            for(var i = 0;i < this.player_ids.length;i++){
+                this.drawer_queue.push({id:this.player_ids[i],drew:false});
+            }
+            sercretword = this.nextTurn(io);
+        }
+        return sercretword;
+    }
+
+    nextTurn(io){
+        var room_name = "room_"+this.room_id;
+        var secretword = "";
+        secretword = this.words[parseInt((Math.random()*this.words.length),10)];
+        console.log("next word for room "+this.room_id+" is : "+sercretword);
+        var painter = this.getPlayerById(this.getDrawerId());
+
+        io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！");
+        io.to(room_name).emit("get word",this.hiddenWord(secretword));
+        io.to(this.getDrawerId()).emit("get word",sercretword);
+        this.setStartTime();
+        io.to(room_name).emit("game update",JSON.stringify(this));
+        return secretword;
     }
 
     setStartTime(){
@@ -34,6 +92,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     getRemainingTime(){
+        if(this.draw_start_time==0)return 1;
         return this.time_limit-(Date.now()-this.draw_start_time)/1000;
     }
 
@@ -53,12 +112,27 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     isDrawing(id){
-        if(this.player_ids[this.turn]==id)return true;
-        return false;
+        return this.getDrawerId()==id;
     }
 
     getDrawerId(){
-        return this.player_ids[this.turn];
+        var drawer = "";
+        for(var i = 0;i < this.drawer_queue.length;i++){
+            if(this.drawer_queue[i].drew==false){
+                drawer = this.drawer_queue[i].id;
+                return drawer;
+            }
+        }
+        return "drawer queue completed";
+    }
+
+    deleteFromDrawQueue(id){
+        for(var i = 0;i < this.drawer_queue.length;i++){
+            if(this.drawer_queue[i].id==id){
+                this.drawer_queue.splice(i,1);
+                break;
+            }
+        }
     }
 
     getPlayerIdByIndex(index){
@@ -91,7 +165,28 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(index!=-1){
             this.player_ids.splice(index,1);
             this.player_data.splice(index,1);
+            this.deleteFromDrawQueue(player_id);
         }
+    }
+
+    hiddenWord(str){
+        var x = "";
+        var arr = Array.from(str);
+        for(var i = 0;i < str.length;i++){
+            x+=(arr[i]!=" ")?"_":" ";
+        }
+        return x;
+    }
+
+    revealAndMergeLetter(origin,hinted){
+        var index = parseInt(Math.random()*origin.length);
+        var x = 0;
+        var org_arr = Array.from(origin);
+        var hnt_arr = Array.from(hinted);
+        for(var i = 0;i < origin.length;i++){
+            x+=((i!=index)?hnt_arr[i]:org_arr[index]);
+        }
+        return x;
     }
 }
 
