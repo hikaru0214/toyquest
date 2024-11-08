@@ -5,10 +5,13 @@ const { join } = require('node:path');
 // socket.ioをインポート
 const { Server } = require('socket.io');
 // 使うクラス
+const GameRoom = require('../public/javascript/gameRoom.js');
 const Game = require('../public/javascript/game.js');
 const Player = require('../public/javascript/player.js');
 const Terrain = require('../public/javascript/terrain.js');
-// クラスインスタンス格納配列
+// GameRoomインスタンス格納
+let gameRoom = new GameRoom();
+// インスタンス格納
 let game = null;
 // ルームID
 let roomID = null;
@@ -39,7 +42,8 @@ io.on('connection', (socket) => {
         if (!room) {
             // まだルームがなかった場合（地形とGameインスタンスは一つのルームで共有する）
             // 参加者に渡す予定のインスタンス
-            game = new Game();
+            game = new Game(roomId);
+            gameRoom.addGameRoom(Game, roomId);
             // 地形の初期設定
             game.initTerrain(Terrain);
         }
@@ -51,35 +55,38 @@ io.on('connection', (socket) => {
         io.to(socket.id).emit("sendID", socket.id);
         // プレイヤーの初期設定
         game.initPlayer(socket.id, Player);
-
         // 参加人数上限
-        if(numClients == 4){
+        if(numClients == 2){
             // 超えたらゲーム開始
             game.isStartFlg = true;
-            // サーバー側では60Hz間隔で更新
-            intervalId = setInterval(() => {onUpdateFrame()}, 1000 / 60);
+            // Gameインスタンスで60Hz間隔で更新
+            game.startInterval(Terrain, io);
+            // intervalId = setInterval(() => {onUpdateFrame()}, 1000 / 60);
         }
+        // 初期設定が終わったGameインスタンスをrooms配列に登録
         // Gameインスタンスを送信
         // 新しく参加者が追加されたGameインスタンスを再度送信
-        io.to(roomId).emit("Update-Entity", game);
+        io.to(roomId).emit("Init-Entity", game);
         
         console.log(socket.id+"が"+roomId+"に入室しました")
     });
 
+
+    // ここをどうやってルームで分けてemitするか
     // 1フレームごとに行うゲーム処理
     // サーバー側で変更を行い、クライアントに返す
     function onUpdateFrame(){
-        // プレイヤーの移動
-        game.proceedProcess();
-        // xOffsetを更新
-        game.rect();
-        // 毎フレームスクロールごとの足場情報の更新
-        game.scrollProcess(Terrain);
-        // 自由落下判定
-        game.fallProcess();
+        // // プレイヤーの移動
+        // game.proceedProcess();
+        // // xOffsetを更新
+        // game.rect();
+        // // 毎フレームスクロールごとの足場情報の更新
+        // game.scrollProcess(Terrain);
+        // // 自由落下判定
+        // game.fallProcess();
 
-        // 更新したGameインスタンスをクライアント側に送信
-        io.to(roomID).emit("Update-Entity", game);
+        // // 更新したGameインスタンスをクライアント側に送信
+        // io.to(roomID).emit("Update-Entity", game);
     }
 
     // ジャンプ通知を受け取ったら
@@ -89,8 +96,11 @@ io.on('connection', (socket) => {
     });
 
     socket.on("disconnect", () => {
+        // ルーム退出処理
         socket.leave(roomID);
-        clearInterval(intervalId);
+        // 1フレームごとの更新処理を停止
+        // game.stopInterval();
+        // clearInterval(intervalId);
         console.log(socket.id+"が退出")
     });
 

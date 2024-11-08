@@ -1,6 +1,3 @@
-const canvas = document.getElementById('gameCanvas');
-// 描画を管理するクラス
-const render = new Render(canvas);
 // キーの状態を格納
 let keyState = [];
 // アニメーションの判別ID
@@ -9,13 +6,6 @@ function gameLoop(){
     
     // 描画のリセット（毎回しないと前のフレームの描画が残る）
     render.resetRender();
-    // マイフレームごとのゲーム更新
-    // emitData();
-    // // プレイヤーの移動
-    // game.proceedProcess();
-    // // 自由落下判定
-    // game.fallProcess();
-
     // 足場の描画
     render.drawTerrain(game);
     // プレイヤーの描画
