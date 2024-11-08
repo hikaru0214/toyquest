@@ -24,30 +24,30 @@
 
         h1 {
             position: relative;
-            top:30px;
+            top:40px;
             font-size: 32px;
         }
 
         .player-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            margin-top: 80px;
+            gap: 70px;
+            margin-top: 100px;
         }
 
         .player-box {
-            border: 2px solid;
+            border: 3px solid;
             padding: 20px;
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 20px;
             border-radius: 8px;
             text-align: center;
         }
 
         .player1 { border-color: red; color: red; }
-        .player2 { border-color: blue; color: blue; }
+        .player2 { border-color: rgb(0, 0, 199); color: rgb(0, 0, 199); }
         .player3 { border-color: gold; color: gold; }
-        .player4 { border-color: green; color: green; }
+        .player4 { border-color: rgb(4, 214, 4); color: rgb(4, 214, 4); }
 
         .buttons {
             margin-top: 80px;
@@ -56,7 +56,7 @@
         }
 
         .button {
-            font-size: 1.2em;
+            font-size: 24px;
             font-weight: bold;
             padding: 10px 20px;
             border: none;
@@ -64,8 +64,8 @@
             cursor: pointer;
         }
 
-        .button.cancel { color: white; }
-        .button.start { color: black; }
+        .button.cancel { color: black; }
+        .button.start { color: white; }
     </style>
 </head>
 <body>
@@ -78,7 +78,7 @@
             <div class="player-box player4">player 4<br>名前</div>
         </div>
         <div class="buttons">
-            <button class="button cancel" onclick="window.location.href='wanted_waitroom.html';">CANCEL</button>
+            <button class="button cancel" onclick="window.location.href='wanted_selectroom.html';">CANCEL</button>
             <button class="button start" onclick="window.location.href='wanted_multi.html';">START</button>
         </div>
     </div>

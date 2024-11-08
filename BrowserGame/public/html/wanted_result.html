@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>wante_result</title>
+<style>
+    body {
+        background-image: url('background.jpg'); /* replace 'background.jpg' with your image file path */
+        background-size: cover;
+        font-family: Arial, sans-serif;
+        color: rgb(8, 8, 8);
+        text-align: center;
+    }
+    .ranking-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        margin-top: 50px;
+    }
+    .title {
+        font-size: 48px;
+        font-weight: bold;
+    }
+    .rank {
+        display: flex;
+        justify-content: space-between;
+        width: 50%;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    .rank .position {
+        color: red;
+    }
+    .rank .name {
+        color: yellow;
+    }
+    .rank .points {
+        color: green;
+    }
+    .rank .request {
+        color: lightblue;
+        border: 1px solid lightblue;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .footer-text {
+        font-size: 20px;
+        color: white;
+        margin-top: 30px;
+    }
+</style>
+</head>
+<body>
+
+<div class="ranking-container">
+    <div class="title">RANKING</div>
+
+    <div class="rank">
+        <span class="position">1st</span>
+        <span class="name">player1</span>
+        <span class="points">99pt</span>
+        <span class="request">request</span>
+    </div>
+    
+    <div class="rank">
+        <span class="position">2nd</span>
+        <span class="name">player3</span>
+        <span class="points">99pt</span>
+        <span class="request">request</span>
+    </div>
+
+    <div class="rank">
+        <span class="position">3rd</span>
+        <span class="name">player4</span>
+        <span class="points">99pt</span>
+        <span class="request">request</span>
+    </div>
+
+    <div class="rank">
+        <span class="position">4th</span>
+        <span class="name">player2</span>
+        <span class="points">99pt</span>
+        <span class="request">request</span>
+    </div>
+</div>
+
+<div class="footer-text">
+    get out &nbsp;&nbsp;&nbsp;&nbsp; once again
+</div>
+
+</body>
+</html>
