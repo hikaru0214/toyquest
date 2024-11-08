@@ -139,7 +139,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     markDrewInQueue(id){
         for(var i = 0;i < this.drawer_queue.length;i++){
             if(this.drawer_queue[i].id==id){
-                this.drawer_queue.drew = true;
+                this.drawer_queue[i].drew = true;
                 break;
             }
         }
