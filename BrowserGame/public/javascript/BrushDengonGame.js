@@ -39,6 +39,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
 
             if(this.state=="round"){
                 this.markDrewInQueue(this.getDrawerId());
+                console.log(this.drawer_queue);
                 var nextword = this.nextTurn(io);
                 return {instruction:"setword",word:nextword};
             }
@@ -65,6 +66,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             this.state = "round";
             this.round++;
             //描き手キュー
+            this.drawer_queue = [];
             for(var i = 0;i < this.player_ids.length;i++){
                 this.drawer_queue.push({id:this.player_ids[i],drew:false});
             }
