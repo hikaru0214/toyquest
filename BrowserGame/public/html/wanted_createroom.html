@@ -6,7 +6,7 @@
     <title>ルーム作成</title>
     <style>
         body {
-            background-image: url('jail_background.jpg'); /* Replace with your background image path */
+            background-image: url(../img/wanted_top.jpg); 
             background-size: cover;
             background-position: center;
             display: flex;
@@ -14,13 +14,11 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            color: white;
             font-family: Arial, sans-serif;
         }
 
         .container {
-            width: 90%;
-            max-width: 600px;
+            width: 50%;
             background: rgba(0, 0, 0, 0.6); /* Dark overlay for readability */
             padding: 20px;
             border-radius: 10px;
@@ -28,18 +26,19 @@
         }
 
         h1 {
-            font-size: 1.5em;
+            font-size:26px;
             margin-bottom: 20px;
+            color: white;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
             font-size: 1em;
-            color: #ff4b4b;
+            color: #ff9a35;
             margin-bottom: 5px;
             text-align: left;
         }
@@ -60,16 +59,23 @@
             align-items: center;
             margin-top: 10px;
             color: #ff4b4b;
+            justify-content: flex-start; /* Aligns checkbox and label on the left */
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            color: #ff4b4b;
         }
 
         .checkbox-group input[type="checkbox"] {
             margin-right: 5px;
+           
         }
 
         .button {
             width: 100%;
             padding: 10px;
-            font-size: 1.2em;
+            font-size: 18px;
             font-weight: bold;
             color: white;
             background-color: #333;
@@ -83,11 +89,6 @@
 <body>
     <div class="container">
         <h1>ルームを作成してください</h1>
-        
-        <div class="form-group">
-            <label for="points">勝利ポイント</label>
-            <input type="number" id="points" placeholder="1〜99" min="1" max="99">
-        </div>
         
         <div class="form-group">
             <label for="players">参加人数</label>
@@ -113,7 +114,7 @@
             <input type="text" id="password" placeholder="パスワードを入力">
         </div>
         
-        <button class="button">作成</button>
+        <button class="button" onclick="window.location.href='wanted_selectroom.html';">作 成</button>
     </div>
 </body>
 </html>
