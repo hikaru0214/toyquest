@@ -1,95 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>wante_result</title>
-<style>
-    body {
-        background-image: url('background.jpg'); /* replace 'background.jpg' with your image file path */
-        background-size: cover;
-        font-family: Arial, sans-serif;
-        color: rgb(8, 8, 8);
-        text-align: center;
-    }
-    .ranking-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-        margin-top: 50px;
-    }
-    .title {
-        font-size: 48px;
-        font-weight: bold;
-    }
-    .rank {
-        display: flex;
-        justify-content: space-between;
-        width: 50%;
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-    .rank .position {
-        color: red;
-    }
-    .rank .name {
-        color: yellow;
-    }
-    .rank .points {
-        color: green;
-    }
-    .rank .request {
-        color: lightblue;
-        border: 1px solid lightblue;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    .footer-text {
-        font-size: 20px;
-        color: white;
-        margin-top: 30px;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>あいつをさがせランキング</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('background.jpg'); /* Replace with the actual image URL */
+            background-size: cover;
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        /* Ranking list */
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .rank-item {
+            display: flex;
+            justify-content: space-between;
+            width: 60%;
+            max-width: 600px;
+            font-size: 24px;
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        .rank-item span {
+            width: 20%;
+        }
+
+        .rank-position {
+            color: red;
+            font-weight: bold;
+        }
+
+        .player-name {
+            font-weight: bold;
+        }
+
+        .score {
+            font-weight: bold;
+        }
+
+        .request-button {
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        /* Color styles for each rank */
+        .rank-item:nth-child(1) .player-name { color: red; }
+        .rank-item:nth-child(2) .player-name { color: green; }
+        .rank-item:nth-child(3) .player-name { color: lime; }
+        .rank-item:nth-child(4) .player-name { color: blue; }
+
+        /* Footer buttons */
+        .footer-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 60%;
+            max-width: 600px;
+            margin-top: 30px;
+        }
+
+        .footer-button {
+            font-size: 20px;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: black;
+            border: 2px solid white;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+    <h1>RANKING</h1>
 
-<div class="ranking-container">
-    <div class="title">RANKING</div>
-
-    <div class="rank">
-        <span class="position">1st</span>
-        <span class="name">player1</span>
-        <span class="points">99pt</span>
-        <span class="request">request</span>
+    <div class="ranking-list">
+        <div class="rank-item">
+            <span class="rank-position">1st</span>
+            <span class="player-name">player1</span>
+            <span class="player-name">名前</span>
+            <span class="score">99pt</span>
+            <span class="request-button" style="color: red; border-color: red;">request</span>
+        </div>
+        <div class="rank-item">
+            <span class="rank-position">2nd</span>
+            <span class="player-name">player3</span>
+            <span class="player-name">名前</span>
+            <span class="score">99pt</span>
+            <span class="request-button" style="color: green; border-color: green;">request</span>
+        </div>
+        <div class="rank-item">
+            <span class="rank-position">3rd</span>
+            <span class="player-name">player4</span>
+            <span class="player-name">名前</span>
+            <span class="score">99pt</span>
+            <span class="request-button" style="color: lime; border-color: lime;">request</span>
+        </div>
+        <div class="rank-item">
+            <span class="rank-position">4th</span>
+            <span class="player-name">player2</span>
+            <span class="player-name">名前</span>
+            <span class="score">99pt</span>
+            <span class="request-button" style="color: blue; border-color: blue;">request</span>
+        </div>
     </div>
-    
-    <div class="rank">
-        <span class="position">2nd</span>
-        <span class="name">player3</span>
-        <span class="points">99pt</span>
-        <span class="request">request</span>
+
+    <div class="footer-buttons">
+        <div class="footer-button" onclick="alert('Exiting...')">get out</div>
+        <div class="footer-button" onclick="alert('Restarting...')">once again</div>
     </div>
-
-    <div class="rank">
-        <span class="position">3rd</span>
-        <span class="name">player4</span>
-        <span class="points">99pt</span>
-        <span class="request">request</span>
-    </div>
-
-    <div class="rank">
-        <span class="position">4th</span>
-        <span class="name">player2</span>
-        <span class="points">99pt</span>
-        <span class="request">request</span>
-    </div>
-</div>
-
-<div class="footer-text">
-    get out &nbsp;&nbsp;&nbsp;&nbsp; once again
-</div>
-
 </body>
 </html>

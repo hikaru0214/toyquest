@@ -72,6 +72,68 @@
         .lock-icon {
             margin-right: 5px;
         }
+        /* Modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            position: relative;
+            text-align: center;
+        }
+
+        .close {
+            position: absolute;
+            top: 0.5px;
+            right: 0.5px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: red;
+        }
+
+        /* Keypad */
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .keypad button {
+            font-size: 24px;
+            padding: 15px;
+            background-color: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .keypad button.enter {
+            background-color: red;
+        }
+
+        .display {
+            font-size: 38px;
+            margin-bottom: 10px;
+            background-color:black;
+            color: lime;
+            padding: 8px;
+        }
     </style>
 </head>
 <body>
@@ -96,7 +158,8 @@
                     <td><span class="lock-icon">🔒</span>ルーム123</td>
                     <td>10pt</td>
                     <td>2/4</td>
-                    <td button class="join-button" onclick="window.location.href='wanted_waitroom.html';">参加</td>
+                    <td button class="join-button" onclick="openModal()">参加</span>
+                    <!-- <td button class="join-button" onclick="window.location.href='wanted_waitroom.html';">参加</td>-->
 
                 </tr>
                 <tr>
@@ -132,5 +195,64 @@
             </tbody>
         </table>
     </div>
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="display" id="display">____</div>
+            <div class="keypad">
+                <button onclick="appendNumber(1)">1</button>
+                <button onclick="appendNumber(2)">2</button>
+                <button onclick="appendNumber(3)">3</button>
+                <button onclick="appendNumber(4)">4</button>
+                <button onclick="appendNumber(5)">5</button>
+                <button onclick="appendNumber(6)">6</button>
+                <button onclick="appendNumber(7)">7</button>
+                <button onclick="appendNumber(8)">8</button>
+                <button onclick="appendNumber(9)">9</button>
+                <button onclick="clearDisplay()">Clear</button>
+                <button onclick="appendNumber(0)">0</button>
+                <button class="enter" onclick="enterCode()">Enter</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let displayValue = "";
+
+        function openModal() {
+            document.getElementById("modal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+            clearDisplay();
+        }
+
+        function appendNumber(number) {
+            if (displayValue.length < 4) {
+                displayValue += number;
+                document.getElementById("display").innerText = displayValue;
+            }
+        }
+
+        function clearDisplay() {
+            displayValue = "";
+            document.getElementById("display").innerText = "____";
+        }
+
+        function enterCode() {
+            alert("Entered code: " + displayValue);
+            closeModal();
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function(event) {
+            let modal = document.getElementById("modal");
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
 </body>
 </html>
