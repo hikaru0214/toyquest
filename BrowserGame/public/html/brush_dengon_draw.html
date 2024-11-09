@@ -112,6 +112,15 @@
             background-color: white;
         }
 
+        .gamecanvas {
+            display: block;
+            box-sizing: border-box;
+            margin: 0px;
+            padding: 0px;
+            position: absolute;
+            image-rendering: pixelated;
+        }
+
     </style>
 </head>
 <body>
@@ -128,7 +137,8 @@
     </div> <!-- スコアボード　-->
 
     <div id="drawing_canvas"> <!--キャンバス-->
-        <canvas id="canvas" width="640" height="480"></canvas>
+        <canvas id="canvas" class="gamecanvas" width="640" height="480"></canvas>
+        <div class="gamecanvas"></div>
     </div>
 
     <div id="right-bar">

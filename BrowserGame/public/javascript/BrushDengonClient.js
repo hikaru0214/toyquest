@@ -72,12 +72,12 @@ socket.on('game init',(game)=>{
 socket.on('game update',(game)=>{
     clientGame = receiveObject(game,Game);
     updateScoreBoard();
+    showPalette(clientGame.isDrawing(own_id));
     switch(clientGame.state){
         case "standby":
             showPalette(true);
             break;
         case "draw":
-            showPalette(clientGame.isDrawing(own_id));
             break;
         default:
             break;
