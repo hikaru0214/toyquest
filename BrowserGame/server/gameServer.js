@@ -17,6 +17,8 @@ let game = null;
 let roomID = null;
 // インターバル識別子
 let intervalId = null;
+// 指定された参加人数
+let entry_member = null;
 // サーバーを作成
 const app = express();
 
@@ -27,7 +29,8 @@ const io = new Server(server);
 app.use(express.static('../public'));
 
 // ゲーム画面のルーティング
-app.get('/', (req, res) => {
+app.get('/:entry_member', (req, res) => {
+    entry_member = req.params.entry_member;
     res.sendFile(join(__dirname, '../public/html/bicycleRunning.html'));
 });
 
@@ -50,13 +53,13 @@ io.on('connection', (socket) => {
         // ルームに参加
         socket.join(roomId);
         // ルーム内の参加者の数を取得
-        const numClients = room ? room.size : 0;
+        const numClients = room ? room.size : 1;
         // 特定個人のIDを送信
         io.to(socket.id).emit("sendID", socket.id);
         // プレイヤーの初期設定
         game.initPlayer(socket.id, Player);
         // 参加人数上限
-        if(numClients == 2){
+        if(numClients == entry_member){
             // 超えたらゲーム開始
             game.isStartFlg = true;
             // Gameインスタンスで60Hz間隔で更新
