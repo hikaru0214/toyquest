@@ -20,26 +20,6 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
-function hiddenWord(str){
-    var x = "";
-    var arr = Array.from(str);
-    for(var i = 0;i < str.length;i++){
-        x+=(arr[i]!=" ")?"_":" ";
-    }
-    return x;
-}
-
-function revealAndMergeLetter(origin,hinted){
-    var index = parseInt(Math.random()*origin.length);
-    var x = 0;
-    var org_arr = Array.from(origin);
-    var hnt_arr = Array.from(hinted);
-    for(var i = 0;i < origin.length;i++){
-        x+=i!=index?hnt_arr[i]:org_arr[index];
-    }
-    return x;
-}
-
 const gamerooms = [];
 const secretword = [];
 const wordhint = [];
@@ -54,47 +34,6 @@ function getAvailableRoomIndex(){
        if(!gamerooms[i].isFull())return i;
     }
     return -1;
-}
-
-function startRound(room,socket){
-    const game = gamerooms[room];
-    const room_name = "room_"+room;
-    if(game.state=="standby"){ //待機中で二人以上になったらゲーム開始
-        if(game.getPlayerCount()>=2){
-            game.state = "draw";
-            var turn = game.turn;
-            secretword[room] = game.words[parseInt((Math.random()*game.words.length), 10)];
-            console.log("next word for room "+room+" is : "+secretword[room]);
-            var painter = game.getPlayerById(game.getDrawerId());
-            io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！");
-            io.to(room_name).emit("get word",getRandomString(secretword[room].length));
-            io.to(game.getDrawerId()).emit("get word",secretword[room]);
-            game.setStartTime();
-            socket.broadcast.to(room_name).emit("game update",JSON.stringify(gamerooms[room]));
-        }else{
-            console.log("you need atlease 2 player to start a round in room "+room);
-        }
-    }else{
-        console.log("round already started in room "+room);
-    }
-}
-
-function nextTurn(room){
-    const game = gamerooms[room];
-    const room_name = "room_"+room;
-    if(game.state=="draw"){
-        game.turn++;
-        game.turn%=game.getPlayerCount();
-        secretword[room] = game.words[parseInt((Math.random()*game.words.length), 10)];
-        console.log("next word for room "+room+" is : "+secretword[room]);
-        var painter = game.getPlayerById(game.getDrawerId());
-        io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！");
-        io.to(room_name).emit("get word",getRandomString(secretword[room].length));
-        io.to(game.getDrawerId()).emit("get word",secretword[room]);
-        game.setStartTime();
-        console.log("game turn in room "+room+" is "+game.turn);
-        io.to(room_name).emit("clear canvas");
-    }
 }
 
 io.on('connection', (socket) => {

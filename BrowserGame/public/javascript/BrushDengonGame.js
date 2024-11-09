@@ -31,17 +31,27 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.paint_history = []; //ペインターが書いている途中でゲッサーが入室した場合ゲッサーにそれまでの絵のデータをおくる
     }
 
-    gameupdate(io){
+    gameupdate(io){ //ゲームループ
         if(this.state=="standby"){
             var firstword = this.startGame(io);
             return {instruction:"setword",word:firstword};
-        }else if(this.getRemainingTime()<=0){
+
+        }else if(this.getRemainingTime()<=0){ //タイマーが0になったら
 
             if(this.state=="round"){
+
                 this.markDrewInQueue(this.getDrawerId());
                 console.log(this.drawer_queue);
+
+                if(this.getDrawerId()=="drawer queue completed"){
+                    //TODO ラウンド終了処理
+                    this.state = "roundend";
+                    var nextround_first_word = this.startRound(io);
+                    return {instruction:"setword",word:nextround_first_word};
+                }else{
                 var nextword = this.nextTurn(io);
                 return {instruction:"setword",word:nextword};
+                }
             }
 
 
