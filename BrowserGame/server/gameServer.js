@@ -29,7 +29,7 @@ const io = new Server(server);
 app.use(express.static('../public'));
 
 // ゲーム画面のルーティング
-app.get('/:entry_member', (req, res) => {
+app.get('/?entry_member', (req, res) => {
     entry_member = req.params.entry_member;
     res.sendFile(join(__dirname, '../public/html/bicycleRunning.html'));
 });
