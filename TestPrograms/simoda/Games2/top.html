@@ -40,7 +40,7 @@
 
     
     // カメラの位置設定
-    camera.position.set(5, 3, 5);
+    camera.position.set(5, 6, 5);
     
 
     // ライトの追加
@@ -290,9 +290,12 @@
 
     let posix=0;
     let posiz=0;
+    let pageload=true;
     // カメラを移動させる関数
     function moveCamera() {
-        
+        if(pageload&&camera.position.y>=3){
+            camera.position.y -= 0.1;
+        }
         if (isMovingLeft) {
             //camera.position.x -= 0.1;
             //character.position.x -= 0.1;
@@ -325,7 +328,9 @@
   // 角度に応じてカメラの位置を設定
   camera.position.x = posix+Math.sin(radian)*-4;
   camera.position.z = posiz+Math.cos(radian)*-4;
+  
   if(model)camera.lookAt(model.position);
+  
     }
 
 
