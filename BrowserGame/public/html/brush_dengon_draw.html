@@ -112,18 +112,43 @@
             background-color: white;
         }
 
-        .gamecanvas {
-            display: block;
-            box-sizing: border-box;
-            margin: 0px;
-            padding: 0px;
-            position: absolute;
-            image-rendering: pixelated;
+        #overlay {
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            position: fixed;
+            background-color: #77777777;
+            display: none;
+        }
+
+        #round {
+            text-align: center;
+            margin-top: 35vh;
+            color: white;
+            font-size: 100px;
         }
 
     </style>
 </head>
 <body>
+
+    <div id="overlay">
+        <div id="round">
+            ラウンド1
+        </div>
+        <div id="painternotice">
+            ユーザー1の番です！
+        </div>
+        <div id="selectword"></div>
+
+        <div id="roundscore">
+
+        </div>
+
+        <div id="finalscore"></div>
+    </div>
 
     <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
 
@@ -138,7 +163,6 @@
 
     <div id="drawing_canvas"> <!--キャンバス-->
         <canvas id="canvas" class="gamecanvas" width="640" height="480"></canvas>
-        <div class="gamecanvas"></div>
     </div>
 
     <div id="right-bar">
@@ -170,6 +194,23 @@
     </div>
 
     </div>
+
+    <script>
+            document.getElementById("painternotice").style.display = "none";
+            document.getElementById("selectword").style.display = "none";
+            document.getElementById("roundscore").style.display = "none";
+            document.getElementById("finalscore").style.display = "none";
+            
+        function hideOverlay(){
+            document.getElementById("overlay").style.display="none";
+        }
+        function showOverlay(){
+            document.getElementById("overlay").style.display="block";
+        }
+        function showRound(){
+            document.getElementById("round").style.display = "block";
+        }
+    </script>
 
     <script type="text/javascript" src="../javascript/gameUtils.js"></script>
     <script type="text/javascript" src="../javascript/BrushDengonGame.js"></script>
