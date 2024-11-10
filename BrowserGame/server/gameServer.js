@@ -28,8 +28,11 @@ const io = new Server(server);
 
 app.use(express.static('../public'));
 
+// favicon.icoリクエストを無視
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 // ゲーム画面のルーティング
-app.get('/?entry_member', (req, res) => {
+app.get('/:entry_member', (req, res) => {
     entry_member = req.params.entry_member;
     res.sendFile(join(__dirname, '../public/html/bicycleRunning.html'));
 });
