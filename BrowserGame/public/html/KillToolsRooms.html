@@ -55,7 +55,7 @@
         const socket = io.connect('http://52.68.111.88:7000');
         //socket.emit("ask roominfo");
 
-        socket.io("roominfo",roominfo=>{
+        socket.on("roominfo",roominfo=>{
             var area = document.getElementById("rooms");
             area.innerHTML = "";
             var rooms = roominfo.room_count;
