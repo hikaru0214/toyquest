@@ -4,8 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        #title {
+            width: 100%;
+            font-size: 100px;
+            text-align: center;
+        }
+        #rooms {
+            width: 70%;
+            margin: auto;
+            background-color: gray;
+            vertical-align: top;
+            padding: 50px;
+        }
+        #room {
+            width: 128px;
+            height: 80px;
+            display:inline-block;
+            vertical-align: top;
+            margin: 5px;
+            background-color: white;
+        }
+    </style>
 </head>
 <body>
-    
+
+    <div id="title">KillTools</div>
+
+    <div id="rooms">
+        <div id="room">
+            <p>3/12</p>
+        </div>
+        <div id="room"></div>
+        <div id="room"></div>
+        <div id="room"></div>
+        <div id="room"></div>
+        <div id="room"></div>
+        <div id="room"></div>
+        <div id="room"></div>
+        <div id="room"></div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
+    <!--
+    <script type="text/javascript" src="../javascript/KillToolsPlayer.js"></script>
+    <script type="text/javascript" src="../javascript/KillToolsGame.js"></script>
+    <script type="text/javascript" src="../javascript/KillToolsClient.js"></script>
+    -->
+    <script type="text/javascript">
+        const socket = io.connect('http://52.68.111.88:6666');
+        //socket.emit("ask roominfo");
+
+        socket.io("roominfo",roominfo=>{
+            var area = document.getElementById("rooms");
+            area.innerHTML = "";
+            var rooms = roominfo.room_count;
+            for(var i = 0;i < rooms;i++){
+                var limit = roominfo.limit[i];
+                var count = roominfo.count[i];
+                area.innerHTML += '<div id="room">'+'<p>'+count+'/'+limit+'</p>'+'</div>';
+            }
+        });
+    </script>
 </body>
 </html>
