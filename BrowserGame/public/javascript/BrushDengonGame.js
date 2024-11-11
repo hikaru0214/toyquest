@@ -27,53 +27,56 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.access = "public"; //部屋アクセスタイプ　0(公開) 1(プライベート)
         this.state = "standby"; //部屋状態 //standby待機中 , roundstart,ラウンド中,
         this.turn = 0;
+        this.timer = 0;
 
         this.paint_history = []; //ペインターが書いている途中でゲッサーが入室した場合ゲッサーにそれまでの絵のデータをおくる
     }
 
     gameupdate(io){ //ゲームループ
         if(this.state=="standby"){
-            var firstword = this.startGame(io);
+            if(this.getPlayerCount()>=this.minimum_players){
+                this.state = "gamestart"
+                this.setTimer();
+            }
+        }
+
+        if(this.state=="gamestart"&&this.getTimer(3)<=0){
+            this.state = "drawing";
+            var firstword = this.startRound(io);
             return {instruction:"setword",word:firstword};
+        }
 
-        }else if(this.getRemainingTime()<=0){ //タイマーが0になったら
-
-            if(this.state=="round"){
-
+        if(this.state=="drawing"&&this.getRemainingTime()<=0){ //タイマーが0になったら
                 this.markDrewInQueue(this.getDrawerId());
                 console.log(this.drawer_queue);
-
                 if(this.getDrawerId()=="drawer queue completed"){
                     //TODO ラウンド終了処理
                     this.state = "roundend";
-                    var nextround_first_word = this.startRound(io);
-                    return {instruction:"setword",word:nextround_first_word};
+                    this.setTimer();
                 }else{
-                var nextword = this.nextTurn(io);
-                return {instruction:"setword",word:nextword};
+                    this.state="nextturn";
+                    this.setTimer();
                 }
-            }
+        }
 
+        if(this.state=="nextturn"&&this.getTimer(3)<=0){
+            this.state="drawing"
+            var nextword = this.nextTurn(io);
+            return {instruction:"setword",word:nextword};
+        }
 
+        if(this.state=="roundend"&&this.getTimer(5)<=0){
+            this.state="roundstart"
+            var nextround_first_word = this.startRound(io);
+            return {instruction:"setword",word:nextround_first_word};
         }
 
         return "nil";
     }
 
-    startGame(io){
-        if(this.state=="standby"){
-            if(this.getPlayerCount()>=this.minimum_players){
-                this.state = "gamestart"
-                return this.startRound(io);
-            }
-        }
-    }
-
     startRound(io){
         var secretword = "";
         //ラウンドスタート
-        if(this.state=="gamestart"||this.state=="roundend"){
-            this.state = "round";
             this.round++;
             //描き手キュー
             this.drawer_queue = [];
@@ -81,7 +84,6 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
                 this.drawer_queue.push({id:this.player_ids[i],drew:false});
             }
             secretword = this.nextTurn(io);
-        }
         return secretword;
     }
 
@@ -107,6 +109,19 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     getRemainingTime(){
         if(this.draw_start_time==0)return 1;
         return this.time_limit-(Date.now()-this.draw_start_time)/1000;
+    }
+
+    setTimer(){
+        this.timer = Date.now();
+    }
+
+    getTimer(time){
+        if(this.timer==0)return NaN;
+        return time-(Date.now()-this.timer)/1000;
+    }
+
+    getTimerElapsed(){
+        return (Date.now()-this.timer)/1000;
     }
 
     isFull(){ //満室か
