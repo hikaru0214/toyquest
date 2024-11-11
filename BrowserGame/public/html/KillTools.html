@@ -34,7 +34,7 @@
     });
     renderer.setSize(width, height);
 
-
+    
     // カメラの位置設定
     camera.position.set(4, 3, 4);
 
@@ -46,25 +46,16 @@
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
 
-    
 
 
-
-    
-
-
-
-
-
-
-    const tex=new THREE.TextureLoader().load("textures/タイトルなし.png")
+    const tex=new THREE.TextureLoader().load("../../textures/タイトルなし.png")
     const mateTex = new THREE.MeshBasicMaterial({map: tex});
     const geometry2 = new THREE.BoxGeometry(3, 1, 2);
     const cube3 = new THREE.Mesh(geometry2, mateTex);
     cube3.position.set(4, 0.5, -1);
     scene.add(cube3);
 
-    const texture=new THREE.TextureLoader().load("textures/タイトルなし.png")
+    const texture=new THREE.TextureLoader().load("../../textures/タイトルなし.png")
     // GLTFモデルの読み込み。GLTFLoaderのインポートが必要
     let gltf; // GLTFオブジェクトを格納する変数
     let mixer; // アニメーションミキサー
@@ -103,6 +94,77 @@
             console.error('Error loading the GLTF model:', error);
         }
     );
+
+    
+   
+    
+
+
+
+
+    // アニメーションの名前を指定して再生する関数
+    function playAnimation(name) {
+        const clip = gltf.animations.find(clip => clip.name === name);
+        if (clip) {
+            
+            mixer.clipAction(clip).play();  // 指定されたアニメーションを再生
+        } else {
+            console.error(`アニメーション "${name}" が見つかりません`);
+        }
+    }
+    //アニメーションの名前を指定して停止する関数
+    function stopAnimation(name) {
+    const clip = gltf.animations.find(clip => clip.name === name);
+    if (clip) {
+        const action = mixer.clipAction(clip);
+        action.stop();  // 特定のアニメーションを停止
+    } else {
+        console.error(`アニメーション "${name}" が見つかりません`);
+    }
+}
+
+    // アニメーションの更新
+
+
+
+
+    // カスタムドットシェーダーの定義
+    const DotShader = {
+      uniforms: {
+        "tDiffuse": { value: null },
+        "resolution": { value: new THREE.Vector2(width, height) },
+        "pixelSize": { value: 50 }//初期値。Composerですぐに変更されるのでここでのvalueの値の初期化
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform vec2 resolution;
+        uniform float pixelSize;
+        varying vec2 vUv;
+
+        void main() {
+          vec2 dxy = pixelSize / resolution;
+          vec2 coord = dxy * floor(vUv / dxy);
+          gl_FragColor = texture2D(tDiffuse, coord);
+        }
+      `
+    };
+
+    // Composerの設定
+    const renderPass = new RenderPass(scene, camera);
+    const dotPass = new ShaderPass(DotShader);
+    dotPass.uniforms["resolution"].value = new THREE.Vector2(width, height);
+    dotPass.uniforms["pixelSize"].value = 3;//ピクセルサイズ変更
+
+    const composer = new EffectComposer(renderer);
+    composer.addPass(renderPass);
+    composer.addPass(dotPass);
 
 
     // キーの押下状態を管理するフラグ
@@ -382,65 +444,6 @@ function adjustCameraDistance() {
 
     animate();
 
-    // アニメーションの名前を指定して再生する関数
-    function playAnimation(name) {
-        const clip = gltf.animations.find(clip => clip.name === name);
-        if (clip) {
-    
-            mixer.clipAction(clip).play();  // 指定されたアニメーションを再生
-        } else {
-            console.error(`アニメーション "${name}" が見つかりません`);
-        }
-    }
-    //アニメーションの名前を指定して停止する関数
-    function stopAnimation(name) {
-    const clip = gltf.animations.find(clip => clip.name === name);
-    if (clip) {
-        const action = mixer.clipAction(clip);
-        action.stop();  // 特定のアニメーションを停止
-    } else {
-        console.error(`アニメーション "${name}" が見つかりません`);
-    }
-}
-
-// カスタムドットシェーダーの定義
-const DotShader = {
-      uniforms: {
-        "tDiffuse": { value: null },
-        "resolution": { value: new THREE.Vector2(width, height) },
-        "pixelSize": { value: 50 }//初期値。Composerですぐに変更されるのでここでのvalueの値の初期化
-      },
-      vertexShader: `
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform sampler2D tDiffuse;
-        uniform vec2 resolution;
-        uniform float pixelSize;
-        varying vec2 vUv;
-
-        void main() {
-          vec2 dxy = pixelSize / resolution;
-          vec2 coord = dxy * floor(vUv / dxy);
-          gl_FragColor = texture2D(tDiffuse, coord);
-        }
-      `
-    };
-
-    // Composerの設定
-    const renderPass = new RenderPass(scene, camera);
-    const dotPass = new ShaderPass(DotShader);
-    dotPass.uniforms["resolution"].value = new THREE.Vector2(width, height);
-    dotPass.uniforms["pixelSize"].value = 3;//ピクセルサイズ変更
-
-    const composer = new EffectComposer(renderer);
-    composer.addPass(renderPass);
-    composer.addPass(dotPass);
-
     // リサイズ処理の追加
     window.addEventListener('resize', () => {
         const width = window.innerWidth;
@@ -453,6 +456,8 @@ const DotShader = {
         composer.setSize(width, height);
         dotPass.uniforms["resolution"].value.set(width, height);
     });
+
+    
 
     </script>
 
