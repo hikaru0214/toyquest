@@ -40,7 +40,7 @@
 
     
     // カメラの位置設定
-    camera.position.set(5, 6, 0);
+    camera.position.set(5, 3, 5);
     
 
     // ライトの追加
@@ -113,6 +113,8 @@
         console.error(`アニメーション "${name}" が見つかりません`);
     }
 }
+
+    // アニメーションの更新
 
 
 
@@ -288,12 +290,9 @@
 
     let posix=0;
     let posiz=0;
-    let pageload=true;
     // カメラを移動させる関数
     function moveCamera() {
-        if(pageload&&camera.position.y>=3){
-            camera.position.y -= 0.1;
-        }
+        
         if (isMovingLeft) {
             //camera.position.x -= 0.1;
             //character.position.x -= 0.1;
@@ -321,19 +320,59 @@
         }
 
 
-  
+        // ラジアンに変換する
+  let radian = rot * Math.PI / 180;
+  // 角度に応じてカメラの位置を設定
+  camera.position.x = posix+Math.sin(radian)*-4;
+  camera.position.z = posiz+Math.cos(radian)*-4;
   if(model)camera.lookAt(model.position);
-  
     }
 
 
 
 
+let rot = 0; // 角度
+let mouseX = 0; // マウス座標
+
+// マウス座標はマウスが動いた時のみ取得できる
+document.addEventListener("mousemove", (event) => {
+  mouseX = event.pageX;
+});
+
+tick();
+
+// 毎フレーム時に実行されるループイベントです
+function tick() {
+  // マウスの位置に応じて角度を設定
+  // マウスのX座標がステージの幅の何%の位置にあるか調べてそれを360度で乗算する
+  const targetRot = (mouseX / window.innerWidth) * 360;
+  // イージングの公式を用いて滑らかにする
+  // 値 += (目標値 - 現在の値) * 減速値
+  rot += (targetRot - rot) * 0.02;
+
+  
+  adjustCameraDistance();
+  
+
+
+  
+  // レンダリング
+  renderer.render(scene, camera);
+
+  requestAnimationFrame(tick);
+}
 
 
 
-
-
+function adjustCameraDistance() {
+    if(!model)return;
+    const distance = camera.position.distanceTo(model.position);
+    const minDistance = 4; // カメラとモデルの最小距離を設定
+    if (distance < minDistance) {
+        const direction = camera.position.clone().sub(model.position).normalize();
+        camera.position.copy(model.position).add(direction.multiplyScalar(minDistance));
+    }
+}
 
     //ピクセルサイズ変更処理
     let pixels=0;
@@ -420,7 +459,7 @@
     <canvas id="myCanvas"></canvas>
     <input type="button" class="button" onclick="location.href='test1.html'" value="チャリ走"></button>
     <input type="button" class="button2" value="ブラシ伝言"></button>
-    <input type="button" class="button3" value="あいつを探せ" onclick="location.href='rogocontrol.html'"></button>
+    <input type="button" class="button3" value="あいつを探せ"></button>
     </div>
 </body>
 </html>
