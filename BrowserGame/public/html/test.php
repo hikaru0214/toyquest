@@ -8,7 +8,7 @@
 </head>
 <body>
     <?php 
-        $stmt = $pdo->query('select * from User');
+        $stmt = $pdo->query('select * from User')->fetchAll();
         foreach ($stmt as $row) {
             echo $row['id'] . '<br>';
         }
