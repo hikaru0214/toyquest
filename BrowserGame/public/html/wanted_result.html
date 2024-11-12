@@ -5,60 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ranking Screen</title>
   <style>
-    body{
-        background-image:url(../img/wanted_top.jpg);
-            background-size:cover;/*全画面*/
-            background-attachment: fixed;         /* 固定 */
-            background-position: center center;   /* 縦横中央 */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+    body {
+      background-image: url(../img/wanted_top.jpg);
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
+    
     .container {
-      width: 50%;
-      background: rgba(0, 0, 0, 0.6); /* Dark overlay for readability */
+      width: 54%;
+      background: rgba(233, 50, 221, 0.391);
       padding: 20px;
       border-radius: 10px;
       text-align: center;
-        }
+    }
+    
     h1 {
-      font-size:26px;
+      font-size: 32px;
       font-weight: bold;
+      margin-bottom: 35px;
+      color: white;
+    }
+    
+    .ranking {
       margin-top: 20px;
     }
-    .ranking {
-      position: absolute;
-      top: 20%;
-      left: 10%;
-      width: 50%;
-    }
+    
     .player {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 24px;
-      margin: 10px 0;
+      font-size: 28px;
+      margin: 25px 0;
     }
+    
     .request {
       font-size: 18px;
       cursor: pointer;
-      border: 1px solid;
+      border: 2px solid;
       padding: 5px;
     }
+    
     .buttons {
-            margin-top: 80px;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .button {
-            font-size: 24px;
-            font-weight: bold;
-            padding: 10px 20px;
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
-        }
+      margin-top: 40px;
+      display: flex;
+      justify-content: center; /* Center-aligns buttons */
+      gap: 120px; 
+    }
+    
+    .button {
+      font-size: 24px;
+      font-weight: bold;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -94,9 +102,9 @@
         <div class="request" style="color: rgb(0, 0, 199)">request</div>
       </div>
     </div>
-      <div class="buttons">
-        <button class="button cancel" onclick="window.location.href='wanted_selectroom.html';">CANCEL</button>
-        <button class="button start" onclick="window.location.href='wanted_multi.html';">START</button>
+    <div class="buttons">
+      <button class="button cancel" onclick="window.location.href='wanted_selectroom.html';">get out</button>
+      <button class="button start" onclick="window.location.href='wanted_waitroom.html';">once again</button>
     </div>
   </div>
 </body>
