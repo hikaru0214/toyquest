@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script type="importmap">
         {
@@ -38,7 +37,8 @@
         antialias: false
     });
     renderer.setSize(game_width,game_height);
-    scene.background = new THREE.Color( 0xff0000 );
+
+    document.body.appendChild(renderer.domElement);
 
     const tex=new THREE.TextureLoader().load("../../textures/タイトルなし.png")
     const mateTex = new THREE.MeshBasicMaterial({map: tex});
@@ -46,6 +46,11 @@
     const cube3 = new THREE.Mesh(geometry2, mateTex);
     cube3.position.set(4, 0.5, -1);
     scene.add(cube3);
+
+    const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+    const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+    const cube = new THREE.Mesh( geometry, material );
+    scene.add( cube );
 
     const DotShader = {
       uniforms: {
@@ -103,7 +108,7 @@
 
     var pixel_scale = 2;
 
-    var player_pos = new THREE.Vector3(0,0,0);
+    var player_pos = new THREE.Vector3(0,0,10);
     var forward_vel = 0.1;
     var player_horizontal_look = 0;
     var player_vertical_look = 0;
@@ -138,6 +143,7 @@
         if(keys["ArrowDown"])player_vertical_look+=look_velocity;
         if(keys["ArrowRight"])player_horizontal_look+=look_velocity;
         if(keys["ArrowLeft"])player_horizontal_look-=look_velocity;
+        //console.log("updated");
     }
     setInterval(update,1000.0/60.0);
 
@@ -148,6 +154,7 @@
         camera.lookAt(cube3.position);
         renderer.render(scene,camera);
         composer.render();
+        //console.log("a frame is rendered");
         requestAnimationFrame(render);
     }
 
