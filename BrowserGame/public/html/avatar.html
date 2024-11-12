@@ -43,7 +43,7 @@
 
         <canvas id="canvas" width="320" height="320" style="margin: 5px; display: inline-block;vertical-align: top;"></canvas>
 
-        <div style="width: 320px; height: 320px; margin: 5px; display: inline-block;
+        <!--<div style="width: 320px; height: 320px; margin: 5px; display: inline-block;
             vertical-align: top;">
             <div class="buttonrow"><button id="skin_prev">&lt</button><button id="skin_next">&gt</button></div>
             <br>
@@ -52,7 +52,7 @@
             <div class="buttonrow"><button id="mouth_prev">&lt</button><button id="mouth_next">&gt</button></div>
             <br>
             <button id="randomize">ランダム</button>
-        </div>
+        </div>-->
     </div>
 
     <script>
@@ -138,7 +138,7 @@
         };
         mouthimg.src = "../img/mouth_atlas.gif";
 
-        document.getElementById("skin_prev").onclick=function(){
+         /*document.getElementById("skin_prev").onclick=function(){
             r_skin++;
         };
 
@@ -167,7 +167,7 @@
             r_mouth = parseInt(Math.random()*51,10);
             avatars.push(new Avatar(r_skin,r_eye,r_mouth,Math.random()*canvas.width,Math.random()*canvas.height));
         };
-
+*/
         function setSpritePosition(r_skin,r_eye,r_mouth){
             
             var skin_row = parseInt(r_skin/10,10);

@@ -58,9 +58,17 @@
             align-items: center;
             justify-content: center;
         }
-        .wanted-image img {
+        .avatar {
+            background-size: 1000% 1000%;
+            display: block;
+            box-sizing: border-box;
+            margin: 0px;
+            padding: 0px;
+            position: absolute;
+            image-rendering: pixelated;
             width: 230px;
             height: 230px;
+            z-index: 10;
         }
         .wanted-title {
             font-size: 34px;
@@ -102,12 +110,205 @@
     <div class="stage">STAGE 99</div>
     <div class="wanted">
         <div class="wanted-image">
-            <img src="../img/zono.png" alt="zono">
+            <div id="skin" class="avatar" style="background-image: url('../img/color_atlas.gif');"></div>
+            <div id="eye" class="avatar" style="background-image: url('../img/eyes_atlas.gif');"></div>
+            <div id="mouth" class="avatar" style="background-image: url('../img/mouth_atlas.gif');"></div>
         </div>
         <div class="wanted-title">WANTED</div>
     </div>
     <div class="wanted_canvas">
         <canvas id="canvas" width="1000" height="610"></canvas>
+        <!--<div class="buttonrow"><button id="skin_prev">&lt</button><button id="skin_next">&gt</button></div>
+            <br>
+            <div class="buttonrow"><button id="eye_prev">&lt</button><button id="eye_next">&gt</button></div>
+            <br>
+            <div class="buttonrow"><button id="mouth_prev">&lt</button><button id="mouth_next">&gt</button></div>
+            <br>
+            <button id="randomize">ランダム</button>-->
     </div>
+
+    <script>
+
+        class Avatar {
+            constructor(s,e,m,x,y){
+                this.skin = s;
+                this.eye = e;
+                this.mouth = m;
+
+                this.x = x;
+                this.y = y;
+
+                this.life = 1000*30;
+
+                this.vx = (Math.random()*1)-0.5;
+                this.vy = (Math.random()*1)-0.5;
+            }
+
+            update(){
+                this.life--;
+                this.x+=this.vx;
+                this.y+=this.vy;
+
+                /*
+
+                if(this.x+this.vx < 0)vx = -vx;
+                if((this.x+48)+this.vx > canvas.width)vx = -vx;
+
+                if(this.y+this.vy < 0)vy = -vy;
+                if((this.y+48)+this.vy > canvas.height)vy = -vy;
+                */
+            }
+
+            draw(){
+                drawAvatar(this.x,this.y,48,48,this.skin,this.eye,this.mouth);
+            }
+        }
+
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext('2d');
+
+        context.imageSmoothingEnabled = false;
+
+        context.fillStyle = "black";
+        context.fillRect(0,0,canvas.width,canvas.height);
+
+        const avatars = [];
+
+        for(var i = 0;i < 500;i++){
+            var rs = parseInt(Math.random()*28,10);
+            var re = parseInt(Math.random()*57,10);
+            var rm = parseInt(Math.random()*51,10);
+            avatars.push(new Avatar(rs,re,rm,Math.random()*canvas.width,Math.random()*canvas.height));
+        }
+
+        var w = 48;
+        var h = 48;
+
+        var skin  = null;
+        var eye = null;
+        var mouth = null;
+
+        var r_skin = parseInt(Math.random()*28,10);
+        var r_eye = parseInt(Math.random()*57,10);
+        var r_mouth = parseInt(Math.random()*51,10);
+
+        var skinimg = new Image();
+        skinimg.onload = function(){
+            skin = this;
+        };
+        skinimg.src = "../img/color_atlas.gif";
+
+        var eyeimg = new Image();
+        eyeimg.onload = function(){
+            eye = this;
+        };
+        eyeimg.src = "../img/eyes_atlas.gif";
+
+        var mouthimg = new Image();
+        mouthimg.onload = function(){
+            mouth = this;
+        };
+        mouthimg.src = "../img/mouth_atlas.gif";
+
+        /*document.getElementById("skin_prev").onclick=function(){
+            r_skin++;
+        };
+
+        document.getElementById("skin_next").onclick=function(){
+            r_skin--;
+        };
+
+        document.getElementById("eye_prev").onclick=function(){
+            r_eye++;
+        };
+
+        document.getElementById("eye_next").onclick=function(){
+            r_eye--;
+        };
+
+        document.getElementById("mouth_prev").onclick=function(){
+            r_mouth++;
+        };
+
+        document.getElementById("mouth_next").onclick=function(){
+            r_mouth--;
+        };
+        document.getElementById("randomize").onclick=function(){
+            r_skin = parseInt(Math.random()*28,10);
+            r_eye = parseInt(Math.random()*57,10);
+            r_mouth = parseInt(Math.random()*51,10);
+            avatars.push(new Avatar(r_skin,r_eye,r_mouth,Math.random()*canvas.width,Math.random()*canvas.height));
+        };*/
+
+        function setSpritePosition(r_skin,r_eye,r_mouth){
+            
+            var skin_row = parseInt(r_skin/10,10);
+            var skin_col = r_skin%10;
+            var skin_sx = skin_col*-100;
+            var skin_sy = skin_row*-100;
+
+            var eye_row = parseInt(r_eye/10,10);
+            var eye_col = r_eye%10;
+            var eye_sx = eye_col*-100;
+            var eye_sy = eye_row*-100;
+
+            var mouth_row = parseInt(r_mouth/10,10);
+            var mouth_col = r_mouth%10;
+            var mouth_sx = mouth_col*-100;
+            var mouth_sy = mouth_row*-100;
+
+            document.getElementById("skin").style.backgroundPositionX = skin_sx+"%";
+            document.getElementById("skin").style.backgroundPositionY = skin_sy+"%";
+
+            document.getElementById("eye").style.backgroundPositionX = eye_sx+"%";
+            document.getElementById("eye").style.backgroundPositionY = eye_sy+"%";
+
+            document.getElementById("mouth").style.backgroundPositionX = mouth_sx+"%";
+            document.getElementById("mouth").style.backgroundPositionY = mouth_sy+"%";
+        }
+
+        function drawAvatar(x,y,sx,sy,r_skin,r_eye,r_mouth){
+            var skin_row = parseInt(r_skin/10,10);
+            var skin_col = r_skin%10;
+            var skin_sx = skin_col*w;
+            var skin_sy = skin_row*h;
+
+            var eye_row = parseInt(r_eye/10,10);
+            var eye_col = r_eye%10;
+            var eye_sx = eye_col*w;
+            var eye_sy = eye_row*h;
+
+            var mouth_row = parseInt(r_mouth/10,10);
+            var mouth_col = r_mouth%10;
+            var mouth_sx = mouth_col*w;
+            var mouth_sy = mouth_row*h;
+
+            if(skin!=null)context.drawImage(skin,skin_sx,skin_sy,w,h,x,y,sx,sy);
+            if(eye!=null)context.drawImage(eye,eye_sx,eye_sy,w,h,x,y,sx,sy);
+            if(mouth!=null)context.drawImage(mouth,mouth_sx,mouth_sy,w,h,x,y,sx,sy);
+        }
+
+        function draw(){
+            context.fillStyle = "white";
+            context.fillRect(0,0,canvas.width,canvas.height);
+            r_skin=Math.abs(r_skin)%28;
+            r_eye=Math.abs(r_eye)%57;
+            r_mouth=Math.abs(r_mouth)%51;
+            /*drawAvatar(0,0,w*3,h*3,r_skin,r_eye,r_mouth);*/
+            setSpritePosition(r_skin,r_eye,r_mouth);
+
+            for(var i = 0;i < avatars.length;i++){
+                avatars[i].update();
+                avatars[i].draw();
+
+                if(avatars[i].life<=0)avatars.splice(i,1);
+            }
+        }
+
+        const draw_interval = 1000.0/60.0;
+        setInterval(draw,draw_interval);
+
+    </script>
+
 </body>
 </html>
