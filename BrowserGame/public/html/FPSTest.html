@@ -143,7 +143,9 @@
 
     function render(){
         camera.position.set(player_pos);
-        camera.rotation.set(player_horizontal_look,player_vertical_look,0);
+        //camera.rotation.set(player_horizontal_look,player_vertical_look,0);
+
+        camera.lookAt(cube3.position);
         renderer.render(scene,camera);
         composer.render();
         requestAnimationFrame(render);
