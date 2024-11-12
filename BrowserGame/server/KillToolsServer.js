@@ -40,7 +40,7 @@ io.on("connection",(socket)=>{
             room_player_counts[i] = gamerooms[i].getPlayerCount();
             room_player_limits[i] = gamerooms[i].getPlayerLimit();
         }
-        var roominfo = {room_count:gamerooms.length,limit:room_player_limits,count:room_player_limits};
+        var roominfo = {room_count:gamerooms.length,limit:room_player_limits,count:room_player_counts};
         socket.emit("roominfo",roominfo);
     });
 

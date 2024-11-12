@@ -25,17 +25,22 @@
     const width = window.innerWidth;
     const height = window.innerHeight;
 
+    //ゲーム設定: 視野、アスペクト比
+    var Field_Of_View = 90;
+    var aspect_ratio = 5/4;
+    var game_width = width;
+    var game_height = width/aspect_ratio;
+
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(Field_Of_View, aspect_ratio, 1, 1000);
     const renderer = new THREE.WebGLRenderer({
         canvas: document.querySelector("#myCanvas"),
-        antialias: true
+        antialias: false
     });
-    renderer.setSize(width, height);
+    renderer.setSize(game_width, game_height);
 
-    
     // カメラの位置設定
-    camera.position.set(4, 3, 4);
+    camera.position.set(0, 0, 0);
 
     // ライトの追加
     const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
@@ -45,13 +50,11 @@
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
 
-
-
-    const tex=new THREE.TextureLoader().load("../../textures/タイトルなし.png")
+    const tex=new THREE.TextureLoader().load("../../textures/concrete.png")
     const mateTex = new THREE.MeshBasicMaterial({map: tex});
-    const geometry2 = new THREE.BoxGeometry(3, 1, 2);
+    const geometry2 = new THREE.BoxGeometry(10, 0.5, 10);
     const cube3 = new THREE.Mesh(geometry2, mateTex);
-    cube3.position.set(4, 0.5, -1);
+    cube3.position.set(-5, 1, -5);
     scene.add(cube3);
 
     const texture=new THREE.TextureLoader().load("../../textures/タイトルなし.png")
@@ -94,12 +97,6 @@
         }
     );
 
-    
-   
-    
-
-
-
 
     // アニメーションの名前を指定して再生する関数
     function playAnimation(name) {
@@ -120,18 +117,16 @@
     } else {
         console.error(`アニメーション "${name}" が見つかりません`);
     }
-}
+    }
 
     // アニメーションの更新
-
-
 
 
     // カスタムドットシェーダーの定義
     const DotShader = {
       uniforms: {
         "tDiffuse": { value: null },
-        "resolution": { value: new THREE.Vector2(width, height) },
+        "resolution": { value: new THREE.Vector2(game_width, game_height) },
         "pixelSize": { value: 50 }//初期値。Composerですぐに変更されるのでここでのvalueの値の初期化
       },
       vertexShader: `
@@ -158,181 +153,66 @@
     // Composerの設定
     const renderPass = new RenderPass(scene, camera);
     const dotPass = new ShaderPass(DotShader);
-    dotPass.uniforms["resolution"].value = new THREE.Vector2(width, height);
-    dotPass.uniforms["pixelSize"].value = 3;//ピクセルサイズ変更
+    dotPass.uniforms["resolution"].value = new THREE.Vector2(game_width, game_height);
+    dotPass.uniforms["pixelSize"].value = 2;//ピクセルサイズ変更
 
     const composer = new EffectComposer(renderer);
     composer.addPass(renderPass);
     composer.addPass(dotPass);
 
+    const keys = {};
 
-    // キーの押下状態を管理するフラグ
-    let isMovingLeft = false;
-    let isMovingRight = false;
-    let isMovingUp = false;
-    let isMovingDown = false;
-    let isKey_q=false;
-    let isKey_w=false;
-    let isKey_e=false;
-    let isKey_x=false;
-    let isKey_a=false;
-    let isKey_s=false;
-    let isKey_d=false;
-    let isKey_u=false;
-    let isKey_i=false;
-    
-
-    // キーが押された際にフラグを更新。Arrowは矢印(移動)
-    window.addEventListener("keydown", (event) => {
+    document.addEventListener("keydown",(event)=>{
         stopAnimation('stopmotion');//アニメーション停止
-        //playAnimation('Walk'); // アニメーションを再生
-        if (event.code === "Space") {
-            event.preventDefault();//キーのデフォルトの操作を無効化。ここではスペースキー押下時の下スクロールを制限
-        }
-        if (event.code === "ArrowLeft") {
-            isMovingLeft = true;
-            event.preventDefault();
-        }
-        if (event.code === "ArrowRight") {
-            isMovingRight = true;
-            event.preventDefault();
-        }
-        if (event.code === "ArrowUp") {
-            isMovingUp = true;
-            event.preventDefault();
-        }
-        if (event.code === "ArrowDown") {
-            isMovingDown = true;
-            event.preventDefault();
-        }
-        if (event.code === "KeyX") {
-            isKey_x = true;
-        }
-
-        if (event.code === "KeyQ") {
-            isKey_q = true;
-        }if (event.code === "KeyW") {
-            isKey_w = true;
-        }if (event.code === "KeyE") {
-            isKey_e = true;
-        }
-        if (event.code === "KeyA") {
-            isKey_a = true;
-        }if (event.code === "KeyS") {
-            isKey_s = true;
-        }if (event.code === "KeyD") {
-            isKey_d = true;
-        }
-        if (event.code === "KeyU") {
-            isKey_u = true;
-            acitionmix();
-        }
-        if (event.code === "KeyI") {
-            isKey_i = true;
-            acitionmix();
-        }
-
-        
+        keys[event.code] = true;
     });
-
-
-
-    // キーが離された際にフラグをリセット
-    window.addEventListener("keyup", (event) => {
-        //stopAnimation('Walk');
+    document.addEventListener("keyup",(event)=>{
         playAnimation('stopmotion'); // アニメーションを再生
-        if (event.code === "ArrowLeft") {
-            isMovingLeft = false;
-            event.preventDefault();
-        }
-        if (event.code === "ArrowRight") {
-            isMovingRight = false;
-            event.preventDefault();
-        }
-        if (event.code === "ArrowUp") {
-            isMovingUp = false;
-            event.preventDefault();
-        }
-        if (event.code === "ArrowDown") {
-            isMovingDown = false;
-            event.preventDefault();
-        }
-        if (event.code === "KeyX") {
-            isKey_x = false;
-        }
-
-        if (event.code === "KeyQ") {
-            isKey_q = false;
-        }if (event.code === "KeyW") {
-            isKey_w = false;
-        }if (event.code === "KeyE") {
-            isKey_e = false;
-        }
-        if (event.code === "KeyA") {
-            isKey_a = false;
-        }if (event.code === "KeyS") {
-            isKey_s = false;
-        }if (event.code === "KeyD") {
-            isKey_d = false;
-        }
-        if (event.code === "KeyU") {
-            isKey_u = false;
-        }
-        if (event.code === "KeyI") {
-            isKey_i = false;
-        }
-        
+        keys[event.code] = false;
     });
 
     function acitionmix(){
-        if(isKey_u){
-            playAnimation('loweraction');
-        }
-        if(isKey_i){
-            
-            playAnimation('upperaction');
-        }
+        if(keys["KeyU"])playAnimation('loweraction');
+        if(keys["KeyI"])playAnimation('upperaction');
     }
-
 
     let posix=0;
     let posiz=0;
     // カメラを移動させる関数
     function moveCamera() {
         
-        if (isMovingLeft) {
+        if (keys["ArrowLeft"]||keys["KeyA"]) {
             //camera.position.x -= 0.1;
             //character.position.x -= 0.1;
             model.position.x -= 0.1;
             posix-=0.1;
         }
 
-        if (isMovingRight) {
+        if (keys["ArrowRight"]||keys["KeyD"]) {
             //camera.position.x += 0.1;
             //character.position.x += 0.1;
             model.position.x += 0.1;
             posix+=0.1;
         }
-        if (isMovingUp) {
+        if (keys["ArrowUp"]||keys["KeyW"]) {
             //camera.position.z += 0.1;
             model.position.z+= 0.1;
             //character.position.z += 0.1;
             posiz+=0.1 
         }
-        if (isMovingDown) {
+        if (keys["ArrowDown"]||keys["KeyS"]) {
             //camera.position.z -= 0.1;
             model.position.z-= 0.1;
             //character.position.z -= 0.1;
             posiz-=0.1
         }
 
-
         // ラジアンに変換する
-  let radian = rot * Math.PI / 180;
-  // 角度に応じてカメラの位置を設定
-  camera.position.x = posix+Math.sin(radian)*-4;
-  camera.position.z = posiz+Math.cos(radian)*-4;
-  if(model)camera.lookAt(model.position);
+        let radian = rot * Math.PI / 180;
+        // 角度に応じてカメラの位置を設定
+        camera.position.x = posix+Math.sin(radian)*-4;
+        camera.position.z = posiz+Math.cos(radian)*-4;
+        if(model)camera.lookAt(model.position);
     }
 
 
@@ -346,8 +226,6 @@ document.addEventListener("mousemove", (event) => {
   mouseX = event.pageX;
 });
 
-tick();
-
 // 毎フレーム時に実行されるループイベントです
 function tick() {
   // マウスの位置に応じて角度を設定
@@ -357,19 +235,14 @@ function tick() {
   // 値 += (目標値 - 現在の値) * 減速値
   rot += (targetRot - rot) * 0.02;
 
-  
   adjustCameraDistance();
-  
-
-
   
   // レンダリング
   renderer.render(scene, camera);
 
-  requestAnimationFrame(tick);
 }
 
-
+setInterval(tick,1000/60);
 
 function adjustCameraDistance() {
     if(!model)return;
@@ -382,55 +255,26 @@ function adjustCameraDistance() {
 }
 
     //ピクセルサイズ変更処理
-    let pixels=0;
+    let pixel_scale=2;
     function Shader(){
-        if(isKey_x){
-            dotPass.uniforms["pixelSize"].value = 3;
-        }
 
-        if(isKey_q){
-            pixels=4;
-            dotPass.uniforms["pixelSize"].value = pixels;
-        }
-        if(isKey_w){
-            pixels=5;
-            dotPass.uniforms["pixelSize"].value = pixels;
-        }
-        if(isKey_e){
-            pixels=6;
-            dotPass.uniforms["pixelSize"].value = pixels;
-        }
-        if(isKey_a){
-            pixels=7;
-            dotPass.uniforms["pixelSize"].value = pixels;
-        }
-        if(isKey_s){
-            pixels=8;
-            dotPass.uniforms["pixelSize"].value = pixels;
-        }
-        if(isKey_d){
-            pixels=9;
-            dotPass.uniforms["pixelSize"].value = pixels;
-        }
-        
+        if(keys["BracketRight"])pixel_scale++;
+        if(keys["BracketLeft"])pixel_scale++;
+
+        dotPass.uniforms["pixelSize"].value = pixel_scale;
+
+        keys["BracketRight"]=keys["BracketLeft"]=false;
     }
-
-
-
-
-
-
 
     const clock = new THREE.Clock();
     // アニメーションループ
     function animate() {
-        requestAnimationFrame(animate);
 
         // キーが押されている場合にカメラを動かす
         moveCamera();
         //特定のキーが押された場合にピクセルサイズを変更する
         Shader();
-        
+    
 
         const delta = clock.getDelta(); // delta の取得
         if (mixer) {
@@ -439,6 +283,7 @@ function adjustCameraDistance() {
 
         // Composerを使用してレンダリング
         composer.render();
+        requestAnimationFrame(animate);
     }
 
     animate();
@@ -463,5 +308,21 @@ function adjustCameraDistance() {
 </head>
 <body>
     <canvas id="myCanvas"></canvas>
+
+    <script>
+        function update(){
+
+        }
+
+        function render(){
+
+            requestAnimationFrame(render);
+        }
+
+        setInterval(update,1000/60);
+
+        render();
+
+    </script>
 </body>
 </html>
