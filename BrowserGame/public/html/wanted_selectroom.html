@@ -8,8 +8,8 @@
         body {
             background-image:url(../img/wanted_top.jpg);
             background-size:cover;/*全画面*/
-            background-attachment: fixed;         /* 固定 */
-            background-position: center center;   /* 縦横中央 */
+            background-attachment: fixed; /* 固定 */
+            background-position: center center; /* 縦横中央 */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -29,14 +29,6 @@
             justify-content: center;
             margin-bottom: 15px;
         }
-        .search-bar input[type="text"] {
-            padding: 5px;
-            font-size: 17px;
-            width: 60%;
-            border-radius: 5px;
-            border: none;
-            margin-left: 20px;
-        }
         .search-bar button {
             padding: 5px 10px;
             font-size: 17px;
@@ -45,7 +37,15 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-left: 3px;
+            margin: 0 3px;
+        }
+        .search-bar input[type="text"] {
+            padding: 5px;
+            font-size: 17px;
+            width: 60%;
+            border-radius: 5px;
+            border: none;
+            margin-left: 20px;
         }
         .room-list {
             font-size:17px;
@@ -74,7 +74,7 @@
         }
         /* Modal */
         .modal {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
             z-index: 1;
             left: 0;
@@ -86,7 +86,6 @@
             justify-content: center;
             align-items: center;
         }
-
         .modal-content {
             background-color: #fefefe;
             padding: 20px;
@@ -95,7 +94,6 @@
             position: relative;
             text-align: center;
         }
-
         .close {
             position: absolute;
             top: 0.5px;
@@ -105,7 +103,6 @@
             cursor: pointer;
             color: red;
         }
-
         /* Keypad */
         .keypad {
             display: grid;
@@ -113,7 +110,6 @@
             gap: 10px;
             margin-top: 20px;
         }
-
         .keypad button {
             font-size: 24px;
             padding: 15px;
@@ -122,11 +118,9 @@
             border: none;
             cursor: pointer;
         }
-
         .keypad button.enter {
             background-color: red;
         }
-
         .display {
             font-size: 38px;
             margin-bottom: 10px;
@@ -140,6 +134,7 @@
     <div class="container">
         <h1>ルームを選択してください</h1>
         <div class="search-bar">
+            <button class="back" onclick="history.back()">戻る</button>
             <button class="create" onclick="window.location.href='wanted_createroom.html';">ルーム作成</button>
             <input type="text" class="room-number" placeholder="ルーム番号を入力">
             <button class="search">🔍</button>
@@ -158,9 +153,7 @@
                     <td><span class="lock-icon">🔒</span>ルーム123</td>
                     <td>10pt</td>
                     <td>2/4</td>
-                    <td button class="join-button" onclick="openModal()">参加</span>
-                    <!-- <td button class="join-button" onclick="window.location.href='wanted_waitroom.html';">参加</td>-->
-
+                    <td button class="join-button" onclick="openModal()">参加</td>
                 </tr>
                 <tr>
                     <td><span class="lock-icon">🔒</span>ルーム123</td>
@@ -168,30 +161,7 @@
                     <td>2/4</td>
                     <td button class="join-button" onclick="window.location.href='wanted_waitroom.html';">参加</td>
                 </tr>
-                <tr>
-                    <td><span class="lock-icon">🔒</span>ルーム123</td>
-                    <td>10pt</td>
-                    <td>2/4</td>
-                    <td button class="join-button" onclick="window.location.href='wanted_waitroom.html';">参加</td>
-                </tr>
-                <tr>
-                    <td><span class="lock-icon">🔒</span>ルーム123</td>
-                    <td>10pt</td>
-                    <td>2/4</td>
-                    <td button class="join-button" onclick="window.location.href='wanted_waitroom.html';">参加</td>
-                </tr>
-                <tr>
-                    <td><span class="lock-icon">🔒</span>ルーム123</td>
-                    <td>10pt</td>
-                    <td>2/4</td>
-                    <td button class="join-button" onclick="window.location.href='wanted_waitroom.html';">参加</td>
-                </tr>
-                <tr>
-                    <td><span class="lock-icon">🔒</span>ルーム123</td>
-                    <td>10pt</td>
-                    <td>2/4</td>
-                    <td button class="join-button" onclick="window.location.href='wanted_waitroom.html';">参加</td>
-                </tr>
+                <!-- Additional rows as needed -->
             </tbody>
         </table>
     </div>
