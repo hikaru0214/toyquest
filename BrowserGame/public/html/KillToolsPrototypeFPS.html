@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Three.js ドットエフェクトの実装</title>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.module.js",
+            "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/loaders/GLTFLoader.js",
+            "three/examples/jsm/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/EffectComposer.js",
+            "three/examples/jsm/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/RenderPass.js",
+            "three/examples/jsm/postprocessing/ShaderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/ShaderPass.js"
+        }
+    }
+    </script>
+    <script type="module">
+    import * as THREE from "three";
+    import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+    import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+    import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+    import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+
+    // シーン、カメラ、レンダラーの設定
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    //ゲーム設定: 視野、アスペクト比
+    var Field_Of_View = 90;
+    var aspect_ratio = 5/4;
+    var game_width = width;
+    var game_height = width/aspect_ratio;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(Field_Of_View, aspect_ratio, 1, 1000);
+    const renderer = new THREE.WebGLRenderer({
+        canvas: document.querySelector("#myCanvas"),
+        antialias: false
+    });
+    renderer.setSize(game_width, game_height);
+
+    // リサイズ処理の追加
+    window.addEventListener('resize', () => {
+
+        var ww = window.innerWidth;
+        var wh = window.innerHeight;
+
+        var gw = ww;
+        var gh = ww/aspect_ratio;
+
+        renderer.setSize(gw, gh);
+        camera.updateProjectionMatrix();
+
+        composer.setSize(gw, gh);
+        dotPass.uniforms["resolution"].value.set(gw, gh);
+    });
+
+    // カメラの位置設定
+    camera.position.set(0, 0, 0);
+
+    // ライトの追加
+    const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 7);
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
+
+    const tex=new THREE.TextureLoader().load("../../textures/concrete.png")
+    const mateTex = new THREE.MeshBasicMaterial({map: tex});
+    const geometry2 = new THREE.BoxGeometry(10, 0.5, 10);
+    const cube3 = new THREE.Mesh(geometry2, mateTex);
+    cube3.position.set(-5, -1, -5);
+    scene.add(cube3);
+
+
+    // カスタムドットシェーダーの定義
+    const DotShader = {
+      uniforms: {
+        "tDiffuse": { value: null },
+        "resolution": { value: new THREE.Vector2(game_width, game_height) },
+        "pixelSize": { value: 50 }//初期値。Composerですぐに変更されるのでここでのvalueの値の初期化
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform vec2 resolution;
+        uniform float pixelSize;
+        varying vec2 vUv;
+
+        void main() {
+          vec2 dxy = pixelSize / resolution;
+          vec2 coord = dxy * floor(vUv / dxy);
+          gl_FragColor = texture2D(tDiffuse, coord);
+        }
+      `
+    };
+
+    // Composerの設定
+    const renderPass = new RenderPass(scene, camera);
+    const dotPass = new ShaderPass(DotShader);
+    dotPass.uniforms["resolution"].value = new THREE.Vector2(game_width, game_height);
+    dotPass.uniforms["pixelSize"].value = 2;//ピクセルサイズ変更
+
+    const composer = new EffectComposer(renderer);
+    composer.addPass(renderPass);
+    composer.addPass(dotPass);
+
+    const keys = {};
+
+    document.addEventListener("keydown",(event)=>{
+        keys[event.code] = true;
+    });
+    document.addEventListener("keyup",(event)=>{
+        keys[event.code] = false;
+    });
+
+    function acitionmix(){
+        if(keys["KeyU"])playAnimation('loweraction');
+        if(keys["KeyI"])playAnimation('upperaction');
+    }
+
+    var player_pos = new THREE.Vector3(0,0,0);
+    var forward_vel = 0.1;
+    var player_horizontal_look = 0;
+    var player_vertical_look = 0;
+    var pause = false;
+    var look_velocity = 0.01;
+    // カメラを移動させる関数
+    function moveCamera() {
+        
+        if (keys["KeyA"]) {
+        }
+        if (keys["KeyD"]) {
+        }
+        if (keys["KeyW"]) {
+            player_pos.x+=Math.sin(player_horizontal_look)*forward_vel;
+            player_pos.z+=Math.cos(player_horizontal_look)*forward_vel;
+        }
+        if (keys["KeyS"]) {
+            player_pos.x+=Math.sin(player_horizontal_look)*-forward_vel;
+            player_pos.z+=Math.cos(player_horizontal_look)*-forward_vel;
+        }
+
+        if(keys["ArrowUp"])player_vertical_look-=look_velocity;
+        if(keys["ArrowDown"])player_vertical_look+=look_velocity;
+        if(keys["ArrowRight"])player_horizontal_look+=look_velocity;
+        if(keys["ArrowLeft"])player_horizontal_look-=look_velocity;
+        
+        // ラジアンに変換する
+        let radian = rot * Math.PI / 180;
+        // 角度に応じてカメラの位置を設定
+        camera.position.set(player_pos);
+        camera.rotation.set(player_horizontal_look,player_vertical_look,0);
+    }
+
+
+
+let rot = 0; // 角度
+let mouseX = 0; // マウス座標
+
+// マウス座標はマウスが動いた時のみ取得できる
+document.addEventListener("mousemove", (event) => {
+  mouseX = event.pageX;
+});
+
+// 毎フレーム時に実行されるループイベントです
+function tick() {
+}
+
+setInterval(tick,1000/60);
+
+    //ピクセルサイズ変更処理
+    let pixel_scale=2;
+    function Shader(){
+
+        if(keys["BracketRight"])pixel_scale++;
+        if(keys["BracketLeft"])pixel_scale--;
+
+        dotPass.uniforms["pixelSize"].value = pixel_scale;
+
+        keys["BracketRight"]=keys["BracketLeft"]=false;
+    }
+
+    const clock = new THREE.Clock();
+    // アニメーションループ
+    function animate() {
+
+        // キーが押されている場合にカメラを動かす
+        moveCamera();
+        //特定のキーが押された場合にピクセルサイズを変更する
+        Shader();
+    
+
+        const delta = clock.getDelta(); // delta の取得
+        if (mixer) {
+        mixer.update(delta); // アニメーションの更新
+        }
+
+        // Composerを使用してレンダリング
+        renderer.render(scene, camera);
+        composer.render();
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    </script>
+
+</head>
+<body>
+    <canvas id="myCanvas"></canvas>
+
+    <script>
+        function update(){
+
+        }
+
+        function render(){
+
+            requestAnimationFrame(render);
+        }
+
+        setInterval(update,1000/60);
+
+        render();
+
+    </script>
+</body>
+</html>
