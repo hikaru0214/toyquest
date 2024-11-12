@@ -50,7 +50,7 @@
     const DotShader = {
       uniforms: {
         "tDiffuse": { value: null },
-        "resolution": { value: new THREE.Vector2(width, height) },
+        "resolution": { value: new THREE.Vector2(game_width, game_height) },
         "pixelSize": { value: 50 }//初期値。Composerですぐに変更されるのでここでのvalueの値の初期化
       },
       vertexShader: `
@@ -76,7 +76,7 @@
 
     const renderPass = new RenderPass(scene, camera);
     const dotPass = new ShaderPass(DotShader);
-    dotPass.uniforms["resolution"].value = new THREE.Vector2(width, height);
+    dotPass.uniforms["resolution"].value = new THREE.Vector2(game_width, game_height);
     dotPass.uniforms["pixelSize"].value = 3;//ピクセルサイズ変更
 
     const composer = new EffectComposer(renderer);
@@ -85,17 +85,11 @@
 
     window.addEventListener('resize', () => {
 
-        var ww = window.innerWidth;
-        var wh = window.innerHeight;
-
-        var gw = ww;
-        var gh = ww/aspect_ratio;
-
-        renderer.setSize(gw, gh);
+        renderer.setSize(game_width, game_height);
         camera.updateProjectionMatrix();
 
-        composer.setSize(gw, gh);
-        dotPass.uniforms["resolution"].value.set(gw, gh);
+        composer.setSize(game_width, game_height);
+        dotPass.uniforms["resolution"].value.set(game_width, game_height);
     });
 
     var keys = {};
