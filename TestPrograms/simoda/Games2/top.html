@@ -410,7 +410,7 @@
         dotPass.uniforms["resolution"].value.set(width, height);
     });
 
-    
+    document.body.style.overflow = 'hidden';//ページのスクロール無効
 
     </script>
 
@@ -418,9 +418,13 @@
 <body>
     <div class="container">
     <canvas id="myCanvas"></canvas>
+    <h3 class="player">プレイヤー名</h3>
     <input type="button" class="button" onclick="location.href='test1.html'" value="チャリ走"></button>
     <input type="button" class="button2" value="ブラシ伝言"></button>
     <input type="button" class="button3" value="あいつを探せ" onclick="location.href='rogocontrol.html'"></button>
+    <h3 class="notice">お知らせ</h3>
+    <h3 class="friend">フレンド</h3>
+    <h3 class="Logout">ログアウト</h3>
     </div>
 </body>
 </html>

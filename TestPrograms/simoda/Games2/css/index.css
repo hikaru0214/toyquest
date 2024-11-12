@@ -6,17 +6,39 @@
 
 input{
     position: absolute;
-    left: 10%;
+    left: 13%;
     transform: translate(-50%, -50%); /* 中央揃え */
     padding: 10px 20px;
     font-size: 16px;
 }
 .button {
-    top: 40%; 
+    top: 30%; 
 }
 .button2 {
-    top: 60%; 
+    top: 50%; 
 }
 .button3 {
-    top: 80%; 
+    top: 70%; 
+}
+.player{
+    position: absolute;
+    left: 5%;
+    top:18%;
+}   
+
+.notice{
+    position: absolute;
+    top: 15%;
+    right: 40%;
+}
+
+.friend{
+    position: absolute;
+    top: 15%;
+    right: 30%;
+}
+.Logout{
+    position: absolute;
+    top: 15%;
+    right: 20%;
 }
