@@ -393,6 +393,8 @@
 
         // Composerを使用してレンダリング
         composer.render();
+
+        toggleFullscreen();
     }
 
     animate();
@@ -412,10 +414,20 @@
 
     document.body.style.overflow = 'hidden';//ページのスクロール無効
 
+
+    function toggleFullscreen() {
+      const content = document.getElementById('content');
+      if (!document.fullscreenElement) {
+        content.requestFullscreen().catch(err => {
+          console.error(`フルスクリーンにできませんでした: ${err.message}`);
+        });
+      }
+    }
     </script>
 
 </head>
 <body>
+    <div id="content" >
     <div class="container">
     <canvas id="myCanvas"></canvas>
     <h3 class="player">プレイヤー名</h3>
@@ -438,6 +450,8 @@
             <td>あなた</td>
         </tr>
     </table>
+    </div>
 </div>
+
 </body>
 </html>

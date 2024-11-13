@@ -59,6 +59,7 @@ table {
 th {
     font-size: 16px;
     background-color: #00e2cf;  /* 背景色指定 */
+    text-align: center;
 }
 td {
     font-size: 16px;
