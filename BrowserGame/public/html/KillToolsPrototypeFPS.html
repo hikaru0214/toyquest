@@ -12,16 +12,44 @@
           }
         }
       </script>
+      <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
+      <style>
+
+        .avatar {
+            background-size: 1000% 1000%;
+            display: block;
+            box-sizing: border-box;
+            margin: 0px;
+            padding: 0px;
+            position: absolute;
+            image-rendering: pixelated;
+            width: 160px;
+            height: 160px;
+        }
+
+        #ui_overlay {
+            width: 100%;
+            height: 100%;
+            margin: 10px;
+            position: fixed;
+            color: white;
+            display: none;
+        }
+      </style>
 </head>
-<body>
+<body style="padding: 0px; margin: 0px; image-rendering:pixelated;">
 
     <script type="module">
         import * as THREE from 'three';
 
+        const socket = io.connect('http://52.68.111.88:6060');
+
+        console.log((socket)?"server responded!":"cannot connect to server ;-;");
+
 var fov = 90;
 var gamewidth = window.innerWidth;
 var gameheight = window.innerHeight;
-var aspectratio = 4/3;
+var aspectratio = 16/9;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( fov, aspectratio, 0.1, 1000 );
@@ -45,13 +73,211 @@ window.addEventListener('resize', () => {
     camera.aspect = aspectratio;
 });
 
+const ch_geom = new THREE.BoxGeometry(50,5,5);
+const cv_geom = new THREE.BoxGeometry(5,79,5);
+const cross_material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+const ch_mesh = new THREE.Mesh(ch_geom,cross_material);
+const cv_mesh = new THREE.Mesh(cv_geom,cross_material);
+
+ch_mesh.position.y=100;
+cv_mesh.position.y=100-7;
+
+ch_mesh.scale.z = 0.2;
+cv_mesh.scale.z = 0.2;
+
+ch_mesh.scale.x = 0.5;
+cv_mesh.scale.x = 0.5;
+ch_mesh.scale.y = 0.5;
+cv_mesh.scale.y = 0.5;
+
+scene.add(ch_mesh);
+scene.add(cv_mesh);
+
 const geometry = new THREE.BoxGeometry( 3, 3, 3 );
 const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 const cube = new THREE.Mesh( geometry, material );
-cube.position.y=5;
+cube.position.y=2;
 scene.add( cube );
 
-scene.add(new THREE.GridHelper(100,50));
+scene.add(new THREE.GridHelper(200,100));
+
+    const particles = [];
+    const players = [];
+
+const cube_geometry = new THREE.BoxGeometry(1,1,1);
+
+class DustParticle {
+    constructor(x,y,z,s,l){
+        this.size = s;
+        this.pos = new THREE.Vector3(x,y,z);
+        this.life = l;
+
+        this.color = 0xcccccc;
+        this.material =  new THREE.MeshBasicMaterial({color:this.color});
+        this.mesh = new THREE.Mesh(cube_geometry,this.material);
+        scene.add(this.mesh);
+
+        this.mesh.position.x = this.pos.x;
+        this.mesh.position.y = this.pos.y;
+        this.mesh.position.z = this.pos.z;
+    }
+
+    move(vel){
+        this.pos.x+=vel.x;
+        this.pos.y+=vel.y;
+        this.pos.z+=vel.z;
+    }
+
+    update(){
+        this.pos.y+=0.05;
+        this.life--;
+        this.size-=0.06;
+        if(this.size<=0)this.size=0;
+        this.mesh.scale.set(this.size,this.size,this.size);
+        this.mesh.position.x = this.pos.x;
+        this.mesh.position.y = this.pos.y;
+        this.mesh.position.z = this.pos.z;
+    }
+
+    isDead(){
+        return this.life <= 0;
+    }
+
+    removeFromScene(){
+        scene.remove(this.mesh);
+        this.mesh.material.dispose();
+    }
+    
+}
+
+const player_geometry = new THREE.BoxGeometry(2,4,2);
+
+class Player{
+            constructor(){
+                this.look_horizontal = 0;
+                this.look_vertical = 0;
+                this.pos = new THREE.Vector3((Math.random()*100)-50,200+(Math.random()*1000),(Math.random()*100)-50);
+                this.vel = new THREE.Vector3(0,0,0);
+                this.vel_forward = 0.05;
+                this.vel_strafe  = 0.1;
+                this.landed = false;
+
+                this.color = parseInt(Math.random()*0xffffff,10);
+                this.material = new THREE.MeshBasicMaterial({color:this.color});
+
+                this.life = 100;
+
+                this.material = new THREE.MeshBasicMaterial({color:this.color});
+                this.box = new THREE.Mesh(player_geometry,this.material);
+                scene.add(this.box);
+
+                this.box.position.x = this.pos.x;
+                this.box.position.y = this.pos.y;
+                this.box.position.z = this.pos.z;
+
+                this.interval = 0;
+                this.interval_jump = 0;
+                this.jump_interval = 60;
+
+            }
+
+            goForward(){
+                if(!this.landed)return;
+                this.vel.x+=Math.sin(this.look_horizontal)*-this.vel_forward;
+                this.vel.z+=Math.cos(this.look_horizontal)*-this.vel_forward;
+            }
+
+            goBackward(){
+                if(!this.landed)return;
+                this.vel.x+=Math.sin(this.look_horizontal)*-this.vel_forward;
+                this.vel.z+=Math.cos(this.look_horizontal)*-this.vel_forward;
+            }
+
+            strafeLeft(){
+                if(!this.landed)return;
+                this.vel.x+=Math.sin(this.look_horizontal+Math.PI/2)*-this.vel_forward;
+                this.vel.z+=Math.cos(this.look_horizontal+Math.PI/2)*-this.vel_forward;
+            }
+
+            strafeRight(){
+                if(!this.landed)return;
+                this.vel.x+=Math.sin(this.look_horizontal+Math.PI/2)*this.vel_forward;
+                this.vel.z+=Math.cos(this.look_horizontal+Math.PI/2)*this.vel_forward;
+            }
+
+            jump(){
+                if(!this.landed)return;
+            this.vel.y=0.5;
+            this.landed = false;
+            }
+
+            lookRandom(){
+                this.interval++;
+                if(this.interval >= 30){
+                    this.look_horizontal=Math.random()*Math.PI*2;
+                    this.interval=0;
+                }
+            }
+
+            jumpRandom(){
+                this.interval_jump++;
+                if(this.interval_jump >= this.jump_interval){
+                this.jump();
+                this.interval_jump=0;
+                this.jump_interval = 20+Math.random()*120;
+                }
+            }
+
+            update(){
+                this.vel.y-=0.02;
+
+                //this.look_horizontal+=0.08;
+
+                this.goForward();
+
+                this.jumpRandom();
+
+                this.lookRandom();
+
+                if(this.landed){
+                    this.vel.x*=0.9; //摩擦
+                    this.vel.z*=0.9;
+                }else{
+                    this.vel.x*=1; //摩擦
+                    this.vel.z*=1;
+                }
+
+                if((this.pos.y+this.vel.y)-4 <= 0){
+                    this.vel.y=0;
+                    this.landed=true;
+                }
+
+                this.pos.x+=this.vel.x;
+                this.pos.y+=this.vel.y;
+                this.pos.z+=this.vel.z;
+                this.box.position.x = this.pos.x;
+                this.box.position.y = this.pos.y-2;
+                this.box.position.z = this.pos.z;
+                this.box.rotation.y = this.look_horizontal;
+
+                if(this.vel.length()>=0.1&&this.landed){
+                    var rx = ((Math.random()*1)-0.5)*1.5;
+                    var ry = ((Math.random()*1)-0.5)/2;
+                    var rz = ((Math.random()*1)-0.5)*1.5;
+                    particles.push(new DustParticle(this.pos.x+rx,ry+this.pos.y-4,rz+this.pos.z,1,15));
+                }
+            }
+
+            isDead(){
+                return this.life <= 0;
+            }
+
+            removeFromScene(){
+                scene.remove(this.box);
+                this.box.material.dispose();
+            }
+
+}
 
 const keys = {};
 
@@ -62,13 +288,18 @@ document.addEventListener("keyup",(e)=>{
     keys[e.code]=false;
 });
 
-    var player_pos = new THREE.Vector3(0,5,5);
+    for(var i = 0;i < 100;i++){
+        players.push(new Player());
+    }
+
+    var player_pos = new THREE.Vector3(0,100,100);
     var player_vel = new THREE.Vector3(0,0,0);
-    var forward_vel = 0.3;
+    var forward_vel = 0.05;
     var player_horizontal_look = 0;
     var player_vertical_look = 0;
     var pause = false;
     var look_velocity = 0.05;
+    var landed = false;
     
     document.addEventListener("mousemove",function(e){
         var reduce = 600.0;
@@ -87,22 +318,30 @@ document.addEventListener("keyup",(e)=>{
         }
     });
 
+    var increment = 0;
+
     function update(){
+        if(landed){
         if(keys["KeyW"]){
-            player_pos.x+=Math.sin(player_horizontal_look)*-forward_vel;
-            player_pos.z+=Math.cos(player_horizontal_look)*-forward_vel;
+            player_vel.x+=Math.sin(player_horizontal_look)*-forward_vel;
+            player_vel.z+=Math.cos(player_horizontal_look)*-forward_vel;
         }
         if(keys["KeyS"]){
-            player_pos.x+=Math.sin(player_horizontal_look)*forward_vel;
-            player_pos.z+=Math.cos(player_horizontal_look)*forward_vel;
+            player_vel.x+=Math.sin(player_horizontal_look)*forward_vel;
+            player_vel.z+=Math.cos(player_horizontal_look)*forward_vel;
         }
         if(keys["KeyA"]){
-            player_pos.x+=Math.sin(player_horizontal_look+Math.PI/2)*-forward_vel;
-            player_pos.z+=Math.cos(player_horizontal_look+Math.PI/2)*-forward_vel;
+            player_vel.x+=Math.sin(player_horizontal_look+Math.PI/2)*-forward_vel;
+            player_vel.z+=Math.cos(player_horizontal_look+Math.PI/2)*-forward_vel;
         }
         if(keys["KeyD"]){
-            player_pos.x+=Math.sin(player_horizontal_look+Math.PI/2)*forward_vel;
-            player_pos.z+=Math.cos(player_horizontal_look+Math.PI/2)*forward_vel;
+            player_vel.x+=Math.sin(player_horizontal_look+Math.PI/2)*forward_vel;
+            player_vel.z+=Math.cos(player_horizontal_look+Math.PI/2)*forward_vel;
+        }
+        }
+        if(keys["Space"]&&landed){
+            player_vel.y=0.5;
+            landed = false;
         }
 
         if(keys["ArrowLeft"])player_horizontal_look += look_velocity;
@@ -113,22 +352,160 @@ document.addEventListener("keyup",(e)=>{
         //player_vel.addScalar(0.9);
         //player_pos.add(player_vel);
 
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
+        cube.rotation.x += 0.03;
+        cube.rotation.y += 0.03;
 
+        increment+=0.05;
+        cube.position.y+=Math.sin(increment)*0.2;
+
+        player_vel.y-=0.02; //重力
+
+        if(landed){
+        player_vel.x*=0.9; //摩擦
+        player_vel.z*=0.9;
+        }else{
+            player_vel.x*=1; //摩擦
+            player_vel.z*=1;
+        }
+
+        if((player_pos.y+player_vel.y)-4 <= 0){
+            player_vel.y=0;
+            landed=true;
+        }
+
+        player_pos.x+=player_vel.x
+        player_pos.y+=player_vel.y
+        player_pos.z+=player_vel.z
+
+        if(player_vel.length()>=0.1&&landed){
+            var rx = ((Math.random()*1)-0.5)*1.5;
+            var ry = ((Math.random()*1)-0.5)/2;
+            var rz = ((Math.random()*1)-0.5)*1.5;
+            particles.push(new DustParticle(player_pos.x+rx,ry+player_pos.y-4,rz+player_pos.z,1,15));
+        }
+
+        for(var i = 0;i < players.length;i++){
+            players[i].update();
+            if(players[i].isDead()){
+                players[i].removeFromScene();
+                players.splice(i,1);
+            }
+        }
+
+        for(var i = 0;i < particles.length;i++){
+            particles[i].update();
+            if(particles[i].isDead()){
+                particles[i].removeFromScene();
+                particles.splice(i,1);
+            }
+        }
     }
 
     setInterval(update,1000/60);
 
     function animate() {
         camera.position.x = player_pos.x;
-        camera.position.y = player_pos.y;
+        camera.position.y = player_pos.y-1;
         camera.position.z = player_pos.z;
 
         camera.rotation.set(player_vertical_look,player_horizontal_look,0);
+        if(player_pos.y > 20){
+            camera.lookAt(ch_mesh.position);
+            player_horizontal_look = camera.rotation.y;
+            player_vertical_look = camera.rotation.x;
+        }else{
+            document.getElementById("ui_overlay").style.display="block";
+        }
 	    renderer.render( scene, camera );
     }
 renderer.setAnimationLoop( animate );
+    </script>
+
+    <div id="ui_overlay">
+        移動 : W,A,S,Dキー
+        <br>
+        向き : ↑,←,↓,→キー、またはマウス(画面をクリックしてフォーカス)
+        <br>
+        ジャンプ : スペースキー
+        <br>
+        <h1>神を恐れよ</h1>
+        <p>オーバーレイテスト</p>
+        <h2>h2ヘッダー</h2>
+        <h3>h3ヘッダー</h2>
+        <h4>h4ヘッダー</h2>
+        <br>
+        <div style="width: 160px; height: 160px;margin: 5px; display: inline-block;vertical-align: top;">
+            <div id="skin" class="avatar" style="background-image: url('../img/color_atlas.gif');"></div>
+            <div id="eye" class="avatar" style="background-image: url('../img/eyes_atlas.gif');"></div>
+            <div id="mouth" class="avatar" style="background-image: url('../img/mouth_atlas.gif');"></div>
+        </div>
+        <button>ボタン</button>
+        <table border="1" style="border-color: white;">
+            <tr>
+                <td>テーブル</td>
+                <td>箇所</td>
+                <td>聖句</td>
+            </tr>
+            <tr>
+                <td>シナイ契約</td>
+                <td>出エジプト記<br>
+                    20章2節~17節</td>
+                <td>「わたしは主、あなたの神、あなたをエジプトの国、奴隷の家から導き出した神である。...」
+                </td>
+            </tr>
+            <tr>
+                <td>新しい契約<br>
+                    の予告</td>
+                <td>エレミヤ書<br>
+                    31章22節</td>
+                <td>しかし、来るべき日に、わたしがイスラエルの家と結ぶ契約はこれである、<br>と主は言われる。
+                    すなわち、わたしの律法を彼らの胸の中に授け、彼らの心にそれを記す。<br>わたしは彼らの神となり、彼らはわたしの民となる。
+                </td>
+            </tr>
+            <tr>
+                <td>御子</td>
+                <td>ヨハネによる<br>
+                    福音書<br>
+                    1章17節</td>
+                <td>律法はモーセを通して与えられたが、<br>
+                    恵みと真理はイエス・キリストを通して現れたからである。
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        function setSpritePosition(r_skin,r_eye,r_mouth){
+            r_skin = parseInt(r_skin);
+            r_eye = parseInt(r_eye);
+            r_mouth = parseInt(r_mouth);
+            
+            var skin_row = parseInt(r_skin/10,10);
+            var skin_col = r_skin%10;
+            var skin_sx = skin_col*-100;
+            var skin_sy = skin_row*-100;
+
+            var eye_row = parseInt(r_eye/10,10);
+            var eye_col = r_eye%10;
+            var eye_sx = eye_col*-100;
+            var eye_sy = eye_row*-100;
+
+            var mouth_row = parseInt(r_mouth/10,10);
+            var mouth_col = r_mouth%10;
+            var mouth_sx = mouth_col*-100;
+            var mouth_sy = mouth_row*-100;
+
+            document.getElementById("skin").style.backgroundPositionX = skin_sx+"%";
+            document.getElementById("skin").style.backgroundPositionY = skin_sy+"%";
+
+            document.getElementById("eye").style.backgroundPositionX = eye_sx+"%";
+            document.getElementById("eye").style.backgroundPositionY = eye_sy+"%";
+
+            document.getElementById("mouth").style.backgroundPositionX = mouth_sx+"%";
+            document.getElementById("mouth").style.backgroundPositionY = mouth_sy+"%";
+        }
+
+        setSpritePosition(Math.random()*28,Math.random()*57,Math.random()*51);
     </script>
     
 </body>

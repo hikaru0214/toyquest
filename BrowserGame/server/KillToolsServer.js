@@ -4,7 +4,7 @@ const options = {
     }
 };
 
-const io = require("socket.io")(7000,options);
+const io = require("socket.io")(6060,options);
 
 const Game = require('../public/javascript/KillToolsGame.js');
 
