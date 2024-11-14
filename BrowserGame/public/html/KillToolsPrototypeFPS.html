@@ -318,6 +318,10 @@ document.addEventListener("keyup",(e)=>{
         }
     });
 
+    function elementDisplayById(id,show){
+        document.getElementById(id).style.display  = show?"block":"none";
+    }
+
     var increment = 0;
 
     function update(){
@@ -413,8 +417,9 @@ document.addEventListener("keyup",(e)=>{
             camera.lookAt(ch_mesh.position);
             player_horizontal_look = camera.rotation.y;
             player_vertical_look = camera.rotation.x;
-        }else{
-            document.getElementById("ui_overlay").style.display="block";
+            elementDisplayById("ui_overlay",false);
+        }else {
+            elementDisplayById("ui_overlay",true);
         }
 	    renderer.render( scene, camera );
     }
@@ -439,7 +444,7 @@ renderer.setAnimationLoop( animate );
             <div id="eye" class="avatar" style="background-image: url('../img/eyes_atlas.gif');"></div>
             <div id="mouth" class="avatar" style="background-image: url('../img/mouth_atlas.gif');"></div>
         </div>
-        <button>ボタン</button>
+        <button id="randomize">ボタン</button>
         <table border="1" style="border-color: white;">
             <tr>
                 <td>テーブル</td>
@@ -506,6 +511,9 @@ renderer.setAnimationLoop( animate );
         }
 
         setSpritePosition(Math.random()*28,Math.random()*57,Math.random()*51);
+        document.getElementById("randomize").onclick = function(){
+            setSpritePosition(Math.random()*28,Math.random()*57,Math.random()*51);
+        }
     </script>
     
 </body>
