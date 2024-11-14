@@ -103,6 +103,7 @@ scene.add(new THREE.GridHelper(200,100));
 
     const particles = [];
     const players = [];
+    const rockets = [];
 
 const cube_geometry = new THREE.BoxGeometry(1,1,1);
 
@@ -148,6 +149,93 @@ class DustParticle {
         this.mesh.material.dispose();
     }
     
+}
+
+const rocket_geometry = new THREE.BoxGeometry(1,1,3);
+
+function rotateX(vec,angle){
+    var sin = Math.sin(angle);
+    var cos = Math.cos(angle);
+
+    var y = (cos*vec.y)+(-sin*vec.z);
+    var z = (sin*y)+(cos*vec.z);
+
+    vec.y = y;
+    vec.z = z;
+}
+
+function rotateY(vec,angle){
+    var sin = Math.sin(angle);
+    var cos = Math.cos(angle);
+
+    var x = (cos*vec.x)+(sin*vec.z);
+    var z = (-sin*x)+(cos*vec.z);
+
+    vec.x = x;
+    vec.z = z;
+}
+
+function rotateZ(vec,angle){
+    var sin = Math.sin(angle);
+    var cos = Math.cos(angle);
+
+    var x = (cos*vec.x)+(-sin*vec.y);
+    var y = (sin*x)+(cos*vec.y);
+}
+
+class Rocket {
+    constructor(pos,look_horizontal,look_vertical){
+        this.pos = new THREE.Vector3().copy(pos);
+        this.speed = 0.5;
+
+        this.tempvel = new THREE.Vector3(0,0,-1);
+        rotateY(this.tempvel,look_horizontal);
+        rotateY(this.tempvel,look_vertical);
+
+        rotateX(this.tempvel,look_horizontal);
+        rotateX(this.tempvel,look_vertical);
+
+        rotateZ(this.tempvel,look_horizontal);
+        rotateZ(this.tempvel,look_vertical);
+
+        this.vel = this.tempvel;
+        this.life = 100;
+
+        this.mesh = new THREE.Mesh(rocket_geometry,new THREE.MeshBasicMaterial({color:0xbbbbbb}));
+        scene.add(this.mesh);
+
+        this.mesh.position.x = this.pos.x;
+        this.mesh.position.y = this.pos.y;
+        this.mesh.position.z = this.pos.z;
+
+        console.log(this.vel);
+
+        this.mesh.rotation.set(look_vertical,look_horizontal,0);
+    }
+
+    update(){
+
+        console.log("updated");
+
+        this.life--;
+
+        this.pos.x += this.vel.x;
+        this.pos.y += this.vel.y;
+        this.pos.z += this.vel.z;
+
+        this.mesh.position.x = this.pos.x;
+        this.mesh.position.y = this.pos.y;
+        this.mesh.position.z = this.pos.z;
+    }
+
+    isDead(){
+        return this.life <= 0;
+    }
+
+    removeFromScene(){
+        scene.remove(this.mesh);
+        this.mesh.material.dispose();
+    }
 }
 
 const player_geometry = new THREE.BoxGeometry(2,4,2);
@@ -348,6 +436,10 @@ document.addEventListener("keyup",(e)=>{
             landed = false;
         }
 
+        if(keys["KeyC"]){
+            rockets.push(new Rocket(player_pos,player_horizontal_look,player_vertical_look));
+        }
+
         if(keys["ArrowLeft"])player_horizontal_look += look_velocity;
         if(keys["ArrowRight"])player_horizontal_look -= look_velocity;
         if(keys["ArrowUp"])player_vertical_look += look_velocity;
@@ -401,6 +493,14 @@ document.addEventListener("keyup",(e)=>{
             if(particles[i].isDead()){
                 particles[i].removeFromScene();
                 particles.splice(i,1);
+            }
+        }
+
+        for(var i = 0;i < rockets.length;i++){
+            rockets[i].update();
+            if(rockets[i].isDead()){
+                rockets[i].removeFromScene();
+                rockets.splice(i,1);
             }
         }
     }

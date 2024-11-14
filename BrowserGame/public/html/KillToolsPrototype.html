@@ -1,328 +1,624 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title>Three.js ドットエフェクトの実装</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
     <script type="importmap">
-    {
-        "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.module.js",
-            "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/loaders/GLTFLoader.js",
-            "three/examples/jsm/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/EffectComposer.js",
-            "three/examples/jsm/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/RenderPass.js",
-            "three/examples/jsm/postprocessing/ShaderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/ShaderPass.js"
+        {
+          "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
+          }
         }
-    }
-    </script>
+      </script>
+      <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
+      <style>
+
+        .avatar {
+            background-size: 1000% 1000%;
+            display: block;
+            box-sizing: border-box;
+            margin: 0px;
+            padding: 0px;
+            position: absolute;
+            image-rendering: pixelated;
+            width: 160px;
+            height: 160px;
+        }
+
+        #ui_overlay {
+            width: 100%;
+            height: 100%;
+            margin: 10px;
+            position: fixed;
+            color: white;
+            display: none;
+        }
+        #player_avatar {
+            position: fixed;
+            bottom: 0;
+        }
+        #crosshair {
+            position: fixed;
+            color: white;
+            text-align:unset;
+            margin: 0px;
+            padding: 0px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            font-size: 16px;
+        }
+      </style>
+</head>
+<body style="padding: 0px; margin: 0px; image-rendering:pixelated;">
+
     <script type="module">
-    import * as THREE from "three";
-    import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-    import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-    import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
-    import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+        import * as THREE from 'three';
 
-    // シーン、カメラ、レンダラーの設定
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+        const socket = io.connect('http://52.68.111.88:6060');
 
-    //ゲーム設定: 視野、アスペクト比
-    var Field_Of_View = 90;
-    var aspect_ratio = 5/4;
-    var game_width = width;
-    var game_height = width/aspect_ratio;
+        console.log((socket)?"server responded!":"cannot connect to server ;-;");
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(Field_Of_View, aspect_ratio, 1, 1000);
-    const renderer = new THREE.WebGLRenderer({
-        canvas: document.querySelector("#myCanvas"),
-        antialias: false
-    });
-    renderer.setSize(game_width, game_height);
+var fov = 90;
+var gamewidth = window.innerWidth;
+var gameheight = window.innerHeight;
+var aspectratio = 16/9;
 
-    // カメラの位置設定
-    camera.position.set(0, 0, 0);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( fov, aspectratio, 0.1, 1000 );
 
-    // ライトの追加
-    const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
-    scene.add(ambientLight);
+camera.rotation.order = "YXZ";
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 7);
-    directionalLight.position.set(5, 5, 5);
-    scene.add(directionalLight);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( gamewidth, gameheight );
+document.body.appendChild( renderer.domElement );
 
-    const tex=new THREE.TextureLoader().load("../../textures/concrete.png")
-    const mateTex = new THREE.MeshBasicMaterial({map: tex});
-    const geometry2 = new THREE.BoxGeometry(10, 0.5, 10);
-    const cube3 = new THREE.Mesh(geometry2, mateTex);
-    cube3.position.set(-5, 1, -5);
-    scene.add(cube3);
+window.addEventListener('resize', () => {
 
-    const texture=new THREE.TextureLoader().load("../../textures/タイトルなし.png")
-    // GLTFモデルの読み込み。GLTFLoaderのインポートが必要
-    let gltf; // GLTFオブジェクトを格納する変数
-    let mixer; // アニメーションミキサー
-    var model = null;
-    const loader = new GLTFLoader();
-    loader.load(
-        "../../models/animatetest4.glb",
-        function (loadedGltf) {
-            gltf = loadedGltf;
-            model = gltf.scene;
-            model.scale.set(0.1, 0.1, 0.1);
-            model.position.set(0, 1, 0);
-            model.rotation.set(0, 0, 0);
-            model.traverse(function (node) {
-                if (node.isMesh) {
-                    if (Array.isArray(node.material)) {
-                        node.material.forEach((mat) => {
-                            mat.map = texture;
-                            mat.needsUpdate = true;
-                        });
-                    } else {
-                        node.material.map = texture;
-                        node.material.needsUpdate = true;
-                    }
-                }
-            });
-            scene.add(model);
-            camera.lookAt(model.position);//カメラがモデルに注目するようにする
+    gamewidth = window.innerWidth;
+    gameheight = window.innerHeight;
+    camera.fov = fov;
+    camera.aspect = aspectratio;
 
-            console.log(gltf.animations.map(clip => clip.name));
-            mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
-            playAnimation('stopmotion'); // アニメーションを再生
-        },
-        undefined,
-        function (error) {
-            console.error('Error loading the GLTF model:', error);
-        }
-    );
-
-
-    // アニメーションの名前を指定して再生する関数
-    function playAnimation(name) {
-        const clip = gltf.animations.find(clip => clip.name === name);
-        if (clip) {
-            
-            mixer.clipAction(clip).play();  // 指定されたアニメーションを再生
-        } else {
-            console.error(`アニメーション "${name}" が見つかりません`);
-        }
-    }
-    //アニメーションの名前を指定して停止する関数
-    function stopAnimation(name) {
-    const clip = gltf.animations.find(clip => clip.name === name);
-    if (clip) {
-        const action = mixer.clipAction(clip);
-        action.stop();  // 特定のアニメーションを停止
-    } else {
-        console.error(`アニメーション "${name}" が見つかりません`);
-    }
-    }
-
-    // アニメーションの更新
-
-
-    // カスタムドットシェーダーの定義
-    const DotShader = {
-      uniforms: {
-        "tDiffuse": { value: null },
-        "resolution": { value: new THREE.Vector2(game_width, game_height) },
-        "pixelSize": { value: 50 }//初期値。Composerですぐに変更されるのでここでのvalueの値の初期化
-      },
-      vertexShader: `
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform sampler2D tDiffuse;
-        uniform vec2 resolution;
-        uniform float pixelSize;
-        varying vec2 vUv;
-
-        void main() {
-          vec2 dxy = pixelSize / resolution;
-          vec2 coord = dxy * floor(vUv / dxy);
-          gl_FragColor = texture2D(tDiffuse, coord);
-        }
-      `
-    };
-
-    // Composerの設定
-    const renderPass = new RenderPass(scene, camera);
-    const dotPass = new ShaderPass(DotShader);
-    dotPass.uniforms["resolution"].value = new THREE.Vector2(game_width, game_height);
-    dotPass.uniforms["pixelSize"].value = 2;//ピクセルサイズ変更
-
-    const composer = new EffectComposer(renderer);
-    composer.addPass(renderPass);
-    composer.addPass(dotPass);
-
-    const keys = {};
-
-    document.addEventListener("keydown",(event)=>{
-        stopAnimation('stopmotion');//アニメーション停止
-        keys[event.code] = true;
-    });
-    document.addEventListener("keyup",(event)=>{
-        playAnimation('stopmotion'); // アニメーションを再生
-        keys[event.code] = false;
-    });
-
-    function acitionmix(){
-        if(keys["KeyU"])playAnimation('loweraction');
-        if(keys["KeyI"])playAnimation('upperaction');
-    }
-
-    let posix=0;
-    let posiz=0;
-    // カメラを移動させる関数
-    function moveCamera() {
-        
-        if (keys["ArrowLeft"]||keys["KeyA"]) {
-            //camera.position.x -= 0.1;
-            //character.position.x -= 0.1;
-            model.position.x -= 0.1;
-            posix-=0.1;
-        }
-
-        if (keys["ArrowRight"]||keys["KeyD"]) {
-            //camera.position.x += 0.1;
-            //character.position.x += 0.1;
-            model.position.x += 0.1;
-            posix+=0.1;
-        }
-        if (keys["ArrowUp"]||keys["KeyW"]) {
-            //camera.position.z += 0.1;
-            model.position.z+= 0.1;
-            //character.position.z += 0.1;
-            posiz+=0.1 
-        }
-        if (keys["ArrowDown"]||keys["KeyS"]) {
-            //camera.position.z -= 0.1;
-            model.position.z-= 0.1;
-            //character.position.z -= 0.1;
-            posiz-=0.1
-        }
-
-        // ラジアンに変換する
-        let radian = rot * Math.PI / 180;
-        // 角度に応じてカメラの位置を設定
-        camera.position.x = posix+Math.sin(radian)*-4;
-        camera.position.z = posiz+Math.cos(radian)*-4;
-        if(model)camera.lookAt(model.position);
-    }
-
-
-
-
-let rot = 0; // 角度
-let mouseX = 0; // マウス座標
-
-// マウス座標はマウスが動いた時のみ取得できる
-document.addEventListener("mousemove", (event) => {
-  mouseX = event.pageX;
+    renderer.setSize(gamewidth, gameheight);
+    camera.updateProjectionMatrix();
+    camera.fov = fov;
+    camera.aspect = aspectratio;
 });
 
-// 毎フレーム時に実行されるループイベントです
-function tick() {
-  // マウスの位置に応じて角度を設定
-  // マウスのX座標がステージの幅の何%の位置にあるか調べてそれを360度で乗算する
-  const targetRot = (mouseX / window.innerWidth) * 360;
-  // イージングの公式を用いて滑らかにする
-  // 値 += (目標値 - 現在の値) * 減速値
-  rot += (targetRot - rot) * 0.02;
+const ch_geom = new THREE.BoxGeometry(50,50,50);
+const cv_geom = new THREE.BoxGeometry(50,79,50);
+const cross_material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+const ch_mesh = new THREE.Mesh(ch_geom,cross_material);
+const cv_mesh = new THREE.Mesh(cv_geom,cross_material);
 
-  adjustCameraDistance();
-  
-  // レンダリング
-  renderer.render(scene, camera);
+ch_mesh.position.y=100;
+cv_mesh.position.y=100-7;
 
-}
+ch_mesh.scale.z = 0.2;
+cv_mesh.scale.z = 0.2;
 
-setInterval(tick,1000/60);
+ch_mesh.scale.x = 0.5;
+cv_mesh.scale.x = 0.5;
+ch_mesh.scale.y = 0.5;
+cv_mesh.scale.y = 0.5;
 
-function adjustCameraDistance() {
-    if(!model)return;
-    const distance = camera.position.distanceTo(model.position);
-    const minDistance = 4; // カメラとモデルの最小距離を設定
-    if (distance < minDistance) {
-        const direction = camera.position.clone().sub(model.position).normalize();
-        camera.position.copy(model.position).add(direction.multiplyScalar(minDistance));
+scene.add(ch_mesh);
+scene.add(cv_mesh);
+
+const geometry = new THREE.BoxGeometry( 3, 3, 3 );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const cube = new THREE.Mesh( geometry, material );
+cube.position.y=2;
+scene.add( cube );
+
+scene.add(new THREE.GridHelper(200,100));
+
+    const particles = [];
+    const players = [];
+    const rockets = [];
+
+const cube_geometry = new THREE.BoxGeometry(1,1,1);
+
+class DustParticle {
+    constructor(x,y,z,s,l,c){
+        this.size = s;
+        this.pos = new THREE.Vector3(x,y,z);
+        this.life = l;
+
+        this.color = c;
+        this.material =  new THREE.MeshBasicMaterial({color:this.color});
+        this.mesh = new THREE.Mesh(cube_geometry,this.material);
+        scene.add(this.mesh);
+
+        this.mesh.position.x = this.pos.x;
+        this.mesh.position.y = this.pos.y;
+        this.mesh.position.z = this.pos.z;
     }
-}
 
-    //ピクセルサイズ変更処理
-    let pixel_scale=2;
-    function Shader(){
-
-        if(keys["BracketRight"])pixel_scale++;
-        if(keys["BracketLeft"])pixel_scale++;
-
-        dotPass.uniforms["pixelSize"].value = pixel_scale;
-
-        keys["BracketRight"]=keys["BracketLeft"]=false;
+    move(vel){
+        this.pos.x+=vel.x;
+        this.pos.y+=vel.y;
+        this.pos.z+=vel.z;
     }
 
-    const clock = new THREE.Clock();
-    // アニメーションループ
-    function animate() {
+    update(){
+        this.pos.y+=0.05;
+        this.life--;
+        this.size-=0.06;
+        if(this.size<=0)this.size=0;
+        this.mesh.scale.set(this.size,this.size,this.size);
+        this.mesh.position.x = this.pos.x;
+        this.mesh.position.y = this.pos.y;
+        this.mesh.position.z = this.pos.z;
+    }
 
-        // キーが押されている場合にカメラを動かす
-        moveCamera();
-        //特定のキーが押された場合にピクセルサイズを変更する
-        Shader();
+    isDead(){
+        return this.life <= 0;
+    }
+
+    removeFromScene(){
+        scene.remove(this.mesh);
+        this.mesh.material.dispose();
+    }
     
+}
 
-        const delta = clock.getDelta(); // delta の取得
-        if (mixer) {
-        mixer.update(delta); // アニメーションの更新
-        }
+const rocket_geometry = new THREE.BoxGeometry(0.5,0.5,2);
 
-        // Composerを使用してレンダリング
-        composer.render();
-        requestAnimationFrame(animate);
+class Rocket {
+    constructor(pos,look_horizontal,look_vertical){
+        this.pos = new THREE.Vector3().copy(pos);
+        this.speed = 1.2;
+        this.vel = new THREE.Vector3();
+        this.life = 60*3;
+
+        this.mesh = new THREE.Mesh(rocket_geometry,new THREE.MeshBasicMaterial({color:0xaaaaaa}));
+        scene.add(this.mesh);
+
+        this.mesh.position.x = this.pos.x;
+        this.mesh.position.y = this.pos.y;
+        this.mesh.position.z = this.pos.z;
+
+        console.log(this.vel);
+
+        this.mesh.rotation.order = "YXZ";
+
+        this.mesh.rotation.set(look_vertical,look_horizontal,0);
+        this.mesh.getWorldDirection(this.vel);
+        this.vel.multiplyScalar(-this.speed);
     }
 
-    animate();
+    update(){
 
-    // リサイズ処理の追加
-    window.addEventListener('resize', () => {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
+        console.log("updated");
 
-        renderer.setSize(width, height);
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
+        this.life--;
 
-        composer.setSize(width, height);
-        dotPass.uniforms["resolution"].value.set(width, height);
+        this.pos.x += this.vel.x;
+        this.pos.y += this.vel.y;
+        this.pos.z += this.vel.z;
+
+        this.mesh.position.x = this.pos.x;
+        this.mesh.position.y = this.pos.y;
+        this.mesh.position.z = this.pos.z;
+
+        if(this.pos.y < 0)this.life=0;
+    }
+
+    isDead(){
+        return this.life <= 0;
+    }
+
+    removeFromScene(){
+        for(var i = 0;i < 20;i++){
+            var rx = (Math.random()*1)-0.5;
+            var ry = (Math.random()*1)-0.5;
+            var rz = (Math.random()*1)-0.5;
+            rx*=2;
+            ry*=2;
+            rz*=2;
+            particles.push(new DustParticle(this.pos.x+rx,this.pos.y+ry,this.pos.z+rz,1,20,0xffaa00));
+        }
+        for(var i = 0;i < 10;i++){
+            var rx = (Math.random()*1)-0.5;
+            var ry = (Math.random()*1)-0.5;
+            var rz = (Math.random()*1)-0.5;
+            rx*=6;
+            ry*=6;
+            rz*=6;
+            particles.push(new DustParticle(this.pos.x+rx,this.pos.y+ry,this.pos.z+rz,1.5,40,0xdddddd));
+        }
+        scene.remove(this.mesh);
+        this.mesh.material.dispose();
+    }
+}
+
+const player_geometry = new THREE.BoxGeometry(2,4,2);
+
+class Player{
+            constructor(){
+                this.look_horizontal = 0;
+                this.look_vertical = 0;
+                this.pos = new THREE.Vector3((Math.random()*100)-50,200+(Math.random()*1000),(Math.random()*100)-50);
+                this.vel = new THREE.Vector3(0,0,0);
+                this.vel_forward = 0.05;
+                this.vel_strafe  = 0.1;
+                this.landed = false;
+
+                this.color = parseInt(Math.random()*0xffffff,10);
+                this.material = new THREE.MeshBasicMaterial({color:this.color});
+
+                this.life = 100;
+
+                this.material = new THREE.MeshBasicMaterial({color:this.color});
+                this.box = new THREE.Mesh(player_geometry,this.material);
+                scene.add(this.box);
+
+                this.box.position.x = this.pos.x;
+                this.box.position.y = this.pos.y;
+                this.box.position.z = this.pos.z;
+
+                this.interval = 0;
+                this.interval_jump = 0;
+                this.jump_interval = 60;
+
+            }
+
+            goForward(){
+                if(!this.landed)return;
+                this.vel.x+=Math.sin(this.look_horizontal)*-this.vel_forward;
+                this.vel.z+=Math.cos(this.look_horizontal)*-this.vel_forward;
+            }
+
+            goBackward(){
+                if(!this.landed)return;
+                this.vel.x+=Math.sin(this.look_horizontal)*-this.vel_forward;
+                this.vel.z+=Math.cos(this.look_horizontal)*-this.vel_forward;
+            }
+
+            strafeLeft(){
+                if(!this.landed)return;
+                this.vel.x+=Math.sin(this.look_horizontal+Math.PI/2)*-this.vel_forward;
+                this.vel.z+=Math.cos(this.look_horizontal+Math.PI/2)*-this.vel_forward;
+            }
+
+            strafeRight(){
+                if(!this.landed)return;
+                this.vel.x+=Math.sin(this.look_horizontal+Math.PI/2)*this.vel_forward;
+                this.vel.z+=Math.cos(this.look_horizontal+Math.PI/2)*this.vel_forward;
+            }
+
+            jump(){
+                if(!this.landed)return;
+            this.vel.y=0.5;
+            this.landed = false;
+            }
+
+            lookRandom(){
+                this.interval++;
+                if(this.interval >= 30){
+                    this.look_horizontal=Math.random()*Math.PI*2;
+                    this.interval=0;
+                }
+            }
+
+            jumpRandom(){
+                this.interval_jump++;
+                if(this.interval_jump >= this.jump_interval){
+                this.jump();
+                this.interval_jump=0;
+                this.jump_interval = 20+Math.random()*120;
+                }
+            }
+
+            update(){
+                this.vel.y-=0.02;
+
+                //this.look_horizontal+=0.08;
+
+                //this.goForward();
+
+                this.lookRandom();
+
+                if((this.pos.y+this.vel.y)-4 <= 0){
+                    this.vel.y=0;
+                    this.landed=true;
+                }
+
+                //this.jumpRandom();
+
+                if(this.landed){
+                    this.vel.x*=0.9; //摩擦
+                    this.vel.z*=0.9;
+                }else{
+                    this.vel.x*=1; //摩擦
+                    this.vel.z*=1;
+                }
+
+                this.pos.x+=this.vel.x;
+                this.pos.y+=this.vel.y;
+                this.pos.z+=this.vel.z;
+                this.box.position.x = this.pos.x;
+                this.box.position.y = this.pos.y-2;
+                this.box.position.z = this.pos.z;
+                this.box.rotation.y = this.look_horizontal;
+
+                if(this.vel.length()>=0.1&&this.landed){
+                    var rx = ((Math.random()*1)-0.5)*1.5;
+                    var ry = ((Math.random()*1)-0.5)/2;
+                    var rz = ((Math.random()*1)-0.5)*1.5;
+                    particles.push(new DustParticle(this.pos.x+rx,ry+this.pos.y-4,rz+this.pos.z,1,15,0xcccccc));
+                }
+                this.landed=false;
+            }
+
+            isDead(){
+                return this.life <= 0;
+            }
+
+            removeFromScene(){
+                scene.remove(this.box);
+                this.box.material.dispose();
+            }
+
+}
+
+const keys = {};
+const mouse = [];
+
+document.addEventListener('mousedown',(e)=>{
+    mouse[e.button] = true;
+    e.preventDefault();
+});
+
+document.addEventListener('mouseup',(e)=>{
+    mouse[e.button] = false;
+    e.preventDefault();
+});
+
+document.addEventListener("keydown",(e)=>{
+    keys[e.code]=true;
+});
+document.addEventListener("keyup",(e)=>{
+    keys[e.code]=false;
+});
+
+    for(var i = 0;i < 100;i++){
+        players.push(new Player());
+    }
+
+    var player_pos = new THREE.Vector3(0,100,90);
+    var player_vel = new THREE.Vector3(0,0,0);
+    var forward_vel = 0.05;
+    var player_horizontal_look = 0;
+    var player_vertical_look = 0;
+    var pause = false;
+    var look_velocity = 0.05;
+    var landed = false;
+    
+    document.addEventListener("mousemove",function(e){
+        var reduce = 600.0;
+        if(document.pointerLockElement){
+        player_horizontal_look-=e.movementX/reduce;
+        player_vertical_look-=e.movementY/reduce;
+        }
     });
 
-    
+    document.addEventListener("click",async()=>{
+        console.log("test");
+        if(!document.pointerLockElement){
+            await document.body.requestPointerLock({
+                unadjustedMovement:true,
+            });
+        }
+    });
 
+    function elementDisplayById(id,show){
+        document.getElementById(id).style.display  = show?"block":"none";
+    }
+
+    var increment = 0;
+
+    function update(){
+
+        if(mouse[0]){
+            var fire_pos = new THREE.Vector3().copy(player_pos);
+            fire_pos.y-=1;
+            rockets.push(new Rocket(fire_pos,player_horizontal_look,player_vertical_look));
+            mouse[0]=false;
+        }
+
+        if(mouse[2]){
+            camera.fov = fov/3;
+            camera.updateProjectionMatrix();
+        }else{
+            camera.fov = fov;
+            camera.updateProjectionMatrix();
+        }
+
+        if(keys["ArrowLeft"])player_horizontal_look += look_velocity;
+        if(keys["ArrowRight"])player_horizontal_look -= look_velocity;
+        if(keys["ArrowUp"])player_vertical_look += look_velocity;
+        if(keys["ArrowDown"])player_vertical_look -= look_velocity;
+
+        //player_vel.addScalar(0.9);
+        //player_pos.add(player_vel);
+
+        cube.rotation.x += 0.03;
+        cube.rotation.y += 0.03;
+
+        increment+=0.05;
+        cube.position.y+=Math.sin(increment)*0.2;
+
+        player_vel.y-=0.02; //重力
+
+        if((player_pos.y+player_vel.y)-4 <= 0){
+            player_vel.y=0;
+            landed=true;
+        }
+
+        if(landed){
+        if(keys["KeyW"]){
+            player_vel.x+=Math.sin(player_horizontal_look)*-forward_vel;
+            player_vel.z+=Math.cos(player_horizontal_look)*-forward_vel;
+        }
+        if(keys["KeyS"]){
+            player_vel.x+=Math.sin(player_horizontal_look)*forward_vel;
+            player_vel.z+=Math.cos(player_horizontal_look)*forward_vel;
+        }
+        if(keys["KeyA"]){
+            player_vel.x+=Math.sin(player_horizontal_look+Math.PI/2)*-forward_vel;
+            player_vel.z+=Math.cos(player_horizontal_look+Math.PI/2)*-forward_vel;
+        }
+        if(keys["KeyD"]){
+            player_vel.x+=Math.sin(player_horizontal_look+Math.PI/2)*forward_vel;
+            player_vel.z+=Math.cos(player_horizontal_look+Math.PI/2)*forward_vel;
+        }
+        if(keys["Space"]){
+            player_vel.y=0.5;
+            landed = false;
+        }
+        }
+
+        if(landed){
+        player_vel.x*=0.9; //摩擦
+        player_vel.z*=0.9;
+        }else{
+            player_vel.x*=1; //摩擦
+            player_vel.z*=1;
+        }
+
+        player_pos.x+=player_vel.x
+        player_pos.y+=player_vel.y
+        player_pos.z+=player_vel.z
+
+        if(player_vel.length()>=0.1&&landed){
+            var rx = ((Math.random()*1)-0.5)*1.5;
+            var ry = ((Math.random()*1)-0.5)/2;
+            var rz = ((Math.random()*1)-0.5)*1.5;
+            particles.push(new DustParticle(player_pos.x+rx,ry+player_pos.y-4,rz+player_pos.z,1,15,0xcccccc));
+        }
+
+        landed=false;
+
+        for(var i = 0;i < particles.length;i++){
+            particles[i].update();
+            if(particles[i].isDead()){
+                particles[i].removeFromScene();
+                particles.splice(i,1);
+            }
+        }
+
+        for(var i = 0;i < rockets.length;i++){
+            rockets[i].update();
+            if(rockets[i].isDead()){
+
+                for(var j = 0;j < players.length;j++){
+                    var distance = players[j].pos.distanceTo(rockets[i].pos);
+                    if(distance < 15){
+                        var p = new THREE.Vector3().copy(players[j].pos);
+                        p.y-=2.5;
+                        var r = new THREE.Vector3().copy(rockets[i].pos);
+                        var d = p.sub(r);
+                        d=d.normalize();
+                        d.divideScalar(distance/4);
+                        players[j].vel.add(d);
+                    }
+                }
+
+                var distance = player_pos.distanceTo(rockets[i].pos);
+                    if(distance < 15){
+                        var p = new THREE.Vector3().copy(player_pos);
+                        p.y-=2.5;
+                        var r = new THREE.Vector3().copy(rockets[i].pos);
+                        var d = p.sub(r);
+                        d=d.normalize();
+                        d.divideScalar(distance/4);
+                        player_vel.add(d);
+                    }
+
+                rockets[i].removeFromScene();
+                rockets.splice(i,1);
+            }
+        }
+
+        for(var i = 0;i < players.length;i++){
+            players[i].update();
+            if(players[i].isDead()){
+                players[i].removeFromScene();
+                players.splice(i,1);
+            }
+        }
+    }
+
+    setInterval(update,1000/60);
+
+    elementDisplayById("ui_overlay",true);
+
+    function animate() {
+        camera.position.x = player_pos.x;
+        camera.position.y = player_pos.y-1;
+        camera.position.z = player_pos.z;
+
+        camera.rotation.set(player_vertical_look,player_horizontal_look,0);
+
+	    renderer.render( scene, camera );
+    }
+renderer.setAnimationLoop( animate );
     </script>
 
-</head>
-<body>
-    <canvas id="myCanvas"></canvas>
+    <div id="ui_overlay">
+        <p id="crosshair" >[ + ]</p>
+        移動 : W,A,S,Dキー
+        <br>
+        向き : ↑,←,↓,→キー、またはマウス(画面をクリックしてフォーカス)
+        <br>
+        ジャンプ : スペースキー
+        <br>
+        <br>
+        <div id="player_avatar" style="width: 160px; height: 160px;margin: 5px; display: inline-block;vertical-align: top;">
+            <div id="skin" class="avatar" style="background-image: url('../img/color_atlas.gif');"></div>
+            <div id="eye" class="avatar" style="background-image: url('../img/eyes_atlas.gif');"></div>
+            <div id="mouth" class="avatar" style="background-image: url('../img/mouth_atlas.gif');"></div>
+        </div>
+    </div>
 
     <script>
-        function update(){
+        function setSpritePosition(r_skin,r_eye,r_mouth){
+            r_skin = parseInt(r_skin);
+            r_eye = parseInt(r_eye);
+            r_mouth = parseInt(r_mouth);
+            
+            var skin_row = parseInt(r_skin/10,10);
+            var skin_col = r_skin%10;
+            var skin_sx = skin_col*-100;
+            var skin_sy = skin_row*-100;
 
+            var eye_row = parseInt(r_eye/10,10);
+            var eye_col = r_eye%10;
+            var eye_sx = eye_col*-100;
+            var eye_sy = eye_row*-100;
+
+            var mouth_row = parseInt(r_mouth/10,10);
+            var mouth_col = r_mouth%10;
+            var mouth_sx = mouth_col*-100;
+            var mouth_sy = mouth_row*-100;
+
+            document.getElementById("skin").style.backgroundPositionX = skin_sx+"%";
+            document.getElementById("skin").style.backgroundPositionY = skin_sy+"%";
+
+            document.getElementById("eye").style.backgroundPositionX = eye_sx+"%";
+            document.getElementById("eye").style.backgroundPositionY = eye_sy+"%";
+
+            document.getElementById("mouth").style.backgroundPositionX = mouth_sx+"%";
+            document.getElementById("mouth").style.backgroundPositionY = mouth_sy+"%";
         }
 
-        function render(){
-
-            requestAnimationFrame(render);
-        }
-
-        setInterval(update,1000/60);
-
-        render();
-
+        setSpritePosition(Math.random()*28,Math.random()*57,Math.random()*51);
     </script>
+    
 </body>
 </html>
