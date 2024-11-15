@@ -27,6 +27,7 @@ jobs:
           cd /var/www/html
           echo "Pulling latest changes from GitHub..."
           git pull origin main
+          sleep 5  # 少し待機
           exit || true  # 強制終了
           exit || true  # 強制終了
           EOF
