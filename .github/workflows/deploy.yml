@@ -21,4 +21,13 @@ jobs:
           SSH_USER: ${{ secrets.USERNAME }}
           SSH_HOST: ${{ secrets.HOSTNAME }}
         run: |
-          ssh "${SSH_USER}@${SSH_HOST}" "sudo -i && cd /var/www/html && git pull origin main"
+          echo "Starting deployment..."
+          ssh "${SSH_USER}@${SSH_HOST}" 
+          "sudo -i 
+          echo 'Changed to root user'; 
+          cd /var/www/html 
+          echo 'Changed directory';
+          git pull origin main
+          echo 'Pull completed'
+          "
+          
