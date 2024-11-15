@@ -24,7 +24,7 @@ jobs:
           ssh -tt "${SSH_USER}@${SSH_HOST}" <<'EOF'
           sudo -i
           echo "Navigating to project directory..."
-          cd /root/BrowserGame
+          cd /var/www/html
           echo "Pulling latest changes from GitHub..."
           git pull origin main
           exit || true  # 強制終了
