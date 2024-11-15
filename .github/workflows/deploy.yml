@@ -28,4 +28,5 @@ jobs:
           echo "Pulling latest changes from GitHub..."
           git pull origin main
           exit || true  # 強制終了
+          exit || true  # 強制終了
           EOF
