@@ -29,4 +29,5 @@ jobs:
           git pull origin main
           exit
           exit
+          exit
           EOF
