@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>Three.js ドットエフェクトの実装</title>
     <link rel="stylesheet" href="css/index.css">
+    <link rel="manifest" href="json/app.json">
     <script type="importmap">
     {
         "imports": {
@@ -394,7 +395,6 @@
         // Composerを使用してレンダリング
         composer.render();
 
-        toggleFullscreen();
     }
 
     animate();
@@ -413,34 +413,28 @@
     });
 
     document.body.style.overflow = 'hidden';//ページのスクロール無効
-
-
-    function toggleFullscreen() {
-      const content = document.getElementById('content');
-      if (!document.fullscreenElement) {
-        content.requestFullscreen().catch(err => {
-          console.error(`フルスクリーンにできませんでした: ${err.message}`);
-        });
-      }
+    window.addEventListener("wheel", (event) => {
+    if (event.ctrlKey) {
+        event.preventDefault();
     }
+    }, { passive: false });
+
     </script>
 
 </head>
 <body>
-    <div id="content" >
     <div class="container">
     <canvas id="myCanvas"></canvas>
     <h3 class="player">プレイヤー名</h3>
     <input type="button" class="button" onclick="location.href='test1.html'" value="チャリ走"></button>
     <input type="button" class="button2" value="ブラシ伝言"></button>
     <input type="button" class="button3" value="あいつを探せ" onclick="location.href='rogocontrol.html'"></button>
-    <input type="button" class="notice" value="お知らせ"></button>
-    <input type="button" class="friend" value="フレンド"></button>
-    <input type="button" class="Logout" value="ログアウト"></button>
-    <table class="table">
-        <tr>
-            <th>ランキング</th>
-        </tr>
+    <input type="image" src="img/notice.png" class="notice" value="お知らせ"></button>
+    <input type="image" src="img/friend.png" class="friend" value="フレンド"></button>
+    <input type="image" src="img/Logout.png" class="Logout" value="ログアウト"></button>
+    <div class="table">
+        <h3 class="table_title">ランキング</h3>
+    <table>
         <tr>
             <td>1位</td>
             <td>zzz</td>
@@ -450,7 +444,7 @@
             <td>あなた</td>
         </tr>
     </table>
-    </div>
+</div>
 </div>
 
 </body>
