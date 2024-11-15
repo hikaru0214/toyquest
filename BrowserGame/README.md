@@ -1,2 +1,2 @@
 #試作品フォルダです
-# test Action
+# test Actions
