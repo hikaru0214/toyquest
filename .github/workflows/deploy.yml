@@ -13,6 +13,7 @@ jobs:
           ssh-private-key: ${{ secrets.DEPLOY_KEY }}
       - name: Add SSH known hosts 
         run: |
+          eval "$(ssh-agent -s)"
           mkdir -p ~/.ssh
           ssh-keyscan ${{ secrets.HOSTNAME }} >> ~/.ssh/known_hosts
       - name: Deploy to EC2
@@ -23,9 +24,10 @@ jobs:
           ssh -tt "${SSH_USER}@${SSH_HOST}" <<'EOF'
           sudo -i
           echo "Navigating to project directory..."
-          cd /var/www/html/BrowserGame
+          cd /var/www/html
           echo "Pulling latest changes from GitHub..."
           git pull origin main
+          exit
           exit
           exit
           EOF
