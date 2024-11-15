@@ -27,5 +27,5 @@ jobs:
           cd /var/www/html/BrowserGame
           echo "Pulling latest changes from GitHub..."
           git pull origin main
-          exit
+          exit || true  # 強制終了
           EOF
