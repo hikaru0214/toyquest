@@ -22,11 +22,8 @@ jobs:
           SSH_HOST: ${{ secrets.HOSTNAME }}
         run: |
           ssh -tt "${SSH_USER}@${SSH_HOST}" <<'EOF'
-          sudo -i
           echo "Navigating to project directory..."
-          cd /var/www/html/BrowserGame
+          sudo cd /var/www/html/BrowserGame
           echo "Pulling latest changes from GitHub..."
-          git pull origin main
-          exit || true  # 強制終了
-          exit || true  # 強制終了
+          sudo git pull origin main
           EOF
