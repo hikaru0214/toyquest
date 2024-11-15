@@ -27,7 +27,7 @@ jobs:
           echo 'Changed to root user'; 
           cd /var/www/html 
           echo 'Changed directory';
-          git pull origin main
-          echo 'Pull completed'
+          git pull origin main || exit 1;
+          echo 'Pull completed';
           "
           
