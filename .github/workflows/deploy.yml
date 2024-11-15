@@ -27,6 +27,6 @@ jobs:
             cd /var/www/html || exit 1;
             echo 'Changed directory';
             sudo git pull origin main || exit 1;
-            echo 'Pull completed'
+            echo 'Pull completed';
           "
           
