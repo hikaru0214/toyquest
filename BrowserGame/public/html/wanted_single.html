@@ -118,17 +118,9 @@
     </div>
     <div class="wanted_canvas">
         <canvas id="canvas" width="1000" height="610"></canvas>
-        <!--<div class="buttonrow"><button id="skin_prev">&lt</button><button id="skin_next">&gt</button></div>
-            <br>
-            <div class="buttonrow"><button id="eye_prev">&lt</button><button id="eye_next">&gt</button></div>
-            <br>
-            <div class="buttonrow"><button id="mouth_prev">&lt</button><button id="mouth_next">&gt</button></div>
-            <br>
-            <button id="randomize">ランダム</button>-->
     </div>
 
     <script>
-
         class Avatar {
             constructor(s,e,m,x,y){
                 this.skin = s;
@@ -148,15 +140,6 @@
                 this.life--;
                 this.x+=this.vx;
                 this.y+=this.vy;
-
-                /*
-
-                if(this.x+this.vx < 0)vx = -vx;
-                if((this.x+48)+this.vx > canvas.width)vx = -vx;
-
-                if(this.y+this.vy < 0)vy = -vy;
-                if((this.y+48)+this.vy > canvas.height)vy = -vy;
-                */
             }
 
             draw(){
@@ -209,36 +192,6 @@
             mouth = this;
         };
         mouthimg.src = "../img/mouth_atlas.gif";
-
-        /*document.getElementById("skin_prev").onclick=function(){
-            r_skin++;
-        };
-
-        document.getElementById("skin_next").onclick=function(){
-            r_skin--;
-        };
-
-        document.getElementById("eye_prev").onclick=function(){
-            r_eye++;
-        };
-
-        document.getElementById("eye_next").onclick=function(){
-            r_eye--;
-        };
-
-        document.getElementById("mouth_prev").onclick=function(){
-            r_mouth++;
-        };
-
-        document.getElementById("mouth_next").onclick=function(){
-            r_mouth--;
-        };
-        document.getElementById("randomize").onclick=function(){
-            r_skin = parseInt(Math.random()*28,10);
-            r_eye = parseInt(Math.random()*57,10);
-            r_mouth = parseInt(Math.random()*51,10);
-            avatars.push(new Avatar(r_skin,r_eye,r_mouth,Math.random()*canvas.width,Math.random()*canvas.height));
-        };*/
 
         function setSpritePosition(r_skin,r_eye,r_mouth){
             
