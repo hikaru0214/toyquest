@@ -23,7 +23,6 @@ jobs:
         run: |
           echo "Starting deployment..."
           ssh -v "${SSH_USER}@${SSH_HOST}" "
-            sudo -i || exit 1;
             echo 'Changed to root user';
             cd /var/www/html || exit 1;
             echo 'Changed directory';
