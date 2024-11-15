@@ -5,9 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ログイン</title>
-
     <!-- DB接続 -->
-    <?php require 'db-connect.php'; ?>
+    <?php require 'dbconnect.php'; ?>
 
     <style>
     .wrapper{
@@ -21,50 +20,23 @@
 
 </head>
 <body>
-<!----------------------------------------------------ここから-------------------------------------------------------------------->
-    <?php unset($_SESSION['user']); ?>
-    <div class="wrapper">
-        <form action="login-process.php" method="post" class="d-flex flex-column" style="height:50vh;width:50vw;min-width:240px;">
-            <h1 class="mb-0">トイクエスト</h1>
+<canvas id="canvas" style="position: absolute;"></canvas>
 
-            <!-- ログインしていない場合 -->
-            <div class="flex-grow-1 align-content-center">
-            <?php
-            if(isset($_GET['hogeB'])){
-                echo '<p class="text-danger mb-0">',$_GET['hogeB'],'</p>';
-            }else{
-                echo '<p class="text-danger mb-0"><br></p>';
-            }
-            ?>
-            </div>
-            <div class="flex-grow-1 align-content-center">
-                <label for="mailaddress" class="form-label">メールアドレス</label>
-                <input type="text" class="form-control" id="mailaddress" name="mailaddress" required>
-            </div>
-            <div class="flex-grow-1 align-content-center">
-                <label for="password" class="form-label">パスワード</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            
-            <!-- ログイン処理に失敗した場合 -->
-            <div class="flex-grow-1 align-content-center">
-            <?php
-            if(isset($_GET['hogeA'])){
-                echo '<p class="text-danger mb-0">',$_GET['hogeA'],'</p>';
-            }else{
-                echo '<p class="text-danger mb-0"><br></p>';
-            }
-            ?>
-            </div>
-            <div class="flex-grow-1 align-content-center">
-                <button type="submit" class="btn btn-primary" style="width:100%;height:2.5rem;">ログイン</button>
-            </div>
-        </form>
-    </div>
-<!----------------------------------------------------ここまで-------------------------------------------------------------------->
+<div style="width: 50vw; height: 50vh; margin-left: auto; margin-right: auto; text-align: center; font-size: large; position: relative;">
 
+    <form action="/login-process.php" method="post">
+        メールアドレス <input id="email" name="email" type="text" style="margin-top: 50vh;">
+        <br>
+        パスワード <input id="password" name="password" type="text">
+        <br>
+        <button type="submit">ログイン</button>
+    </form>
+    <br>
+    <a href="change_password.html"><button>パスワードを忘れた方</button></a>
+    <br>
+    <a href="signup.html"><button>新規</button></a>
+</div>
     <!-- DB切断 -->
     <?php $pdo = null;?>
-
 </body>
 </html>

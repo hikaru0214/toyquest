@@ -1,24 +1,31 @@
 name: Deploy to EC2
-
 on:
   push:
-   branches: [ main ]
+    branches: [ main ]
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: action/checkout@v2
-
+      - uses: actions/checkout@v2
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.4
         with:
-          ssh-private-key: ${{ -----BEGIN OPENSSH PRIVATE KEY-----b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZWQyNTUxOQAAACCbheqcXONWaagZWIaophRHgZo5jEpGTpUPtbtYB6UbuwAAAMAgAF0HIABdBwAAAAtzc2gtZWQyNTUxOQAAACCbheqcXONWaagZWIaophRHgZo5jEpGTpUPtbtYB6UbuwAAAECSt4xMOozLPLwe0oxDo3a+ar3i0qOiIyZ7HpJ8CkAT4JuF6pxc41ZpqBlYhqimFEeBmjmMSkZOlQ+1u1gHpRu7AAAAN2VjMi11c2VyQGlwLTE3Mi0zMS0zLTE3LmFwLW5vcnRoZWFzdC0xLmNvbXB1dGUuaW50ZXJuYWwBAgMEBQY=-----END OPENSSH PRIVATE KEY----- }}
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
       - name: Add SSH known hosts 
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan ${{ 52.68.111.88 }} >> ~/.ssh/known_hosts
-
+          ssh-keyscan ${{ secrets.HOSTNAME }} >> ~/.ssh/known_hosts
       - name: Deploy to EC2
+        env:
+          SSH_USER: ${{ secrets.USERNAME }}
+          SSH_HOST: ${{ secrets.HOSTNAME }}
         run: |
-          ssh ${{ ec2-user }}@${{ 52.68.111.88 }} 
-          ' cd /var/www/html && git pull origin main '
+          ssh -tt "${SSH_USER}@${SSH_HOST}" <<'EOF'
+          sudo -i
+          echo "Navigating to project directory..."
+          cd /var/www/html/BrowserGame
+          echo "Pulling latest changes from GitHub..."
+          git pull origin main
+          exit
+          exit
+          EOF
