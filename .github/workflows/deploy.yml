@@ -21,13 +21,4 @@ jobs:
           SSH_USER: ${{ secrets.USERNAME }}
           SSH_HOST: ${{ secrets.HOSTNAME }}
         run: |
-          ssh -tt "${SSH_USER}@${SSH_HOST}" <<'EOT'
-          sudo -i
-          echo "Navigating to project directory..."
-          cd /var/www/html
-          echo "Pulling latest changes from GitHub..."
-          git pull origin main
-          exit
-          exit
-          EOT
-          exit0
+          ssh "${SSH_USER}@${SSH_HOST}" "sudo -i && cd /var/www/html && git pull origin main"
