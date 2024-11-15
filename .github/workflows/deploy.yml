@@ -21,7 +21,7 @@ jobs:
           SSH_USER: ${{ secrets.USERNAME }}
           SSH_HOST: ${{ secrets.HOSTNAME }}
         run: |
-          ssh -tt "${SSH_USER}@${SSH_HOST}" <<'EOF'
+          ssh -tt "${SSH_USER}@${SSH_HOST}" <<'EOT'
           sudo -i
           echo "Navigating to project directory..."
           cd /var/www/html
@@ -29,5 +29,5 @@ jobs:
           git pull origin main
           exit
           exit
-          exit
-          EOF
+          EOT
+          exit0
