@@ -33,14 +33,16 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     gameupdate(io){ //ゲームループ
+        const room_name = "room_"+this.room_id;
         if(this.state=="standby"){
             if(this.getPlayerCount()>=this.minimum_players){
-                this.state = "gamestart"
+                this.state = "roundstart";
                 this.setTimer();
+                io.to(room_name).emit("show_client_overlay",{id:"round",time:3});
             }
         }
 
-        if(this.state=="gamestart"&&this.getTimer(3)<=0){
+        if(this.state=="roundstart"&&this.getTimer(3)<=0){
             this.state = "drawing";
             var firstword = this.startRound(io);
             return {instruction:"setword",word:firstword};
@@ -52,9 +54,11 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
                 if(this.getDrawerId()=="drawer queue completed"){
                     //TODO ラウンド終了処理
                     this.state = "roundend";
+                    io.to(room_name).emit("show_client_overlay",{id:"gamescore",time:5});
                     this.setTimer();
                 }else{
                     this.state="nextturn";
+                    io.to(room_name).emit("show_client_overlay",{id:"painternotice",time:3});
                     this.setTimer();
                 }
         }
