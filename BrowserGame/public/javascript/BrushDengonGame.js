@@ -199,7 +199,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     addScore(id,score){
-        var index = thsi.getPlayerIndexById(id);
+        var index = this.getPlayerIndexById(id);
         this.player_data[index].score+=score;
     }
 
