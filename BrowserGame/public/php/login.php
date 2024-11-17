@@ -20,7 +20,6 @@
 
 </head>
 <body>
-<canvas id="canvas" style="position: absolute;"></canvas>
 
 <div style="width: 50vw; height: 50vh; margin-left: auto; margin-right: auto; text-align: center; font-size: large; position: relative;">
 
