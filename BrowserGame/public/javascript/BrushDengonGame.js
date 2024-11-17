@@ -3,7 +3,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.room_id = room_id;
         this.player_limit = 4; //プレイヤー数制限
         this.minimum_players = 2; //最小プレイヤー数
-        this.time_limit = 60; //時間制限
+        this.time_limit = 20; //時間制限
         this.draw_start_time = 0;
         this.round = -1; //ラウンドカウンター
         this.rounds = 3; //ラウンド数
@@ -66,6 +66,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(this.state=="nextturn"&&this.getTimer(3)<=0){
             this.state="drawing"
             var nextword = this.nextTurn(io);
+            io.to(room_name).emit("clear canvas");
             return {instruction:"setword",word:nextword};
         }
 
@@ -195,6 +196,11 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             }
         }
         return -1;
+    }
+
+    addScore(id,score){
+        var index = thsi.getPlayerIndexById(id);
+        this.player_data[index].score+=score;
     }
 
     getGameState(){

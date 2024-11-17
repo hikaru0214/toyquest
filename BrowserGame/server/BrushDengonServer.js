@@ -62,6 +62,10 @@ io.on('connection', (socket) => {
         console.log(name+" : "+messsage);
 
         io.to(room_name).emit("message to everyone in room",name+" : "+messsage);
+        if(message===secretword[room]){
+            //socket.emit(); 正解通知をチャットに送る
+            gamerooms[room].addScore(id,123);
+        }
     });
 
     socket.on("client draw",(data)=>{
