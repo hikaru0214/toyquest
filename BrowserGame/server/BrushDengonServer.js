@@ -57,11 +57,11 @@ io.on('connection', (socket) => {
         //secretword[room] = gamerooms[room].startGame();
     });
 
-    socket.on('textchat',(messsage)=>{
+    socket.on('textchat',(message)=>{
         var name = gamerooms[room].getPlayerById(id).name;
-        console.log(name+" : "+messsage);
+        console.log(name+" : "+message);
 
-        io.to(room_name).emit("message to everyone in room",name+" : "+messsage);
+        io.to(room_name).emit("message to everyone in room",name+" : "+message);
         if(message===secretword[room]){
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].addScore(id,123);
