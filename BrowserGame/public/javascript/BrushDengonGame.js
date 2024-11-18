@@ -60,6 +60,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         }
 
         if(this.state=="painternotice"&&this.getTimer(3)<=0){
+            io.to(room_name).emit("clear canvas");
             this.state = "drawing";
             var word = this.nextTurn(io);
             return word;
@@ -70,8 +71,9 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             this.markDrewInQueue(this.getDrawerId());
             console.log(this.drawer_queue);
 
-            if(this.getDrawerId()=="drawer queue completed"){//ラウンド終了処理
-                this.state=="roundend";
+            if(this.getDrawerId()=="drawer queue completed"){
+                //ラウンド終了処理
+                this.state="roundend";
                 io.to(room_name).emit("show_client_overlay",{id:"gamescore",time:6});
                 this.setTimer();
             }else{ //次のターン
