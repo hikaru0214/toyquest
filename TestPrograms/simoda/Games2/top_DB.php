@@ -8,4 +8,5 @@ foreach($sql as $row) {
         echo "</td><td>"+$row['mailaddress'];
         echo "</td><td>"+$row['password']+"</td></tr>";
 }
+echo "<tr><td>終了<td></tr>";
 ?>
