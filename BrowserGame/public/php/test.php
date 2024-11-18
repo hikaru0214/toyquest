@@ -10,7 +10,7 @@
     <?php 
         $stmt = $pdo->query('select * from User')->fetchAll();
         foreach ($stmt as $row) {
-            echo $row['id'] . '<br>';
+            echo $row['user_id'] . '<br>';
         }
     ?>
 </body>
