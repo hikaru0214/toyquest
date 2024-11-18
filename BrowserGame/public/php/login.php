@@ -1,6 +1,6 @@
 <?php session_start(); ?>
 <!-- DB接続 -->
-<?php require 'dbconnect.php'; ?>
+<?php require '../dbConnect/dbconnect.php'; ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
