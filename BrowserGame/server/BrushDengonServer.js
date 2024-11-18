@@ -112,5 +112,10 @@ function update(){
     }
 }
 
+setInterval(function(){
+    var game = gamerooms[0];
+    console.log(game.state);
+},1000);
+
 const updateInterval = 1000.0/30.0;
 setInterval(update,updateInterval);
