@@ -1,5 +1,5 @@
 
-<?php require '../dbconnect/dbConnect.php';?>
+<?php require '../dbConnect/dbconnect.php';?>
 <!DOCTYPE html>
 <html>
 <head>
