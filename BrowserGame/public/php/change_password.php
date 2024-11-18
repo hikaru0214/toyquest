@@ -49,6 +49,51 @@
     </style>
 </head>
 <body>
+<?php
+
+// フォームが送信されたか確認
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // フォームからデータを取得
+    $email = $_POST['email'];
+    $new_password = $_POST['new-password'];
+    $confirm_password = $_POST['confirm-password'];
+
+    // 新しいパスワードと確認用パスワードが一致するか確認
+    if ($new_password !== $confirm_password) {
+        echo "新しいパスワードが一致しません。";
+        exit;
+    }
+
+    // メールアドレスがデータベースに存在するか確認
+    $mdb = $pdo->prepare("SELECT * FROM User WHERE mailaddress = :email");
+    $mdb->bindParam(':email', $email, PDO::PARAM_STR);
+    $mdb->execute();
+    $user = $mdb->fetch();
+
+    if ($user) {
+        // 新しいパスワードをハッシュ化
+        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+
+        // パスワードを更新
+        $mdb = $pdo->prepare("UPDATE User SET password = :password WHERE email = :email");
+        $mdb->bindParam(':password', $hashed_password, PDO::PARAM_STR);
+        $mdb->bindParam(':email', $email, PDO::PARAM_STR);
+
+        if ($mdb->execute()) {
+            echo "パスワードが更新されました。";
+            header("Location: change_password_complete.html"); // 完了ページへリダイレクト
+            exit;
+        } else {
+            echo "パスワード更新中にエラーが発生しました。";
+        }
+    } else {
+        echo "このメールアドレスは登録されていません。";
+    }
+} else {
+    echo "無効なリクエストです。";
+}
+?>
+
     
         <a href="login.html"><span class="back-arrow">&larr;</span></a>
         <div class="container">
@@ -57,18 +102,15 @@
         <form action="change_password_complete.html" method="post">
             <div class="form-group">
                 <label for="email">メールアドレス</label>
-                <?php
-                    
-                    echo '<input type="email" id="email" name="email">'
-                ?>
+                <input type="email" id="email" name="email" required>'
             </div>
             <div class="form-group">
                 <label for="new-password">新しいパスワード</label>
-                <input type="password" id="new-password" name="new-password">
+                <input type="password" id="new-password" name="new-password" required>
             </div>
             <div class="form-group">
                 <label for="confirm-password">パスワード (確認用)</label>
-                <input type="password" id="confirm-password" name="confirm-password">
+                <input type="password" id="confirm-password" name="confirm-password" required>
             </div>
             <button type="submit" class="submit-btn">登録</button>
         </form>  
