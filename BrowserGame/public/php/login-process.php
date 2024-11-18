@@ -12,10 +12,10 @@ foreach($sql as $row) {
     ];
 }
 if(isset($_SESSION['user'])){
-header('Location: top.php');
+header('Location: BrowserGame/public/php/top.php');
 exit;
 }else{
-header('Location: login.php?hogeA=ログイン名またはパスワードが違います');
+header('Location: BrowserGame/public/php/login.php?hogeA=ログイン名またはパスワードが違います');
 exit;
 }
 ?>
