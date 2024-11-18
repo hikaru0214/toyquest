@@ -439,7 +439,7 @@
             <td>1位</td>
             <td>zzz</td>
         </tr>
-        
+        <?php require 'top_DB.php';?>
     </table>
     testtesttest
 </div>
