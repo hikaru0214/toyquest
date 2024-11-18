@@ -49,7 +49,29 @@
     </style>
 </head>
 <body>
-<?php
+
+
+    
+        <a href="login.html"><span class="back-arrow">&larr;</span></a>
+        <div class="container">
+            <h2>パスワード再設定</h2>
+        </div>
+        <form action="change_password_complete.html" method="post">
+            <div class="form-group">
+                <label for="email">メールアドレス</label>
+                <input type="email" id="email" name="email" required>'
+            </div>
+            <div class="form-group">
+                <label for="new-password">新しいパスワード</label>
+                <input type="password" id="new-password" name="new-password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">パスワード (確認用)</label>
+                <input type="password" id="confirm-password" name="confirm-password" required>
+            </div>
+            <button type="submit" class="submit-btn">登録</button>
+        </form>  
+        <?php
 
 // フォームが送信されたか確認
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -92,27 +114,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 } else {
     echo "無効なリクエストです。";
 }
-?>
-
-    
-        <a href="login.html"><span class="back-arrow">&larr;</span></a>
-        <div class="container">
-            <h2>パスワード再設定</h2>
-        </div>
-        <form action="change_password_complete.html" method="post">
-            <div class="form-group">
-                <label for="email">メールアドレス</label>
-                <input type="email" id="email" name="email" required>'
-            </div>
-            <div class="form-group">
-                <label for="new-password">新しいパスワード</label>
-                <input type="password" id="new-password" name="new-password" required>
-            </div>
-            <div class="form-group">
-                <label for="confirm-password">パスワード (確認用)</label>
-                <input type="password" id="confirm-password" name="confirm-password" required>
-            </div>
-            <button type="submit" class="submit-btn">登録</button>
-        </form>  
+?>    
 </body>
 </html>
