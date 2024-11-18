@@ -1,0 +1,81 @@
+.container {
+    position: relative;
+}
+
+/* ボタンをキャンバス上に配置 */
+
+input{
+    position: absolute;
+    transform: translate(-50%, -50%); /* 中央揃え */
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.button {
+    left: 13%;
+    top: 30%; 
+}
+.button2 {
+    left: 13%;
+    top: 50%; 
+}
+.button3 {
+    left: 13%;
+    top: 70%; 
+}
+.player{
+    position: absolute;
+    left: 5%;
+    top:18%;
+}   
+
+
+.notice{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 15%;
+    right: 40%;
+}
+
+.friend{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 15%;
+    right: 26%;
+}
+.Logout{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 15%;
+    right: 10%;
+}
+
+.table{
+    position: absolute;
+    top: 20%;
+    right: 20%;
+}
+
+.table_title{
+    text-align: center;
+}
+
+table {
+    background-color: #cdefff;  /* 背景色指定 */
+}
+
+th {
+    font-size: 20px;
+    padding: 10px 50px;
+    background-color: #00e2cf; /* 背景色指定 */
+    text-align: center;
+}
+td {
+    text-align: center;
+    font-size: 20px;
+    padding: 10px 50px;
+    background-color: #00e2cf;  /* 背景色指定 */
+}
