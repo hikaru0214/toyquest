@@ -1,4 +1,5 @@
 
+<?php require 'dbconnect.php';?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -439,7 +440,16 @@
             <td>1位</td>
             <td>zzz</td>
         </tr>
-        <?php require 'top_DB.php';?>
+        <?php
+$sql=$pdo->prepare('SELECT user_id,SUM(score) AS total_score FROM Score GROUP BY user_id ORDER BY total_score ASC');
+$sql->execute();
+foreach($sql as $row) {
+        echo "</td><td>"+$row['user_name'];
+        echo "</td><td>"+$row['total_score'];
+        echo "</td></tr>";
+}
+echo "<tr><td>終了<td></tr>";
+?>
     </table>
     testtesttest
 </div>
