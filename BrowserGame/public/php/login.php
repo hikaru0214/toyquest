@@ -1,12 +1,12 @@
 <?php session_start(); ?>
+<!-- DB接続 -->
+<?php require 'dbconnect.php'; ?>
 <!doctype html>
 <html lang="ja" data-bs-theme="auto">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ログイン</title>
-    <!-- DB接続 -->
-    <?php require 'dbconnect.php'; ?>
 
     <style>
     .wrapper{
