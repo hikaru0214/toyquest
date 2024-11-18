@@ -439,10 +439,7 @@
             <td>1位</td>
             <td>zzz</td>
         </tr>
-        <tr>
-            <td>圏外</td>
-            <td>あなた</td>
-        </tr>
+        <?php require 'top_DB.php';?>
     </table>
 </div>
 </div>
