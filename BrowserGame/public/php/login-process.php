@@ -13,9 +13,9 @@ foreach($sql as $row) {
 }
 if(isset($_SESSION['user'])){
 header('Location: top.php');
-exit();
+exit;
 }else{
 header('Location: login.php?hogeA=ログイン名またはパスワードが違います');
-exit();
+exit;
 }
 ?>
