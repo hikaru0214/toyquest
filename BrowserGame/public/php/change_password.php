@@ -1,6 +1,6 @@
 <?php session_start(); ?>
 <!-- DB接続 -->
-<?php require 'db-connect.php'; ?>
+<?php require '../dbConnect/dbconnect.php'; ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -46,6 +46,12 @@
             
         }
         
+        /* エラーメッセージ用のスタイル */
+        .error {
+            color: red; /* 赤色 */
+            margin-top: 10px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -91,6 +97,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 } else {
     echo "無効なリクエストです。";
+}
+if (!empty($error_message)) {
+    echo '<p class="error">' . htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8') . '</p>';
 }
 ?>
 

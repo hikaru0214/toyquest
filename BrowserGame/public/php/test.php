@@ -12,6 +12,12 @@
         foreach ($stmt as $row) {
             echo $row['user_id'] . '<br>';
         }
+        // ini_set('display_errors', 1);
+        // ini_set('display_startup_errors', 1);
+        // error_reporting(E_ALL);
+        // 意図的なエラーを発生
+        echo 'エラー'
+        phpinfo();
     ?>
 </body>
 </html>
