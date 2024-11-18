@@ -169,7 +169,6 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     getTimer(time){
-        if(this.timer==0)return NaN;
         return time-(Date.now()-this.timer)/1000;
     }
 

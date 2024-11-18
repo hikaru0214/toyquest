@@ -114,7 +114,7 @@ function update(){
 
 setInterval(function(){
     var game = gamerooms[0];
-    console.log(game.state);
+    console.log(game.state+" timer :"+game.getTimer(6));
 },1000);
 
 const updateInterval = 1000.0/30.0;
