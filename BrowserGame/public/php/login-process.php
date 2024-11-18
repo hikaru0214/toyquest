@@ -1,5 +1,5 @@
 <?php session_start(); ?>
-<?php require '../dbConnect/db-connect.php';?>
+<?php require '../dbConnect/dbconnect.php';?>
 <?php
 // ini_set('display_errors', 1);
 // ini_set('display_startup_errors', 1);
