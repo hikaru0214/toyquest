@@ -1,4 +1,3 @@
-// プレイヤーのオブジェクト
 class Player{
     constructor(socketID,x,y,width,height,velocityY,jumpStrength){
         this.socketID = socketID;
@@ -34,22 +33,34 @@ class Player{
 
     // プレイヤーの落下処理
     fallPlayer(terrainArray,gravity){
-        // 要素の0、1番目の足場に乗っていれば
-        if(terrainArray[0].intersect(this) || terrainArray[1].intersect(this)){
-            // 着地状態に
-            this.isJumping = false;
-        }else {
-            // ジャンプor落下状態の場合
-            // 落下速度を0.8ずつ（重力分）加算
-            // 1フレームごとに重力が加算され、
-            // 勢いがなくなっていく
-            this.velocityY += gravity;
-            // 1フレームごとに落下速度が0.8ずつ増える
-            this.y += this.velocityY;
-            // ジャンプ状態のまま
-            this.isJumping = true; 
-            // console.log("playerY"+this.y);       
-        }           
+        // ジャンプor落下状態の場合
+        // 落下速度を0.8ずつ（重力分）加算
+        // 1フレームごとに重力が加算され、
+        // 勢いがなくなっていく
+        this.velocityY += gravity;
+        this.velocityY = Math.trunc(this.velocityY * 10) / 10;
+        // 1フレームごとに落下速度が0.8ずつ増える
+        this.y += this.velocityY;
+        console.log("PlayerY: "+(this.y))
+        // 足場に乗っているか？
+        for(let i = 0; i < 2; i++){
+            // 要素の0、1番目の足場に乗っていれば
+            if(terrainArray[i].intersect(this)){
+                // ジャンプしていなければ
+                if(this.velocityY > 0){
+                    console.log("jumpStrength: "+(this.velocityY))
+                    // 着地状態に
+                    this.isJumping = false;
+                    // 足場の高さにプレイヤーを移動
+                    this.y = terrainArray[i].y - this.height;
+                    // 落下速度を0に
+                    this.velocityY = 0;
+                }else{
+                    // ジャンプ状態のまま
+                    this.isJumping = true;
+                }
+            }
+        }
     }
 
     // ゲームオーバー判定
