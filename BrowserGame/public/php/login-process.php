@@ -1,5 +1,5 @@
 <?php session_start(); ?>
-<?php require 'db-connect.php';?>
+<?php require '../dbConnect/db-connect.php';?>
 <?php
 $sql=$pdo->prepare('select * from User where mailaddress = ? AND password = ?');
 $sql->execute([$_POST['email'],$_POST['password']]);
