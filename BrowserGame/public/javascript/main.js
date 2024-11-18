@@ -25,11 +25,6 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-function emitData(){
-    // 毎フレームごとにGameインスタンスを更新
-    socket.emit('Update-Players', "testRoom");
-}
-
 // gameを受け取るまで待つ必要が...
 function waitTime(){
     // gameを受け取った＆人数がそろった

@@ -12,11 +12,7 @@ class Game{
         this.gravity = 0.8;
         // ゲーム開始フラグ
         this.isStartFlg = false;
-        // インターバル識別子
-        this.intervalId = null;
     }
-
-    
 
     // プレイヤーの初期設定
     initPlayer(socketID, Player){
@@ -30,6 +26,13 @@ class Game{
         }
     }
 
+    // 1フレームごとに行う処理
+    startInterval(Terrain, io){
+        setInterval(() => this.onUpdateFrame(Terrain, io), 1000 / 60);
+    }
+
+    // 1フレームごとに行うゲーム処理
+    // サーバー側で変更を行い、クライアントに返す
     onUpdateFrame(Terrain, io){
         // プレイヤーの移動
         this.proceedProcess();
@@ -114,14 +117,6 @@ class Game{
             index++;
         }
     }
-
-    startInterval(Terrain, io){
-        setInterval(() => this.onUpdateFrame(Terrain, io), 1000 / 60);
-    }
-
-    // stopInterval(){
-    //     clearInterval(this.intervalId);
-    // }
 
     gameOver(){
         for(var i = 0;i<this.player.length;i++){

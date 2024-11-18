@@ -12,6 +12,7 @@
         foreach ($stmt as $row) {
             echo $row['user_id'] . '<br>';
         }
+        phpinfo();
     ?>
 </body>
 </html>

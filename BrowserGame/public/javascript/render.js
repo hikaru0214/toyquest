@@ -12,6 +12,9 @@ class Render{
     // 足場の描画
     drawTerrain(game){
         for(let terrain of game.terrainArray){
+            if(terrain.x < 300) {
+                console.log("TerrainY: "+terrain.y)
+            };
             // 足場の色
             this.ctx.fillStyle = "black";
             // GameクラスのterrainArrayを使う
@@ -25,8 +28,10 @@ class Render{
         for(let player of game.player){
             // プレイヤーの色
             this.ctx.fillStyle = player.styleColor;
+            console.log("PlayerY: "+(player.y+player.width))
+            console.log("PlayervelocityY: "+(player.velocityY))
             // Gameクラスのplayerを使う
-            this.ctx.fillRect(player.x-game.xOffset, player.y, player.width, player.height);
+            this.ctx.fillRect(Math.trunc(player.x)-game.xOffset, player.y, player.width, player.height);
         }
     }
 }
