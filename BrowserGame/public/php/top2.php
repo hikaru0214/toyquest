@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8" />
     <title>Three.js ドットエフェクトの実装</title>
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="manifest" href="json/app.json">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="manifest" href="../json/app.json">
     <script type="importmap">
     {
         "imports": {
@@ -61,7 +61,7 @@
     var model = null;
     const loader = new GLTFLoader();
     loader.load(
-        "models/ハウス3.glb",
+        "../models/ハウス3.glb",
         function (loadedGltf) {
             gltf = loadedGltf;
             model = gltf.scene;
@@ -429,9 +429,9 @@
     <input type="button" class="button" onclick="location.href='test1.html'" value="チャリ走"></button>
     <input type="button" class="button2" value="ブラシ伝言"></button>
     <input type="button" class="button3" value="あいつを探せ" onclick="location.href='rogocontrol.html'"></button>
-    <input type="image" src="img/notice.png" class="notice" value="お知らせ"></button>
-    <input type="image" src="img/friend.png" class="friend" value="フレンド"></button>
-    <input type="image" src="img/Logout.png" class="Logout" value="ログアウト"></button>
+    <input type="image" src="../img/notice.png" class="notice" value="お知らせ"></button>
+    <input type="image" src="../img/friend.png" class="friend" value="フレンド"></button>
+    <input type="image" src="../img/Logout.png" class="Logout" value="ログアウト"></button>
     <div class="table">
         <h3 class="table_title">ランキング</h3>
     <table>
