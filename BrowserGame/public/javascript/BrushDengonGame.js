@@ -84,7 +84,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         }
 
         if(this.state=="roundend"&&this.getTimer(6)<=0){
-            this.state=="roundstart"
+            this.state="roundstart"
         }
 
         /*
