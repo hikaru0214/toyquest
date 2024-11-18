@@ -140,6 +140,15 @@
                 this.life--;
                 this.x+=this.vx;
                 this.y+=this.vy;
+
+                if (this.x < 0 || this.x + 48 > canvas.width) {
+            this.vx *= -1; // Reverse x direction
+            this.x = Math.max(0, Math.min(this.x, canvas.width - 48)); // Keep within bounds
+        }
+        if (this.y < 0 || this.y + 48 > canvas.height) {
+            this.vy *= -1; // Reverse y direction
+            this.y = Math.max(0, Math.min(this.y, canvas.height - 48)); // Keep within bounds
+        }
             }
 
             draw(){
@@ -157,7 +166,7 @@
 
         const avatars = [];
 
-        for(var i = 0;i < 500;i++){
+        for(var i = 0;i < 200;i++){
             var rs = parseInt(Math.random()*28,10);
             var re = parseInt(Math.random()*57,10);
             var rm = parseInt(Math.random()*51,10);

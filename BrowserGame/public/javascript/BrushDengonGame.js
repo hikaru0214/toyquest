@@ -3,7 +3,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.room_id = room_id;
         this.player_limit = 4; //プレイヤー数制限
         this.minimum_players = 2; //最小プレイヤー数
-        this.time_limit = 60; //時間制限
+        this.time_limit = 20; //時間制限
         this.draw_start_time = 0;
         this.round = -1; //ラウンドカウンター
         this.rounds = 3; //ラウンド数
@@ -33,14 +33,16 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     gameupdate(io){ //ゲームループ
+        const room_name = "room_"+this.room_id;
         if(this.state=="standby"){
             if(this.getPlayerCount()>=this.minimum_players){
-                this.state = "gamestart"
+                this.state = "roundstart";
                 this.setTimer();
+                io.to(room_name).emit("show_client_overlay",{id:"round",time:3});
             }
         }
 
-        if(this.state=="gamestart"&&this.getTimer(3)<=0){
+        if(this.state=="roundstart"&&this.getTimer(3)<=0){
             this.state = "drawing";
             var firstword = this.startRound(io);
             return {instruction:"setword",word:firstword};
@@ -52,9 +54,11 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
                 if(this.getDrawerId()=="drawer queue completed"){
                     //TODO ラウンド終了処理
                     this.state = "roundend";
+                    io.to(room_name).emit("show_client_overlay",{id:"gamescore",time:5});
                     this.setTimer();
                 }else{
                     this.state="nextturn";
+                    io.to(room_name).emit("show_client_overlay",{id:"painternotice",time:3});
                     this.setTimer();
                 }
         }
@@ -62,6 +66,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(this.state=="nextturn"&&this.getTimer(3)<=0){
             this.state="drawing"
             var nextword = this.nextTurn(io);
+            io.to(room_name).emit("clear canvas");
             return {instruction:"setword",word:nextword};
         }
 
@@ -191,6 +196,11 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             }
         }
         return -1;
+    }
+
+    addScore(id,score){
+        var index = this.getPlayerIndexById(id);
+        this.player_data[index].score+=score;
     }
 
     getGameState(){

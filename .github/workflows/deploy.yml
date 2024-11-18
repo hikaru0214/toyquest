@@ -21,13 +21,12 @@ jobs:
           SSH_USER: ${{ secrets.USERNAME }}
           SSH_HOST: ${{ secrets.HOSTNAME }}
         run: |
-          ssh -tt "${SSH_USER}@${SSH_HOST}" <<'EOF'
-          sudo -i
-          echo "Navigating to project directory..."
-          cd /var/www/html
-          echo "Pulling latest changes from GitHub..."
-          git pull origin main
-          exit
-          exit
-          exit
-          EOF
+          echo "Starting deployment..."
+          ssh -v "${SSH_USER}@${SSH_HOST}" "
+            echo 'Changed to root user';
+            cd /var/www/html || exit 1;
+            echo 'Changed directory';
+            sudo git pull origin main || exit 1;
+            echo 'Pull completed';
+          "
+          

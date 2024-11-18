@@ -13,6 +13,29 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
+function setVisibleElementById(id,visible){
+    document.getElementById(id).style.display =  visible?"block":"none";
+}
+
+setVisibleElementById("overlay",false);
+setVisibleElementById("round",false);
+setVisibleElementById("selectword",false);
+setVisibleElementById("painternotice",false);
+
+var ol_timer = 0;
+var ol_timespan = 0;
+var ol_elementId = "";
+var ol_timer_onend = function(){};
+
+function showOverlayByIdWithTimespan(id,timespan,onend){
+    ol_timer = Date.now();
+    ol_timer_onend = onend;
+    ol_timespan = timespan;
+    ol_elementId = id;
+    setVisibleElementById("overlay",true);
+    setVisibleElementById(id,true);
+}
+
 function receiveObject(obj,ObjClass){
     const received = JSON.parse(obj);
     const newobj = new ObjClass;
@@ -91,6 +114,10 @@ socket.on('update timer',(time)=>{
 
 socket.on("get word",(word)=>{
     document.getElementById("word").innerHTML = word;
+});
+
+socket.on("show_client_overlay",(data)=>{
+    showOverlayByIdWithTimespan(data.id,data.time*1000,function(){});
 });
 
 var chatlog = document.getElementById("log");
@@ -190,6 +217,14 @@ context.fillRect(0,0,canvas.width,canvas.height);
 
 function update(){
     if(!initialized)init();
+    if(ol_timer!=-1){
+    if(Date.now()-ol_timer >= ol_timespan){
+        setVisibleElementById(ol_elementId,false);
+        setVisibleElementById("overlay",false);
+        ol_timer_onend();
+        ol_timer = -1;
+    }
+    }
 }
 
 let start;

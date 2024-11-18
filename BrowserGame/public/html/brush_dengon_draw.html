@@ -119,7 +119,7 @@
             left: 0;
             z-index: 10;
             position: fixed;
-            background-color: #77777777;
+            background-color: #555555bb;
             display: none;
         }
 
@@ -127,7 +127,23 @@
             text-align: center;
             margin-top: 35vh;
             color: white;
-            font-size: 100px;
+            font-size:5vw;
+        }
+
+        #painternotice {
+            color: white;
+            position: fixed;
+            left: 50%;
+            top: 45%;
+            transform: translate(-50%,-50%);
+            font-size: 5vw;
+        }
+
+        .menu_button_horizontal {
+            width:32%;
+            height: 15%;
+            padding: 0px;
+            margin: 0px;
         }
 
     </style>
@@ -141,18 +157,38 @@
         <div id="painternotice">
             ユーザー1の番です！
         </div>
-        <div id="selectword"></div>
+        <div id="selectword">
+            <div style="position: fixed; left:50%; top:50%; transform: translate(-50%,-50%); width: 50%; height: 50%; display: inline-block; vertical-align: top;">
+                <p style="font-size: 64px; text-align: center; color: white;">お題を選んでください</p>
+                <button class="menu_button_horizontal">お題1</button>
+                <button class="menu_button_horizontal">お題2</button>
+                <button class="menu_button_horizontal">お題3</button>
+            </div>
+        </div>
+
+        <div id="gamescore">
+            <div id="resultscore">
+
+            </div>
+        </div>
 
         <div id="roundscore">
 
         </div>
 
-        <div id="finalscore"></div>
+        <div id="finalscore">
+            <div id="podium">
+
+            </div>
+            <div id="resultscore">
+
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
 
-    <div id="word_board"><p id="word" style="top: 50%;">ミッフィー</p><p id="timer" style="position: fixed; float:right;"></p></div> <!-- お題単語表示-->
+    <div id="word_board"><p id="word" style="top: 50%;">ミッフィー</p><p id="timer" style="position: fixed; top:20px; left: 25px; margin: 0; padding: 0; font-size: 32px;"></p></div> <!-- お題単語表示-->
 
     <div id="game_elements"> <!-- ゲーム画面要素(スコアボード、キャンバス、チャット)をまとめるdiv -->
 
@@ -194,23 +230,6 @@
     </div>
 
     </div>
-
-    <script>
-            document.getElementById("painternotice").style.display = "none";
-            document.getElementById("selectword").style.display = "none";
-            document.getElementById("roundscore").style.display = "none";
-            document.getElementById("finalscore").style.display = "none";
-            
-        function hideOverlay(){
-            document.getElementById("overlay").style.display="none";
-        }
-        function showOverlay(){
-            document.getElementById("overlay").style.display="block";
-        }
-        function showRound(){
-            document.getElementById("round").style.display = "block";
-        }
-    </script>
 
     <script type="text/javascript" src="../javascript/gameUtils.js"></script>
     <script type="text/javascript" src="../javascript/BrushDengonGame.js"></script>

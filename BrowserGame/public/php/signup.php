@@ -1,32 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ユーザ登録画面</title>
-</head>
-<body>
-    <h2>ユーザ登録フォーム</h2>
-    <form action="register.php" method="POST">
-    <p>
-        <label for="username">ユーザ名：</label>
-        <input type="text" name="username">
-    </p>
-    <p>
-        <label for="email">メールアドレス：</label>
-        <input type="email" name="email">
-    </p>
-    <p>
-        <label for="password">パスワード：</label>
-        <input type="password" name="password">
-    </p>
-    <p>
-        <label for="password_conf">パスワード確認：</label>
-        <input type="password" name="password_conf">
-    </p>
-    <p>
-        <input type="submit" value="新規登録">
-    </p>
-    </form>
-</body>
-</html>
+<h1 style="text-align:center;margin-top: 2em;margin-bottom: 1em;" class="h1_log">初めての方はこちら</h1>
+<form action="register.php" method="post" class="form_log">
+     <input type="email" name="email" class="textbox un" placeholder="メールアドレス"><br>
+     <input type="password" name="password" class="textbox pass" placeholder="パスワード"><br>
+     <button type="submit" class="log_button">新規登録する</button>
+     <p style="text-align:center;margin-top: 1.5em;">※パスワードは半角英数字をそれぞれ１文字以上含んだ、８文字以上で設定してください。</p>
+</form>
