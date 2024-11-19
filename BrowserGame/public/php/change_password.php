@@ -57,6 +57,9 @@
 <body>
 <?php
 
+$error_message = ""; // エラーメッセージの初期化
+
+
 // フォームが送信されたか確認
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // フォームからデータを取得
@@ -98,9 +101,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 } else {
     echo "無効なリクエストです。";
 }
-if (!empty($error_message)) {
-    echo '<p class="error">' . htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8') . '</p>';
-}
 ?>
 
     
@@ -123,5 +123,9 @@ if (!empty($error_message)) {
             </div>
             <button type="submit" class="submit-btn">登録</button>
         </form>  
+        <!-- エラーメッセージ表示 -->
+    <?php if (!empty($error_message)): ?>
+        <p class="error"><?php echo htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8'); ?></p>
+    <?php endif; ?>
 </body>
 </html>
