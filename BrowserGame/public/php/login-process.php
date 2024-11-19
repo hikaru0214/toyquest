@@ -15,12 +15,11 @@ if(isset($_SESSION['user'])){
 try{
 header('Location: top.php');
 exit;
-}catch(Exception e){
+}catch(Exception $e){
    var_dump($e->getMessage());
 }
 }else{
-header('Location: BrowserGame/public/php/login.php?hogeA=ログイン名またはパスワードが違います');
+header('Location: login.php?hogeA=ログイン名またはパスワードが違います');
 exit;
 }
-echo 'aaa';
 ?>
