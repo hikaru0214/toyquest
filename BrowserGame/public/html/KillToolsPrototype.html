@@ -447,7 +447,7 @@ document.addEventListener("keyup",(e)=>{
     keys[e.code]=false;
 });
 
-    for(var i = 0;i < 500;i++){
+    for(var i = 0;i < 50;i++){
         players.push(new Player());
     }
 
@@ -485,7 +485,17 @@ document.addEventListener("keyup",(e)=>{
     }
 
     var increment = 0;
-    const spectate = true;
+
+    var spectate = false;
+
+    var specbutton = document.getElementById("spectate");
+
+        specbutton.onclick = function(){
+            console.log("モードトグル");
+            spectate=!spectate;
+            specbutton.innerHTML=spectate?"モブモード":"観戦モード";
+            console.log(spectate);
+    };
 
     function update(){
 
@@ -527,6 +537,8 @@ document.addEventListener("keyup",(e)=>{
 
         if(spectate){
             landed=true;
+            if(keys["ShiftLeft"])player_vel.y-=0.1;
+            player_vel.y*=0.9;
         }else{
             player_vel.y-=0.02; //重力
         }
@@ -538,6 +550,10 @@ document.addEventListener("keyup",(e)=>{
 
 
         if(landed){
+            forward_vel=0.05;
+        }else{
+            forward_vel=0.003;
+        }
         if(keys["KeyW"]){
             player_vel.x+=Math.sin(player_horizontal_look)*-forward_vel;
             player_vel.z+=Math.cos(player_horizontal_look)*-forward_vel;
@@ -554,18 +570,18 @@ document.addEventListener("keyup",(e)=>{
             player_vel.x+=Math.sin(player_horizontal_look+Math.PI/2)*forward_vel;
             player_vel.z+=Math.cos(player_horizontal_look+Math.PI/2)*forward_vel;
         }
-        if(keys["Space"]){
-            player_vel.y=0.7;
+
+        if(keys["Space"]&&landed){
+            player_vel.y=0.5;
             landed = false;
-        }
         }
 
         if(landed){
         player_vel.x*=0.9; //摩擦
         player_vel.z*=0.9;
         }else{
-            player_vel.x*=1; //摩擦
-            player_vel.z*=1;
+            player_vel.x*=0.995; //摩擦
+            player_vel.z*=0.995;
         }
 
         player_pos.x+=player_vel.x
@@ -684,15 +700,6 @@ renderer.setAnimationLoop( animate );
     </div>
 
     <script>
-
-        const specbutton = document.getElementById("spectate");
-
-        specbutton.onclick = function(){
-            console.log("モードトグル");
-            spectate=!spectate;
-            specbutton.innerHTML=spectate?"モブモード":"観戦モード";
-            console.log(spectate);
-        };
 
         function setSpritePosition(r_skin,r_eye,r_mouth){
             r_skin = parseInt(r_skin);
