@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 新しいパスワードと確認用パスワードが一致するか確認
     if ($new_password !== $confirm_password) {
-        echo "新しいパスワードが一致しません。";
+        $error_message = "新しいパスワードが一致しません。";
         exit;
     }
 
@@ -89,15 +89,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mdb->bindParam(':email', $email, PDO::PARAM_STR);
 
         if ($mdb->execute()) {
-            echo "パスワードが更新されました。";
+            $error_message = "パスワードが更新されました。";
             header("Location: change_password_complete.html"); // 完了ページへリダイレクト
             exit;
         } else {
-            echo "パスワード更新中にエラーが発生しました。";
+            $error_message = "パスワード更新中にエラーが発生しました。";
         }
     } else {
-        echo "このメールアドレスは登録されていません。";
+        $error_message = "このメールアドレスは登録されていません。";
     }
+} else {
+    $error_message = "無効なリクエストです。";
 }
 ?>
 
