@@ -463,6 +463,11 @@
             }
         }
 
+        if($Rank<=10){
+            for($Rank;$Rank==10;$Rank++){
+                echo "<tr><td>-</td><td>-</td><td>-</td></tr>";
+            }
+        }
         echo "<tr><td></td><td></td><td></td></tr>";
 
         if($userRank_in=true){
