@@ -458,6 +458,7 @@
                     $user_score=$row['total_score'];
                 }
         }
+        echo "<tr><td></td><td></td><td></td></tr>"
         if($userRank_in=true){
             echo "<tr><td>".$userRank;
             echo "</td><td>あなた</td><td>".$user_score;
