@@ -13,7 +13,7 @@ foreach($sql as $row) {
 }
 if(isset($_SESSION['user'])){
 try{
-header('Location: BrowserGame/public/php/top.php');
+header('Location: top.php');
 exit;
 }catch(Exception e){
    var_dump($e->getMessage());
