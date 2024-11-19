@@ -13,6 +13,13 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
+function hideAllOverlay(){
+    var overlays = document.getElementById("overlay").children;
+    for(var i = 0;i < overlays.length;i++){
+        overlays[i].style.display = "none";
+    }
+}
+
 function setVisibleElementById(id,visible){
     document.getElementById(id).style.display =  visible?"block":"none";
 }
@@ -117,8 +124,17 @@ socket.on("get word",(word)=>{
     document.getElementById("word").innerHTML = word;
 });
 
-socket.on("show_client_overlay",(data)=>{
+socket.on("show_client_overlay_timed",(data)=>{
+    hideAllOverlay();
     showOverlayByIdWithTimespan(data.id,data.time*1000,function(){});
+});
+
+socket.on("show_client_overlay",(data)=>{
+    setVisibleElementById(data.id,true);
+});
+
+socket.on("hide_client_overlay",(data)=>{
+    setVisibleElementById(data.id,false);
 });
 
 var chatlog = document.getElementById("log");

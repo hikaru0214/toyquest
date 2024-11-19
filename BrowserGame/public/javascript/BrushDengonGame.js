@@ -47,14 +47,14 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             for(var i = 0;i < this.player_ids.length;i++){
                 this.drawer_queue.push({id:this.player_ids[i],drew:false});
             }
-            io.to(room_name).emit("show_client_overlay",{id:"round",time:3});
+            io.to(room_name).emit("show_client_overlay_timed",{id:"round",time:3});
             this.setTimer();
             this.state="round";
         }
 
         if(this.state=="round"&&this.getTimer(3)<=0){
             io.to(room_name).emit("clear canvas");
-            io.to(room_name).emit("show_client_overlay",{id:"painternotice",time:3})
+            io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3})
             this.setTimer();
             this.state = "painternotice";
         }
@@ -74,10 +74,10 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             if(this.getDrawerId()=="drawer queue completed"){
                 //ラウンド終了処理
                 this.state="roundend";
-                io.to(room_name).emit("show_client_overlay",{id:"gamescore",time:6});
+                io.to(room_name).emit("show_client_overlay_timed",{id:"gamescore",time:6});
                 this.setTimer();
             }else{ //次のターン
-                io.to(room_name).emit("show_client_overlay",{id:"painternotice",time:3})
+                io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3})
                 this.setTimer();
                 this.state = "painternotice";
             }
@@ -101,11 +101,11 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
                 if(this.getDrawerId()=="drawer queue completed"){
                     //TODO ラウンド終了処理
                     this.state = "roundend";
-                    io.to(room_name).emit("show_client_overlay",{id:"gamescore",time:5});
+                    io.to(room_name).emit("show_client_overlay_timed",{id:"gamescore",time:5});
                     this.setTimer();
                 }else{
                     this.state="nextturn";
-                    io.to(room_name).emit("show_client_overlay",{id:"painternotice",time:3});
+                    io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3});
                     this.setTimer();
                 }
         }
