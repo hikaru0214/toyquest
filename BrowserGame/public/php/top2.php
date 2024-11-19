@@ -441,10 +441,10 @@
             <td>zzz</td>
         </tr>
         <?php
-        $sql=$pdo->prepare('SELECT user_id,user_name SUM(score) AS total_score FROM Score GROUP BY user_id ORDER BY total_score ASC');
+        $sql=$pdo->prepare('SELECT user_id, SUM(score) AS total_score FROM Score GROUP BY user_id ORDER BY total_score ASC');
         $sql->execute();
         foreach($sql as $row) {
-                echo "</td><td>".$row['user_name'];
+                echo "</td><td>".$row['user_id'];
                 echo "</td><td>".$row['total_score'];
                 echo "</td></tr>";
         }
