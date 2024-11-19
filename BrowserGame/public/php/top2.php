@@ -437,8 +437,7 @@
         <h3 class="table_title">ランキング</h3>
     <table>
         <tr>
-            <td>1位</td>
-            <td>zzz</td>
+        <td>Rank</td><td>name</td><td>score</td>
         </tr>
         <?php
         $sql=$pdo->prepare('SELECT Score.user_id, SUM(Score.score) AS total_score, User.user_name 
@@ -446,17 +445,30 @@
             GROUP BY Score.user_id ORDER BY total_score ASC');
         $sql->execute();
         $Rank=0;
+        $userRank_in=false;
         foreach($sql as $row) {
                 $Rank+=1;
-                echo "</td><td>".$Rank;
-                echo "</td><td>".$row['user_id'];
+                echo "<tr><td>".$Rank;
                 echo "</td><td>".$row['user_name'];
                 echo "</td><td>".$row['total_score'];
                 echo "</td></tr>";
+                if($row['user_id']==1){
+                    $userRank_in=true;
+                    $userRank=$Rank;
+                    $user_score=$row['total_score'];
+                }
+        }
+        if($userRank_in=true){
+            echo "<tr><td>".$userRank;
+            echo "</td><td>あなた</td><td>".$user_score;
+            echo "</td></tr>";
+        }else{
+            echo "<tr><td>圏外";
+            echo "</td><td>あなた</td><td>".$user_score;
+            echo "</td></tr>";
         }
         ?>
     </table>
-    testtesttest
 </div>
 </div>
 
