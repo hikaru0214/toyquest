@@ -1,6 +1,6 @@
-<?php session_start(); ?>
+<?php session_start(); 
 <!-- DB接続 -->
-<?php require '../dbConnect/dbconnect.php'; ?>
+ require '../dbConnect/dbconnect.php'; 
 
 $db['host'] = "localhost";  // DBサーバのURL
 $db['user'] = "hogeUser";  // ユーザー名
