@@ -98,8 +98,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "このメールアドレスは登録されていません。";
     }
-} else {
-    echo "無効なリクエストです。";
 }
 ?>
 
