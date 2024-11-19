@@ -468,6 +468,7 @@
                 echo "<tr><td>---</td><td>---</td><td>---</td></tr>";
             }
         }
+        echo "<tr><td>---</td><td>---</td><td>---</td></tr>";
         echo "<tr><td></td><td></td><td></td></tr>";
 
         if($userRank_in=true){
