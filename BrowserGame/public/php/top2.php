@@ -429,7 +429,7 @@
     <h3 class="player">プレイヤー名</h3>
     <input type="button" class="button" onclick="location.href='test1.html'" value="チャリ走"></button>
     <input type="button" class="button2" value="ブラシ伝言"></button>
-    <input type="button" class="button3" value="あいつを探せ" onclick="location.href='rogocontrol.html'"></button>
+    <input type="button" class="button3" value="あいつを探せ" onclick="location.href='rogocontrol.php'"></button>
     <input type="image" src="../img/notice.png" class="notice" value="お知らせ"></button>
     <input type="image" src="../img/friend.png" class="friend" value="フレンド"></button>
     <input type="image" src="../img/Logout.png" class="Logout" value="ログアウト"></button>
@@ -444,7 +444,7 @@
             FROM Score JOIN User ON Score.user_id = User.user_id 
             GROUP BY Score.user_id ORDER BY total_score ASC');
         $sql->execute();
-        
+
         $Rank=0;
         $userRank_in=false;
 
