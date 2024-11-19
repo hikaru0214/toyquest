@@ -464,11 +464,10 @@
         }
 
         if($Rank>=10){
-            for($Rank;$Rank==10;$Rank++){
+            for($NULLRank=$Rank;$NULLRank==10;$NULLRank++){
                 echo "<tr><td>---</td><td>---</td><td>---</td></tr>";
             }
         }
-        echo "<tr><td>---</td><td>---</td><td>---</td></tr>";
         echo "<tr><td></td><td></td><td></td></tr>";
 
         if($userRank_in=true){
