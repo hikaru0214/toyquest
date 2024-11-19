@@ -444,21 +444,27 @@
             FROM Score JOIN User ON Score.user_id = User.user_id 
             GROUP BY Score.user_id ORDER BY total_score ASC');
         $sql->execute();
+        
         $Rank=0;
         $userRank_in=false;
+
         foreach($sql as $row) {
-                $Rank+=1;
-                echo "<tr><td>".$Rank;
-                echo "</td><td>".$row['user_name'];
-                echo "</td><td>".$row['total_score'];
-                echo "</td></tr>";
-                if($row['user_id']==1){
-                    $userRank_in=true;
-                    $userRank=$Rank;
-                    $user_score=$row['total_score'];
-                }
+        $Rank+=1;
+
+        echo "<tr><td>".$Rank;
+        echo "</td><td>".$row['user_name'];
+        echo "</td><td>".$row['total_score'];
+        echo "</td></tr>";
+        
+        if($row['user_id']==1){
+            $userRank_in=true;
+            $userRank=$Rank;
+            $user_score=$row['total_score'];
+            }
         }
-        echo "<tr><td></td><td></td><td></td></tr>"
+
+        echo "<tr><td></td><td></td><td></td></tr>";
+
         if($userRank_in=true){
             echo "<tr><td>".$userRank;
             echo "</td><td>あなた</td><td>".$user_score;
