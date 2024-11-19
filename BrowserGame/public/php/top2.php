@@ -463,14 +463,14 @@
             }
         }
 
-        if($Rank>=10){
-            for($NULLRank=$Rank;$NULLRank==10;$NULLRank++){
+        if($Rank<=10){
+            for($Rank;$Rank<=10;$Rank++){
                 echo "<tr><td>---</td><td>---</td><td>---</td></tr>";
             }
         }
         echo "<tr><td></td><td></td><td></td></tr>";
 
-        if($userRank_in=true){
+        if($userRank_in==true){
             echo "<tr><td>".$userRank;
             echo "</td><td>あなた</td><td>".$user_score;
             echo "</td></tr>";
