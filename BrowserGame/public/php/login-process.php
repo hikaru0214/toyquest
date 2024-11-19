@@ -12,13 +12,8 @@ foreach($sql as $row) {
     ];
 }
 if(isset($_SESSION['user'])){
-// try{
 header('Location: top.php');
-session_destroy();
 exit;
-// }catch(Exception $e){
-//    var_dump($e->getMessage());
-// }
 }else{
 header('Location: login.php?hogeA=ログイン名またはパスワードが違います');
 exit;
