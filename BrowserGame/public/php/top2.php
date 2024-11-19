@@ -445,13 +445,15 @@
             FROM Score JOIN User ON Score.user_id = User.user_id 
             GROUP BY Score.user_id ORDER BY total_score ASC');
         $sql->execute();
+        $Rank=0;
         foreach($sql as $row) {
+                $Rank+=1;
+                echo "</td><td>".$Rank;
                 echo "</td><td>".$row['user_id'];
                 echo "</td><td>".$row['user_name'];
                 echo "</td><td>".$row['total_score'];
                 echo "</td></tr>";
         }
-        echo "<tr><td>終了<td></tr>";
         ?>
     </table>
     testtesttest
