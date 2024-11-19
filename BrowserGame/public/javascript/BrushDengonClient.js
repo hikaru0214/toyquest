@@ -96,7 +96,7 @@ socket.on('game update',(game)=>{
     clientGame = receiveObject(game,Game);
     updateScoreBoard();
     showPalette(clientGame.isDrawing(own_id));
-    document.getElementById("round_count").innerHTML = game.round;
+    document.getElementById("round_count").innerHTML = clientGame.round;
     switch(clientGame.state){
         case "standby":
             showPalette(true);
