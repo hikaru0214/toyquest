@@ -62,7 +62,7 @@
     var model = null;
     const loader = new GLTFLoader();
     loader.load(
-        "../models/ハウス3.glb",
+        "../models/ハウス2.glb",
         function (loadedGltf) {
             gltf = loadedGltf;
             model = gltf.scene;
