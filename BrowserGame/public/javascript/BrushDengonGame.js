@@ -74,7 +74,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             if(this.getDrawerId()=="drawer queue completed"){
                 //ラウンド終了処理
                 this.state="roundend";
-                io.to(room_name).emit("show_client_overlay_timed",{id:"gamescore",time:6});
+                io.to(room_name).emit("show_client_overlay_timed",{id:"roundcore",time:6});
                 this.setTimer();
             }else{ //次のターン
                 io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3})

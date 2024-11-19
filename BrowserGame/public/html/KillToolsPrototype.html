@@ -119,8 +119,25 @@ scene.add(new THREE.GridHelper(200,100));
     const particles = [];
     const players = [];
     const rockets = [];
+    const platforms = [];
 
 const cube_geometry = new THREE.BoxGeometry(1,1,1);
+
+class Platform {
+    constructor(pos,size){
+        this.pos = pos;
+        this.size = size;
+        this.color = parseInt(Math.random()*0xffffff);
+        this.material = new THREE.MeshBasicMaterial({color: this.color});
+        this.geometry = new THREE.BoxGeometry(this.size.x,this.size.y,this.size.z);
+        this.mesh = new THREE.Mesh(this.geometry,this.material);
+        scene.add(this.mesh);
+
+        this.mesh.position.copy(this.pos);
+    }
+}
+
+platforms.push(new Platform(new THREE.Vector3(0,0,0),new THREE.Vector3(10,10,10)));
 
 class DustParticle {
     constructor(x,y,z,s,l,c){
@@ -317,18 +334,18 @@ class Player{
             update(){
                 this.vel.y-=0.02;
 
-                //this.look_horizontal+=0.08;
-
-                //this.goForward();
-
-                this.lookRandom();
+                this.look_horizontal+=0.08;
 
                 if((this.pos.y+this.vel.y)-4 <= 0){
                     this.vel.y=0;
                     this.landed=true;
                 }
 
-                //this.jumpRandom();
+                this.goForward();
+
+                this.lookRandom();
+
+                this.jumpRandom();
 
                 if(this.landed){
                     this.vel.x*=0.9; //摩擦
@@ -386,7 +403,7 @@ document.addEventListener("keyup",(e)=>{
     keys[e.code]=false;
 });
 
-    for(var i = 0;i < 100;i++){
+    for(var i = 0;i < 10;i++){
         players.push(new Player());
     }
 
