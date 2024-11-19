@@ -1,11 +1,8 @@
 <?php session_start();?>
 <!-- DB接続 -->
  <?php require '../dbConnect/dbconnect.php';?>
+ 
 <?php
-$db['host'] = "localhost";  // DBサーバのURL
-$db['user'] = "hogeUser";  // ユーザー名
-$db['pass'] = "hogehoge";  // ユーザー名のパスワード
-$db['dbname'] = "loginManagement";  // データベース名
 
 // エラーメッセージ、登録完了メッセージの初期化
 $errorMessage = "";
