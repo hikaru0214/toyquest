@@ -68,6 +68,7 @@
             height: 35%;
             transform: translate(-50%,-50%);
             border: double white 2px;
+            cursor:pointer;
         }
       </style>
 </head>
@@ -432,12 +433,12 @@ const mouse = [];
 
 document.addEventListener('mousedown',(e)=>{
     mouse[e.button] = true;
-    e.preventDefault();
+    //e.preventDefault();
 });
 
 document.addEventListener('mouseup',(e)=>{
     mouse[e.button] = false;
-    e.preventDefault();
+    //e.preventDefault();
 });
 
 document.addEventListener("keydown",(e)=>{
@@ -504,7 +505,7 @@ document.addEventListener("keyup",(e)=>{
         if(!document.pointerLockElement)requestFocusElement.style.display="block";
 
         if(document.pointerLockElement){
-
+            requestFocusElement.style.display="none"
         if(mouse[0]){
             var fire_pos = new THREE.Vector3().copy(player_pos);
             fire_pos.y-=1;
@@ -554,6 +555,8 @@ document.addEventListener("keyup",(e)=>{
         }else{
             forward_vel=0.003;
         }
+
+        if(document.pointerLockElement){
         if(keys["KeyW"]){
             player_vel.x+=Math.sin(player_horizontal_look)*-forward_vel;
             player_vel.z+=Math.cos(player_horizontal_look)*-forward_vel;
@@ -574,6 +577,7 @@ document.addEventListener("keyup",(e)=>{
         if(keys["Space"]&&landed){
             player_vel.y=0.5;
             landed = false;
+        }
         }
 
         if(landed){
@@ -686,6 +690,8 @@ renderer.setAnimationLoop( animate );
         <br>
         <button id="spectate">観戦モード</button>
         <br>
+        ユーザーネーム<input type="text"><button>適用</button>
+        <br>
         <div id="player_avatar" style="width: 160px; height: 160px;margin: 5px; display: inline-block;vertical-align: top;">
             <div id="skin" class="avatar" style="background-image: url('../img/color_atlas.gif');"></div>
             <div id="eye" class="avatar" style="background-image: url('../img/eyes_atlas.gif');"></div>
@@ -694,12 +700,21 @@ renderer.setAnimationLoop( animate );
     </div>
 
     <div id="requestFocus">
-        <p style="position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 32px; margin: 0px; padding: 0px;">
+        <p class="blink" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 32px; margin: 0px; padding: 0px;">
             CLICK TO FOCUS
         </p>
     </div>
 
     <script>
+
+        var blink = false;
+        var blinkel = document.getElementsByClassName("blink");
+        setInterval(function(){
+            blink=!blink;
+            for(var i = 0;i < blinkel.length;i++){
+                blinkel[i].style.display = blink?"block":"none";
+            }
+        },500)
 
         function setSpritePosition(r_skin,r_eye,r_mouth){
             r_skin = parseInt(r_skin);
