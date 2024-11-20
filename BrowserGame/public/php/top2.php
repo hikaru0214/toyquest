@@ -259,7 +259,7 @@
     const clock = new THREE.Clock();
     // アニメーションループ
     function animate() {
-        defaultZoom();//画面拡縮無効
+        
         requestAnimationFrame(animate);
         // キーが押されている場合にカメラを動かす
         moveCamera();
@@ -290,6 +290,7 @@
     function defaultZoom() {
     document.body.style.zoom = "100%";
     }
+    defaultZoom();//画面拡縮無効
 
     </script>
 
