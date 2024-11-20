@@ -2,7 +2,7 @@
     "name": "Your App Name",
     "short_name": "testapp",
     "description": "Your app description",
-    "start_url": "../top.html",
+    "start_url": "../php/top2.php",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#000000",

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Three.js ドットエフェクトの実装</title>
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="../css/index.css">
     <script type="importmap">
     {
         "imports": {
@@ -63,7 +63,7 @@
     var model = null;
     const loader = new GLTFLoader();
     loader.load(
-        "models/rogo.glb",
+        "../models/rogo.glb",
         function (loadedGltf) {
             gltf = loadedGltf;
             model = gltf.scene;

@@ -62,7 +62,7 @@
     var model = null;
     const loader = new GLTFLoader();
     loader.load(
-        "../models/ハウス3.glb",
+        "../models/ハウス2.glb",
         function (loadedGltf) {
             gltf = loadedGltf;
             model = gltf.scene;
@@ -429,7 +429,7 @@
     <h3 class="player">プレイヤー名</h3>
     <input type="button" class="button" onclick="location.href='test1.html'" value="チャリ走"></button>
     <input type="button" class="button2" value="ブラシ伝言"></button>
-    <input type="button" class="button3" value="あいつを探せ" onclick="location.href='rogocontrol.html'"></button>
+    <input type="button" class="button3" value="あいつを探せ" onclick="location.href='rogocontrol.php'"></button>
     <input type="image" src="../img/notice.png" class="notice" value="お知らせ"></button>
     <input type="image" src="../img/friend.png" class="friend" value="フレンド"></button>
     <input type="image" src="../img/Logout.png" class="Logout" value="ログアウト"></button>
@@ -437,21 +437,50 @@
         <h3 class="table_title">ランキング</h3>
     <table>
         <tr>
-            <td>1位</td>
-            <td>zzz</td>
+        <td>Rank</td><td>name</td><td>score</td>
         </tr>
         <?php
-        $sql=$pdo->prepare('SELECT user_id,user_name_SUM(score) AS total_score FROM Score GROUP BY user_id ORDER BY total_score ASC');
+        $sql=$pdo->prepare('SELECT Score.user_id, SUM(Score.score) AS total_score, User.user_name 
+            FROM Score JOIN User ON Score.user_id = User.user_id 
+            GROUP BY Score.user_id ORDER BY total_score ASC');
         $sql->execute();
+
+        $Rank=0;
+        $userRank_in=false;
+
         foreach($sql as $row) {
-                echo "</td><td>".$row['user_name'];
-                echo "</td><td>".$row['total_score'];
-                echo "</td></tr>";
+        $Rank+=1;
+
+        echo "<tr><td>".$Rank;
+        echo "</td><td>".$row['user_name'];
+        echo "</td><td>".$row['total_score'];
+        echo "</td></tr>";
+        
+        if($row['user_id']==1){
+            $userRank_in=true;
+            $userRank=$Rank;
+            $user_score=$row['total_score'];
+            }
         }
-        echo "<tr><td>終了<td></tr>";
+
+        if($Rank<=10){
+            for($Rank;$Rank<10;$Rank++){
+                echo "<tr><td>---</td><td>---</td><td>---</td></tr>";
+            }
+        }
+        echo "<tr><td></td><td></td><td></td></tr>";
+
+        if($userRank_in==true){
+            echo "<tr><td>".$userRank;
+            echo "</td><td>あなた</td><td>".$user_score;
+            echo "</td></tr>";
+        }else{
+            echo "<tr><td>圏外";
+            echo "</td><td>あなた</td><td>".$user_score;
+            echo "</td></tr>";
+        }
         ?>
     </table>
-    testtesttest
 </div>
 </div>
 

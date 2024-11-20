@@ -37,10 +37,57 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(this.state=="standby"){
             if(this.getPlayerCount()>=this.minimum_players){
                 this.state = "roundstart";
-                this.setTimer();
-                io.to(room_name).emit("show_client_overlay",{id:"round",time:3});
             }
         }
+
+        if(this.state=="roundstart"){ //最初のラウンドと続くラウンドをスタートする
+            this.round++;
+            //描き手キュー
+            this.drawer_queue = [];
+            for(var i = 0;i < this.player_ids.length;i++){
+                this.drawer_queue.push({id:this.player_ids[i],drew:false});
+            }
+            io.to(room_name).emit("show_client_overlay_timed",{id:"round",time:3});
+            this.setTimer();
+            this.state="round";
+        }
+
+        if(this.state=="round"&&this.getTimer(3)<=0){
+            io.to(room_name).emit("clear canvas");
+            io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3})
+            this.setTimer();
+            this.state = "painternotice";
+        }
+
+        if(this.state=="painternotice"&&this.getTimer(3)<=0){
+            io.to(room_name).emit("clear canvas");
+            this.state = "drawing";
+            var word = this.nextTurn(io);
+            return word;
+        }
+
+        if(this.state=="drawing"&&this.getRemainingTime()<=0){
+
+            this.markDrewInQueue(this.getDrawerId());
+            console.log(this.drawer_queue);
+
+            if(this.getDrawerId()=="drawer queue completed"){
+                //ラウンド終了処理
+                this.state="roundend";
+                io.to(room_name).emit("show_client_overlay_timed",{id:"roundcore",time:6});
+                this.setTimer();
+            }else{ //次のターン
+                io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3})
+                this.setTimer();
+                this.state = "painternotice";
+            }
+        }
+
+        if(this.state=="roundend"&&this.getTimer(6)<=0){
+            this.state="roundstart"
+        }
+
+        /*
 
         if(this.state=="roundstart"&&this.getTimer(3)<=0){
             this.state = "drawing";
@@ -54,11 +101,11 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
                 if(this.getDrawerId()=="drawer queue completed"){
                     //TODO ラウンド終了処理
                     this.state = "roundend";
-                    io.to(room_name).emit("show_client_overlay",{id:"gamescore",time:5});
+                    io.to(room_name).emit("show_client_overlay_timed",{id:"gamescore",time:5});
                     this.setTimer();
                 }else{
                     this.state="nextturn";
-                    io.to(room_name).emit("show_client_overlay",{id:"painternotice",time:3});
+                    io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3});
                     this.setTimer();
                 }
         }
@@ -70,11 +117,12 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             return {instruction:"setword",word:nextword};
         }
 
-        if(this.state=="roundend"&&this.getTimer(5)<=0){
+        if(this.state=="roundend"&&this.getTimer(6)<=0){
             this.state="roundstart"
             var nextround_first_word = this.startRound(io);
             return {instruction:"setword",word:nextround_first_word};
         }
+            */
 
         return "nil";
     }
@@ -121,7 +169,6 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     getTimer(time){
-        if(this.timer==0)return NaN;
         return time-(Date.now()-this.timer)/1000;
     }
 

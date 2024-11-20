@@ -139,6 +139,15 @@
             font-size: 5vw;
         }
 
+        #resultscore {
+            color: white;
+            position: fixed;
+            left: 50%;
+            top: 45%;
+            transform: translate(-50%,-50%);
+            font-size: 5vw;
+        }
+
         .menu_button_horizontal {
             width:32%;
             height: 15%;
@@ -173,7 +182,9 @@
         </div>
 
         <div id="roundscore">
-
+            <div id="resultscore">
+                ラウンドスコア
+            </div>
         </div>
 
         <div id="finalscore">
@@ -188,7 +199,10 @@
 
     <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
 
-    <div id="word_board"><p id="word" style="top: 50%;">ミッフィー</p><p id="timer" style="position: fixed; top:20px; left: 25px; margin: 0; padding: 0; font-size: 32px;"></p></div> <!-- お題単語表示-->
+    <div id="word_board"><p id="word" style="top: 50%;">ミッフィー</p>
+        <p id="timer" style="position: fixed; top:20px; left: 25px; margin: 0; padding: 0; font-size: 32px;"></p>
+        <p id="round_count" style="position: fixed; top: 20px; right: 25px; margin: 0; padding: 0; font-size: 32px;"></p>
+    </div> <!-- お題単語表示-->
 
     <div id="game_elements"> <!-- ゲーム画面要素(スコアボード、キャンバス、チャット)をまとめるdiv -->
 
