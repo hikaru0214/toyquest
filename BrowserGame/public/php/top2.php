@@ -287,7 +287,6 @@
     });
 
     document.body.style.overflow = 'hidden';//ページのスクロール無効
-    window.addEventListener("wheel", (event) => {
     function defaultZoom() {
     document.body.style.zoom = "100%";
     }
