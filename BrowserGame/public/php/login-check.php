@@ -16,24 +16,29 @@ if (empty($_POST["password"])) {
 
 // エラーがなければログイン処理
 if (count($err) == 0) {
-    // メールアドレスとパスワードを照合
-    $sql = $pdo->prepare('SELECT * FROM User WHERE mailaddress = ? AND password = ?');
-    $sql->execute([$_POST['mailaddress'], $_POST['password']]);
+    // メールアドレスが存在するか確認
+    $sql = $pdo->prepare('SELECT * FROM User WHERE mailaddress = ?');
+    $sql->execute([$_POST['mailaddress']]);
     $user = $sql->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
-        // ログイン成功
-        $_SESSION['user'] = [
-            'user_id' => $user['user_id'],
-            'user_name' => $user['user_name'],
-            'mailaddress' => $user['mailaddress'],
-            'password' => $user['password']
-        ];
-        header('Location: top.php');
-        exit;
+        // メールアドレスは一致、パスワードを確認
+        if ($user['password'] === $_POST['password']) {
+            // ログイン成功
+            $_SESSION['user'] = [
+                'user_id' => $user['user_id'],
+                'user_name' => $user['user_name'],
+                'mailaddress' => $user['mailaddress']
+            ];
+            header('Location: top.php');
+            exit;
+        } else {
+            // パスワードが一致しない
+            $err[] = 'パスワードが一致しません。';
+        }
     } else {
-        // 一致しない場合
-        $err[] = 'メールアドレスまたはパスワードが一致しません。';
+        // メールアドレスが一致しない
+        $err[] = 'メールアドレスが一致しません。';
     }
 }
 
