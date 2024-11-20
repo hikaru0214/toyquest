@@ -63,7 +63,7 @@ $error_message = ""; // エラーメッセージの初期化
 // フォームが送信されたか確認
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // フォームからデータを取得
-    $email = $_POST['email'];
+    $mailaddress = $_POST['mailaddress'];
     $new_password = $_POST['new-password'];
     $confirm_password = $_POST['confirm-password'];
 
@@ -74,21 +74,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // メールアドレスがデータベースに存在するか確認
-    $mdb = $pdo->prepare("SELECT * FROM User WHERE mailaddress = :email");
-    $mdb->bindParam(':email', $email, PDO::PARAM_STR);
-    $mdb->execute();
-    $user = $mdb->fetch();
+    $stmt = $pdo->prepare("SELECT * FROM User WHERE mailaddress = :mailaddress");
+    $stmt->bindParam(':mailaddress', $mailaddress, PDO::PARAM_STR);
+    $stmt->execute();
+    $user = $stmt->fetch();
 
     if ($user) {
         // 新しいパスワードをハッシュ化
         $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
         // パスワードを更新
-        $mdb = $pdo->prepare("UPDATE User SET password = :password WHERE email = :email");
-        $mdb->bindParam(':password', $hashed_password, PDO::PARAM_STR);
-        $mdb->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt = $pdo->prepare("UPDATE User SET password = :password WHERE mailaddress = :mailaddress");
+        $stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
+        $stmt->bindParam(':mailaddress', $mailaddress, PDO::PARAM_STR);
 
-        if ($mdb->execute()) {
+        if ($stmt->execute()) {
             $error_message = "パスワードが更新されました。";
             header("Location: change_password_complete.html"); // 完了ページへリダイレクト
             exit;
