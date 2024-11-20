@@ -31,9 +31,9 @@
         <button type="submit">ログイン</button>
     </form>
     <br>
-    <a href="change_password.html"><button>パスワードを忘れた方</button></a>
+    <a href="change_password.php"><button>パスワードを忘れた方</button></a>
     <br>
-    <a href="signup.html"><button>新規</button></a>
+    <a href="signup.php"><button>新規</button></a>
 </div>
     <!-- DB切断 -->
     <?php $pdo = null;?>
