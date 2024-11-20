@@ -24,7 +24,7 @@
 <div style="width: 50vw; height: 50vh; margin-left: auto; margin-right: auto; text-align: center; font-size: large; position: relative;">
 
     <form action="login-process.php" method="post">
-        メールアドレス <input id="email" name="email" type="text" style="margin-top: 50vh;">
+        メールアドレス <input id="mailaddress" name="mailaddress" type="text" style="margin-top: 50vh;">
         <br>
         パスワード <input id="password" name="password" type="text">
         <br>
