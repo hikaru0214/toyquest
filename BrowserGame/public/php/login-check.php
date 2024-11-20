@@ -44,6 +44,6 @@ if (count($err) == 0) {
 
 // エラーがある場合は戻る
 $_SESSION['err'] = $err;
-header('Location: login2.php');
+header('Location: login.php');
 exit;
 ?>
