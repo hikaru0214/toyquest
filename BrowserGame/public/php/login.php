@@ -1,41 +1,45 @@
-<?php session_start(); ?>
-<!-- DB接続 -->
-<?php require '../dbConnect/dbconnect.php'; ?>
+<?php 
+session_start();
+// エラー取得
+$err = $_SESSION['err'] ?? [];
+// セッションのエラー情報をクリア
+unset($_SESSION['err']);
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ログイン</title>
-
-    <style>
-    .wrapper{
-        height:100vh;
-        width:100vw;
-        display: flex;
-        justify-content:center;
-        align-items:center;
-    }
-    </style>
-
+    <title>新規登録</title>
 </head>
 <body>
-
-<div style="width: 50vw; height: 50vh; margin-left: auto; margin-right: auto; text-align: center; font-size: large; position: relative;">
-
-    <form action="login-process.php" method="post">
-        メールアドレス <input id="mailaddress" name="mailaddress" type="text" style="margin-top: 50vh;">
-        <br>
-        パスワード <input id="password" name="password" type="text">
-        <br>
-        <button type="submit">ログイン</button>
+    <h2>新規登録</h2>
+    <form action="login-check.php" method="POST">
+        <!-- エラーメッセージ表示 -->
+        <?php if (!empty($err)): ?>
+            <ul>
+                <?php foreach ($err as $error): ?>
+                    <li style="color: red;"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+        
+        <p>
+            <label for="mailaddress">メールアドレス</label>
+            <input type="email" name="mailaddress" required>
+        </p>
+        <p>
+            <label for="password">パスワード</label>
+            <input type="password" name="password" required>
+        </p>
+        <p>
+            <input type="submit" value="ログイン">
+        </p>
     </form>
     <br>
-    <a href="change_password.php"><button>パスワードを忘れた方</button></a>
+    <a href="change_password.php">パスワードを忘れた方</a>
     <br>
-    <a href="signup.php"><button>新規</button></a>
-</div>
-    <!-- DB切断 -->
-    <?php $pdo = null;?>
+    <a href="signup.php">新規</a>
 </body>
 </html>
