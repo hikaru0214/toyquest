@@ -12,16 +12,17 @@ $signUpMessage = "";
 if (isset($_POST["signUp"])) {
 	// 1. ユーザIDの入力チェック
 	if (empty($_POST["username"])) {  // 値が空のとき
-		$errorMessage = 'ユーザーIDが未入力です。';
-	} else if (empty($_POST["password"])) {
-		$errorMessage = 'パスワードが未入力です。';
+		$errorMessage = 'ユーザー名が未入力です。';
+	} else if (empty($_POST["mailaddress"])) {
+		$errorMessage = 'メールアドレスが未入力です。';
 	} else if (empty($_POST["password2"])) {
 		$errorMessage = 'パスワードが未入力です。';
 	}
 
-	if (!empty($_POST["username"]) && !empty($_POST["password"]) && !empty($_POST["password2"]) && $_POST["password"] === $_POST["password2"]) {
+	if (!empty($_POST["username"]) && !empty($_POST["mailaddress"]) && !empty($_POST["password"])) {
 		// 入力したユーザIDとパスワードを格納
 		$username = $_POST["username"];
+		$password = $_POST["mailaddress"];
 		$password = $_POST["password"];
 
 		// 2. ユーザIDとパスワードが入力されていたら認証する
@@ -63,9 +64,9 @@ if (isset($_POST["signUp"])) {
 				<div><font color="#0000ff"><?php echo htmlspecialchars($signUpMessage, ENT_QUOTES); ?></font></div>
 				<label for="username">ユーザー名</label><input type="text" id="username" name="username" placeholder="ユーザー名を入力" value="<?php if (!empty($_POST["username"])) {echo htmlspecialchars($_POST["username"], ENT_QUOTES);} ?>">
 				<br>
-				<label for="password">パスワード</label><input type="password" id="password" name="password" value="" placeholder="パスワードを入力">
+				<label for="password">メールアドレス</label><input type="mailaddress" id="mailaddress" name="mailaddress" value="" placeholder="メールアドレスを入力">
 				<br>
-				<label for="password2">パスワード(確認用)</label><input type="password" id="password2" name="password2" value="" placeholder="再度パスワードを入力">
+				<label for="password2">パスワード</label><input type="password" id="password" name="password" value="" placeholder="パスワードを入力">
 				<br>
 				<input type="submit" id="signUp" name="signUp" value="新規登録">
 			</fieldset>
