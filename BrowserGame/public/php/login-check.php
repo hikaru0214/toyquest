@@ -5,7 +5,7 @@
 <?php
 
 // エラーメッセージ
-$err = "";
+$err = [];
 
 $sql=$pdo->prepare('select * from User where mailaddress = ? AND password = ?');
 $sql->execute([$_POST['mailaddress'],$_POST['password']]);
@@ -37,6 +37,7 @@ if(count($err) == 0){
     return;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -16,7 +16,11 @@
 <body>
     <h2>新規登録</h2>
     <form action="login-check.php" method="POST">
-	<div><font color="#ff0000"><?php echo htmlspecialchars($error, ENT_QUOTES); ?></font></div>
+		
+	<?php if (isset($err[])):?>
+		<p><?php echo $err[];?></p>
+		<?php endif; ?>
+		
     <p>
         <label for="mailaddress">メールアドレス</label>
         <input type="email" name="mailaddress">
