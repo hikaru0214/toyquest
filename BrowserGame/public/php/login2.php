@@ -2,7 +2,9 @@
 <!-- DB接続 -->
 <?php require '../dbConnect/dbconnect.php'; ?>
 
-
+<?php
+	$err = $_SESSTION;
+?>
 
 <!DOCTYPE html>
 <html lang="en">

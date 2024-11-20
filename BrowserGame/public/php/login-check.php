@@ -36,7 +36,7 @@ if(count($err) == 0){
     header('Location: login2.php');
     return;
 }
-
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
