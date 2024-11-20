@@ -259,19 +259,16 @@
     const clock = new THREE.Clock();
     // アニメーションループ
     function animate() {
+        defaultZoom();//画面拡縮無効
         requestAnimationFrame(animate);
-
         // キーが押されている場合にカメラを動かす
         moveCamera();
-
         const delta = clock.getDelta(); // delta の取得
         if (mixer) {
         mixer.update(delta); // アニメーションの更新
         }
-
         // Composerを使用してレンダリング
         composer.render();
-
     }
 
     animate();
@@ -291,10 +288,9 @@
 
     document.body.style.overflow = 'hidden';//ページのスクロール無効
     window.addEventListener("wheel", (event) => {
-    if (event.ctrlKey) {
-        event.preventDefault();
+    function defaultZoom() {
+    document.body.style.zoom = "100%";
     }
-    }, { passive: false });
 
     </script>
 
