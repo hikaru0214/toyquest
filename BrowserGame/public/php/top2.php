@@ -258,8 +258,60 @@
             //character.position.z -= 0.1;
             posiz-=0.1
         }
-        if(model)camera.lookAt(model.position);  
+
+
+  
+  if(model)camera.lookAt(model.position);
+  
     }
+
+
+
+
+
+
+
+
+
+
+    //ピクセルサイズ変更処理
+    let pixels=0;
+    function Shader(){
+        if(isKey_x){
+            dotPass.uniforms["pixelSize"].value = 3;
+        }
+
+        if(isKey_q){
+            pixels=4;
+            dotPass.uniforms["pixelSize"].value = pixels;
+        }
+        if(isKey_w){
+            pixels=5;
+            dotPass.uniforms["pixelSize"].value = pixels;
+        }
+        if(isKey_e){
+            pixels=6;
+            dotPass.uniforms["pixelSize"].value = pixels;
+        }
+        if(isKey_a){
+            pixels=7;
+            dotPass.uniforms["pixelSize"].value = pixels;
+        }
+        if(isKey_s){
+            pixels=8;
+            dotPass.uniforms["pixelSize"].value = pixels;
+        }
+        if(isKey_d){
+            pixels=2.5;
+            dotPass.uniforms["pixelSize"].value = pixels;
+        }
+        
+    }
+
+
+
+
+
 
 
     const clock = new THREE.Clock();
