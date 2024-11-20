@@ -155,7 +155,7 @@
         try {
         
             // データ取得SQL
-            $sql = "SELECT score_id, game_id, user_id, registration_date, score FROM Score ORDER BY registration_date DESC";
+            $sql = "SELECT Score.score_id, Score.game_id, Score.user_id,User.user_name,Score. registration_date, Score.score FROM Score INNER JOIN User ON Score.user_id = User.user_id  ORDER BY registration_date DESC";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
         
@@ -190,7 +190,8 @@
                     <tr>
                         <th>本日スコア</th>
                         <th>月間スコア</th>
-                        <th>総合</th>
+                        <th>ユーザー名</th>
+                        <th>日付</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -198,11 +199,11 @@
                     <?php if (!empty($scores)): ?>
                 <?php foreach ($scores as $score): ?>
                     <tr>
-                        <td><?= htmlspecialchars($score['score_id'], ENT_QUOTES, 'UTF-8') ?></td>
-                        <td><?= htmlspecialchars($score['game_id'], ENT_QUOTES, 'UTF-8') ?></td>
-                        <td><?= htmlspecialchars($score['user_id'], ENT_QUOTES, 'UTF-8') ?></td>
-                        <td><?= htmlspecialchars($score['registration_date'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($score['score'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($score['score'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($score['user_name'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($score['registration_date'], ENT_QUOTES, 'UTF-8') ?></td>
+                        
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
