@@ -3,9 +3,10 @@
     "short_name": "testapp",
     "description": "Your app description",
     "start_url": "../php/top2.php",
-    "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#000000",
+    "display": "fullscreen",
+    "orientation": "landscape",
     "icons": [
       {
         "src": "../img/icon.png",
