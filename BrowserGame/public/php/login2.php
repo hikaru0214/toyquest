@@ -1,3 +1,11 @@
+<?php session_start(); ?>
+<!-- DB接続 -->
+<?php require '../dbConnect/dbconnect.php'; ?>
+
+<?php
+	$err = $_SESSTION;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +15,8 @@
 </head>
 <body>
     <h2>新規登録</h2>
-    <form action="register.php" method="POST">
+    <form action="login-check.php" method="POST">
+	<div><font color="#ff0000"><?php echo htmlspecialchars($error, ENT_QUOTES); ?></font></div>
     <p>
         <label for="mailaddress">メールアドレス</label>
         <input type="email" name="mailaddress">
@@ -21,8 +30,8 @@
     </p>
 	</form>
 	<br>
-    <a href="change_password.php"><button>パスワードを忘れた方</button></a>
+    <a href="change_password.php">パスワードを忘れた方</a>
     <br>
-    <a href="signup.php"><button>新規</button></a>
+    <a href="signup.php">新規</a>
 </body>
 </html>
