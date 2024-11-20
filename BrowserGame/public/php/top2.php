@@ -256,47 +256,6 @@
     }
 
 
-
-    //ピクセルサイズ変更処理
-    let pixels=0;
-    function Shader(){
-        if(isKey_x){
-            dotPass.uniforms["pixelSize"].value = 3;
-        }
-
-        if(isKey_q){
-            pixels=4;
-            dotPass.uniforms["pixelSize"].value = pixels;
-        }
-        if(isKey_w){
-            pixels=5;
-            dotPass.uniforms["pixelSize"].value = pixels;
-        }
-        if(isKey_e){
-            pixels=6;
-            dotPass.uniforms["pixelSize"].value = pixels;
-        }
-        if(isKey_a){
-            pixels=7;
-            dotPass.uniforms["pixelSize"].value = pixels;
-        }
-        if(isKey_s){
-            pixels=8;
-            dotPass.uniforms["pixelSize"].value = pixels;
-        }
-        if(isKey_d){
-            pixels=2.5;
-            dotPass.uniforms["pixelSize"].value = pixels;
-        }
-        
-    }
-
-
-
-
-
-
-
     const clock = new THREE.Clock();
     // アニメーションループ
     function animate() {
@@ -304,9 +263,6 @@
 
         // キーが押されている場合にカメラを動かす
         moveCamera();
-        //特定のキーが押された場合にピクセルサイズを変更する
-        Shader();
-        
 
         const delta = clock.getDelta(); // delta の取得
         if (mixer) {
@@ -347,9 +303,9 @@
     <div class="container">
     <canvas id="myCanvas"></canvas>
     <h3 class="player">プレイヤー名</h3>
-    <input type="button" class="button" onclick="location.href='test1.html'" value="チャリ走"></button>
-    <input type="button" class="button2" value="ブラシ伝言"></button>
-    <input type="button" class="button3" value="あいつを探せ" onclick="location.href='rogocontrol.php'"></button>
+    <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>
+    <input type="button" class="button2" onclick="location.href='../html/brush_dengon.html'" value="ブラシ伝言"></button>
+    <input type="button" class="button3" onclick="location.href='../html/wanted_top.html'" value="あいつを探せ"></button>
     <input type="image" src="../img/notice.png" class="notice" value="お知らせ"></button>
     <input type="image" src="../img/friend.png" class="friend" value="フレンド"></button>
     <input type="image" src="../img/Logout.png" class="Logout" value="ログアウト"></button>
