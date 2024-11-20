@@ -38,10 +38,10 @@ if (isset($_POST["signUp"])) {
         $mailaddress = $_POST["mailaddress"];
     }
 
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM User WHERE mailaddress = :mailaddress");
-        $stmt->bindValue(':email', $mailaddress, PDO::PARAM_STR);
-        $stmt->execute();
-        $count = $stmt->fetchColumn();
+    //$stmt = $pdo->prepare("SELECT COUNT(*) FROM User WHERE mailaddress = :mailaddress");
+        //$stmt->bindValue(':email', $mailaddress, PDO::PARAM_STR);
+        //$stmt->execute();
+        //$count = $stmt->fetchColumn();
 
 
     // メールアドレスが登録済みかどうかの判定

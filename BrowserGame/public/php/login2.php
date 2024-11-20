@@ -1,62 +1,28 @@
-<?php 
-	session_start(); 
-    require '../dbConnect/dbconnect.php';
-?>
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>ログインフォーム画面</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新規登録</title>
 </head>
 <body>
-
-<?php
-	
-	if(isset($_POST['login'])) { // ログインボタンが押下されたときに実行
-
-	  $mailaddress = $mysqli->real_escape_string($_POST['mailaddress']);
-	  $password = $mysqli->real_escape_string($_POST['password']);
-
-	  //SQL命令文を$queryへ代入
-	  $query = "SELECT * FROM User WHERE mailaddress='$mailaddress'"; // 入力されたメールアドレスがDB上にあるか
-
-	  //$queryを実行
-	  $result = $mysqli->query($query);
-	  if (!$result) {
-	    print('ログインに失敗しました。メールアドレスが違う可能性があります。' . $mysqli->error);
-	    $mysqli->close();// データベースの切断
-	    exit();
-	  }
-
-	  // DB上から該当ユーザのパスワード(暗号化済み）とユーザーIDを取得
-	  while ($row = $result->fetch_assoc()) {
-	    $db_hashed_pwd = $row['password'];
-	    $user_id = $row['user_id'];
-	  }
-
-	  // データベースの切断
-	  $result->close();
-
-	  // ハッシュ化されたパスワードがマッチするかどうかを確認
-	  if (password_verify($password, $db_hashed_pwd)) {
-	    $_SESSION['user'] = $user_id;
-	    header("Location: home.php");// ログイン
-	    exit;
-	  } else { ?>
-	    <div role="alert">メールアドレスとパスワードが一致しません。</div>
-	  <?php }
-	}
-
-?>
-	<form method="post">
-		<dl>
-			<dt><label for="q1">メールアドレス</label></dt>
-			<dd><input type="email" name="email" id="q1"  size="50" placeholder="○○○@○○○.com" required></dd>
-			<dt><label for="q2">パスワード</label></dt>
-			<dd><input type="password" name="password" id="q2" size="30" placeholder="○○○○○○○○" required></dd>
-		</dl>
-		<button type="submit" name="login">ログイン</button>
-		<a href="register.php">会員登録はこちら</a>
+    <h2>新規登録</h2>
+    <form action="register.php" method="POST">
+    <p>
+        <label for="mailaddress">メールアドレス</label>
+        <input type="email" name="mailaddress">
+    </p>
+    <p>
+        <label for="password">パスワード</label>
+        <input type="password" name="password">
+    </p>
+    <p>
+        <input type="submit" value="ログイン">
+    </p>
 	</form>
+	<br>
+    <a href="change_password.php"><button>パスワードを忘れた方</button></a>
+    <br>
+    <a href="signup.php"><button>新規</button></a>
 </body>
 </html>
