@@ -21,6 +21,10 @@
         <input type="password" name="password">
     </p>
     <p>
+        <label for="password_conf">確認用パスワード</label>
+        <input type="password" name="password_conf">
+    </p>
+    <p>
         <input type="submit" value="新規登録">
     </p>
 </body>
