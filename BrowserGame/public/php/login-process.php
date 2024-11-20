@@ -1,10 +1,6 @@
 <?php session_start(); ?>
 <?php require '../dbConnect/dbconnect.php';?>
 <?php
-
-// エラーメッセージ
-$errorMessage = "";
-
 $sql=$pdo->prepare('select * from User where mailaddress = ? AND password = ?');
 $sql->execute([$_POST['email'],$_POST['password']]);
 foreach($sql as $row) {
