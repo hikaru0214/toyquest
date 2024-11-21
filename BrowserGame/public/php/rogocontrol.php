@@ -212,7 +212,7 @@
             camera.position.y-=0.1;
                 if(camera.position.y<=-2){
                     //rogofadeout2=false;
-                    window.location.replace('top2.php');
+                    window.location.replace('top.php');
                 }
         }
         //if(model)camera.lookAt(model.position);
