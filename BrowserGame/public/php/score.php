@@ -155,7 +155,7 @@
         try {
         
             // データ取得SQL
-            $sql = "SELECT Score.score_id, Score.game_id, Score.user_id,User.user_name,Score. registration_date, Score.score FROM Score INNER JOIN User ON Score.user_id = User.user_id  ORDER BY registration_date DESC";
+            $sql = "SELECT Score.score_id, Score.game_id, Score.user_id,User.user_name,Score. registration_date, Score.score FROM Score INNER JOIN User ON Score.user_id = User.user_id  ORDER BY registration_date ASC,Score.score DESC";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
         
@@ -188,6 +188,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>順位</th>
                         <th>本日スコア</th>
                         <th>月間スコア</th>
                         <th>ユーザー名</th>
@@ -197,8 +198,10 @@
                 <tbody>
                     <!-- スコアのデータはここに追加されます -->
                     <?php if (!empty($scores)): ?>
+                        <?php $rank=1; ?>
                 <?php foreach ($scores as $score): ?>
                     <tr>
+                        <td><?= $rank++ ?></td>
                         <td><?= htmlspecialchars($score['score'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($score['score'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($score['user_name'], ENT_QUOTES, 'UTF-8') ?></td>
