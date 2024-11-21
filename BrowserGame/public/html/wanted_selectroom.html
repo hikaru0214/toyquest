@@ -210,9 +210,13 @@
             var players = roominfo.player;
             var limits = roominfo.limit;
             var roomids = roominfo.roomids;
+            var accesstypes = roominfo.access;
             room_table.innerHTML = "";
             for(var i = 0;i < limits.length;i++){
-                room_table.innerHTML += '<tr><td><span class="lock-icon">🔒</span>ルーム'+(roomids[i])+'</td><td>10pt</td><td>'+players[i]+'/'+limits[i]+'</td><td button class="join-button" onclick="openModal()">参加</td></tr>';
+                room_table.innerHTML += 
+                '<tr><td>'
+                    +(accesstypes[i]=="private"?'<span class="lock-icon">🔒</span>':'')+
+                    'ルーム'+(roomids[i])+'</td><td>10pt</td><td>'+players[i]+'/'+limits[i]+'</td><td button class="join-button" onclick="openModal()">参加</td></tr>';
             }
         });
 

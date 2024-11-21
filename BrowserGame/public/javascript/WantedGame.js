@@ -1,12 +1,12 @@
 class Game {
-    constructor(room_id,player_limit){
+    constructor(room_id,player_limit,access){
         this.room_id = room_id;
         this.player_limit = player_limit;
         this.minimum_players = 2;
         this.timelimit = 60;
         this.player_data = {};
         this.player_ids = [];
-        this.access = "public";
+        this.access = access; //public or private
         this.timer = 0;
     }
     setTimer(){

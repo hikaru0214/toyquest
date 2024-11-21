@@ -120,7 +120,7 @@
         </div>
         
         <div class="checkbox-group">
-            <input type="checkbox" id="set-password">
+            <input id="access" type="checkbox" id="set-password">
             <label for="set-password">パスワードを設定する</label>
         </div>
         
@@ -142,9 +142,11 @@
             const roomid_input = document.getElementById("room_id");
             const players_input = document.getElementById("players");
             const errormsg = document.getElementById("errormsg");
+            const access = document.getElementById("access");
 
             createButton.onclick = function(){
-                const room_settings = {room_id:roomid_input.value,player_limit:players_input.value};
+                var accesstype = access.check?"private":"public";
+                const room_settings = {room_id:roomid_input.value,player_limit:players_input.value,access:accesstype};
                 socket.emit("create new room",room_settings);
             }
 
