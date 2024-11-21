@@ -186,6 +186,14 @@
 
             $stmt = $pdo->prepare($sql);
 
+            // マイスコアの場合はログイン中のユーザーIDをバインド
+            if ($showMyScore) {
+                if (!isset($_SESSION['user_id'])) {
+                    throw new Exception("ログインが必要です。");
+                }
+                $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+            }
+
             // 総合スコア以外の場合、ゲームIDをバインド
             if ($selectedGame !== '総合スコア') {
                 $gameMapping = [
