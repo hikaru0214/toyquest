@@ -2,7 +2,7 @@
     "name": "Your App Name",
     "short_name": "testapp",
     "description": "Your app description",
-    "start_url": "../php/top.php",
+    "start_url": "../php/rogocontrol.php",
     "background_color": "#ffffff",
     "theme_color": "#000000",
     "display": "standalone",
