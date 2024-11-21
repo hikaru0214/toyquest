@@ -6,7 +6,6 @@ $err = $_SESSION['err'] ?? [];
 unset($_SESSION['err']);
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +37,6 @@ unset($_SESSION['err']);
         <label for="password">パスワード</label>
         <input type="password" name="password">
     </p>
-    <input type="hidden" name="csrf_token" value="<?php echo h(setToken()); ?>">
     <p>
         <input type="submit" value="新規登録">
     </p>

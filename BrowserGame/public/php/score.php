@@ -155,7 +155,7 @@
         try {
         
             // データ取得SQL
-            $sql = "SELECT Score.score_id, Score.game_id, Score.user_id,User.user_name,Score. registration_date, Score.score FROM Score INNER JOIN User ON Score.user_id = User.user_id  ORDER BY registration_date DESC";
+            $sql = "SELECT Score.score_id, Score.game_id, Score.user_id,User.user_name,Score. registration_date, Score.score FROM Score INNER JOIN User ON Score.user_id = User.user_id  ORDER BY Score.score DESC,registration_date ASC";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
         
@@ -188,6 +188,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>順位</th>
                         <th>本日スコア</th>
                         <th>月間スコア</th>
                         <th>ユーザー名</th>
@@ -197,15 +198,27 @@
                 <tbody>
                     <!-- スコアのデータはここに追加されます -->
                     <?php if (!empty($scores)): ?>
-                <?php foreach ($scores as $score): ?>
+                        <?php 
+                            $rank=1; 
+                            $prevScore= null;
+                            $displayRank = 1;
+                            foreach ($scores as $score):
+                                if($prevScore !== null && $score['score'] != $prevScore){
+                                    $displayRank = $rank;
+                                }
+                        ?>
                     <tr>
+                        <td><?= $displayRank ?></td>
                         <td><?= htmlspecialchars($score['score'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($score['score'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($score['user_name'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($score['registration_date'], ENT_QUOTES, 'UTF-8') ?></td>
                         
                     </tr>
-                <?php endforeach; ?>
+                <?php 
+                    $prevScore = $score['score']; // 現在のスコアを保存
+                    $rank++;
+                    endforeach; ?>
             <?php else: ?>
                 <tr>
                     <td colspan="5">データがありません</td>
