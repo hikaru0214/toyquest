@@ -1,7 +1,7 @@
 class Game {
-    constructor(room_id){
+    constructor(room_id,player_limit){
         this.room_id = room_id;
-        this.player_limit = 4;
+        this.player_limit = player_limit;
         this.minimum_players = 2;
         this.timelimit = 60;
         this.player_data = {};

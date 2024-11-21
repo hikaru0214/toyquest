@@ -11,7 +11,7 @@ const Game = require('../public/javascript/WantedGame.js');
 const gamerooms = [];
 
 for(var i = 0;i < 5;i++){
-    gamerooms.push(new Game(i));
+    gamerooms.push(new Game(i,4));
 }
 
 function getAvailableRoomIndex(){
@@ -23,8 +23,8 @@ function getAvailableRoomIndex(){
 
 io.on('connection',(socket)=>{
     const id = socket.id;
-    var room = getAvailableRoomIndex();
-    var roomname = "room"+room;
+    var room = getAvailableRoomIndex(); //might not use
+    var roomid = "room"+room; //might not use
     var ipaddress = socket.handshake.address;
     console.log("user connected! ip:"+ipaddress);
 
@@ -36,6 +36,13 @@ io.on('connection',(socket)=>{
             players.push(gamerooms[i].getPlayerCount());
         }
         socket.emit("room info",{limit:limits,player:players});
+    });
+
+    socket.on("create new room",(room_setting)=>{
+        var success = false;
+        gamerooms.push(new Game(room_setting.room_id,room_setting.player_limit));
+        success=true;
+        if(success)socket.emit("room successfully created");
     });
     
 });

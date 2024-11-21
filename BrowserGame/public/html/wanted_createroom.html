@@ -108,15 +108,15 @@
         <div class="form-group">
             <label for="players">参加人数</label>
             <select id="players">
-                <option>2人</option>
-                <option>3人</option>
-                <option>4人</option>
+                <option value="2">2人</option>
+                <option value="3">3人</option>
+                <option value="4">4人</option>
             </select>
         </div>
         
         <div class="form-group">
             <label for="room-number">ルーム番号</label>
-            <input type="text" id="room-number" placeholder="ルーム番号を入力">
+            <input id="room_id" type="text" id="room-number" placeholder="ルーム番号を入力">
         </div>
         
         <div class="checkbox-group">
@@ -129,7 +129,26 @@
             <input type="text" id="password" placeholder="パスワードを入力">
         </div>
         
-        <button class="button" onclick="window.location.href='wanted_selectroom.html';">作 成</button>
+        <button id="createButton" class="button">作 成</button>
+
+        <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
+
+        <script>
+            const socket = io.connect('http://52.68.111.88:3939');
+
+            const createButton = document.getElementById("createButton");
+            const roomid_input = document.getElementById("room_id");
+            const players_input = document.getElementById("players");
+            createButton.onclick = function(){
+                const room_settings = {room_id:roomid_input.value,player_limit:players_input.value};
+                socket.emit("create new room",room_settings);
+            }
+
+            socket.on("room successfully created",function(){
+                window.location.href='wanted_selectroom.html';
+            });
+        </script>
+
     </div>
 </body>
 </html>
