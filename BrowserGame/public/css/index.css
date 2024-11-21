@@ -69,13 +69,13 @@ table {
 
 th {
     font-size: 10px;
-    padding: 10px 40px;
+    padding: 10px 30px;
     background-color: #00e2cf; /* 背景色指定 */
     text-align: center;
 }
 td {
     text-align: center;
     font-size: 10px;
-    padding: 10px 40px;
+    padding: 10px 30px;
     background-color: #00e2cf;  /* 背景色指定 */
 }
