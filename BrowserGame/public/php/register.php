@@ -40,10 +40,10 @@ if (empty($username)) {
 
 // エラーがない場合
 if (count($err) === 0) {
-    // 入力値をセッションに保存
-    $_SESSION['mailaddress'] = $mailaddress;
-    $_SESSION['password'] = $password; // パスワードはハッシュ化する場合はここで対応
-    $_SESSION['username'] = $username;
+    // 入力値をポストに保存
+    $_POST['mailaddress'] = $mailaddress;
+    $_POST['password'] = $password; // パスワードはハッシュ化する場合はここで対応
+    $_POST['username'] = $username;
 
     // 確認ページにリダイレクト
     header('Location: signup-check.php');
@@ -51,10 +51,6 @@ if (count($err) === 0) {
 } else {
     // エラー情報をセッションに保存
     $_SESSION['err'] = $err;
-
-    // 入力値もセッションに保存してフォームで再利用
-    $_SESSION['mailaddress'] = $mailaddress;
-    $_SESSION['username'] = $username;
 
     // 入力ページに戻る
     header('Location: signup.php');
