@@ -152,14 +152,42 @@
 </head>
 <body>
     <?php
+        
+        $selectedGame = isset($_POST['rankingu']) ? $_POST['rankingu'] : '総合スコア';
+
+
         try {
-        
-            // データ取得SQL
-            $sql = "SELECT Score.score_id, Score.game_id, Score.user_id,User.user_name,Score. registration_date, Score.score FROM Score INNER JOIN User ON Score.user_id = User.user_id  ORDER BY Score.score DESC,registration_date ASC";
+            // ゲームIDに応じてSQLを切り替え
+            if ($selectedGame === '総合スコア') {
+                $sql = "
+                    SELECT Score.score_id, Score.game_id, Score.user_id, User.user_name, Score.registration_date, Score.score 
+                    FROM Score 
+                    INNER JOIN User ON Score.user_id = User.user_id 
+                    ORDER BY Score.score DESC, registration_date ASC
+                ";
+            } else {
+                $sql = "
+                    SELECT Score.score_id, Score.game_id, Score.user_id, User.user_name, Score.registration_date, Score.score 
+                    FROM Score 
+                    INNER JOIN User ON Score.user_id = User.user_id 
+                    WHERE Score.game_id = :game_id
+                    ORDER BY Score.score DESC, registration_date ASC
+                ";
+            }
+
             $stmt = $pdo->prepare($sql);
+
+            // 総合スコア以外の場合、ゲームIDをバインド
+            if ($selectedGame !== '総合スコア') {
+                $gameMapping = [
+                    'Burush Dengon' => 1,
+                    'チャリ走' => 2,
+                    'WANTED' => 3,
+                ];
+                $stmt->bindValue(':game_id', $gameMapping[$selectedGame], PDO::PARAM_INT);
+            }
+
             $stmt->execute();
-        
-            // 結果を取得
             $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "データベース接続エラー: " . $e->getMessage();
@@ -172,11 +200,11 @@
         <h1>ランキング</h1>
         <div class="tabs">
             <label class="selectbox-1">
-                <select name="rankingu">
-                    <option>総合スコア</option>
-                    <option>Burush Dengon</option>
-                    <option>チャリ走</option>
-                    <option>WANTED</option>
+                <select name="rankingu" onchange="this.form.submit()">
+                    <option <?= $selectedGame === '総合スコア' ? 'selected' : '' ?>>総合スコア</option>
+                    <option <?= $selectedGame === 'Burush Dengon' ? 'selected' : '' ?>>Burush Dengon</option>
+                    <option <?= $selectedGame === 'チャリ走' ? 'selected' : '' ?>>チャリ走</option>
+                    <option <?= $selectedGame === 'WANTED' ? 'selected' : '' ?>>WANTED</option>
                 </select> 
             </label>  
             <button>マイスコア</button>
