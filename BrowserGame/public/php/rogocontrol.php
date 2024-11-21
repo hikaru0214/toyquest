@@ -205,14 +205,14 @@
             if(camera.position.z<=-1){
                 rogofadeout=false;
                 //rogofadeout2=true;
-                window.location.replace('top2.php');
+                window.location.replace('top.php');
             }
         }
         if(rogofadeout2){
             camera.position.y-=0.1;
                 if(camera.position.y<=-2){
                     //rogofadeout2=false;
-                    window.location.replace('top2.php');
+                    window.location.replace('top.php');
                 }
         }
         //if(model)camera.lookAt(model.position);

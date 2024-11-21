@@ -292,12 +292,15 @@
     document.body.style.zoom = "100%";
     }
     defaultZoom();//画面拡縮無効
-
-    window.addEventListener("orientationchange", () => {
+    
+    function checkOrientation() {
     if (window.orientation !== 90 && window.orientation !== -90) {
         alert("このアプリは横向きでのみ動作します。デバイスを横にしてください。");
     }
-    });
+    }
+
+    // デバイスの向きが変わったときにチェック
+    window.addEventListener("orientationchange", checkOrientation);
     </script>
 
 </head>

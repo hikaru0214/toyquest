@@ -1,10 +1,13 @@
 @media screen and (orientation: portrait) {
     body {
-        transform: rotate(90deg);
-        transform-origin: left top;
         width: 100vh;
         height: 100vw;
-        overflow-x: hidden;
+    }
+}
+@media screen and (orientation: landscape) {
+    body{
+        width: 100vw;
+        height: 100vh;
     }
 }
 
