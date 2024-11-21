@@ -1,12 +1,12 @@
 @media screen and (orientation: portrait) {
     body {
         width: 100vh;
-        height: 100wh;
+        height: 100vw;
     }
 }
 @media screen and (orientation: landscape) {
     body{
-        width: 100wh;
+        width: 100vw;
         height: 100vh;
     }
 }
