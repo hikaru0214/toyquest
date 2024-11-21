@@ -276,15 +276,21 @@
 
     // リサイズ処理の追加
     window.addEventListener('resize', () => {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
-        renderer.setSize(width, height);
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
 
-        composer.setSize(width, height);
-        dotPass.uniforms["resolution"].value.set(width, height);
+    composer.setSize(width, height);
+    dotPass.uniforms["resolution"].value.set(width, height);
+    });
+
+    // デバイスの向きが変わった際にも同様の処理を呼び出す
+    window.addEventListener("orientationchange", () => {
+        checkOrientation();
+        adjustCanvasSize(); // 必要に応じて再描画
     });
 
     document.body.style.overflow = 'hidden';//ページのスクロール無効
@@ -294,9 +300,11 @@
     defaultZoom();//画面拡縮無効
     
     function checkOrientation() {
-    if (window.orientation !== 90 && window.orientation !== -90) {
+    const isLandscape = window.innerWidth > window.innerHeight;
+    if (!isLandscape) {
         alert("このアプリは横向きでのみ動作します。デバイスを横にしてください。");
     }
+    adjustCanvasSize(); // レイアウトを横向きに最適化
     }
 
     // デバイスの向きが変わったときにチェック
