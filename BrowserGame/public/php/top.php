@@ -299,9 +299,6 @@
     }
     }
 
-    // ページ読み込み時にチェック
-    window.addEventListener("load", checkOrientation);
-
     // デバイスの向きが変わったときにチェック
     window.addEventListener("orientationchange", checkOrientation);
     </script>
