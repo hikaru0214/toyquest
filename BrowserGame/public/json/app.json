@@ -5,7 +5,7 @@
     "start_url": "../php/top.php",
     "background_color": "#ffffff",
     "theme_color": "#000000",
-    "display": "fullscreen",
+    "display": "standalone",
     "orientation": "landscape",
     "icons": [
       {
