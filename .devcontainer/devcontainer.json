@@ -1,0 +1,16 @@
+{
+  "name": "Node.js",
+  "image": "mcr.microsoft.com/devcontainers/node:18",
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "xabikos.JavaScriptSnippets",
+        "oderwat.indent-rainbow"
+      ]
+    }
+  },
+  "postCreateCommand": "npm install -g npm@9.8.1"
+}
