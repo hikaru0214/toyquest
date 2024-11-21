@@ -292,6 +292,11 @@
     }
     defaultZoom();//画面拡縮無効
 
+    window.addEventListener("orientationchange", () => {
+    if (window.orientation !== 90 && window.orientation !== -90) {
+        alert("このアプリは横向きでのみ動作します。デバイスを横にしてください。");
+    }
+    });
     </script>
 
 </head>
