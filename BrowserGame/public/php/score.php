@@ -155,10 +155,35 @@
         
         $selectedGame = isset($_POST['rankingu']) ? $_POST['rankingu'] : '総合スコア';
         $showMyScore = isset($_POST['show_my_score']) ? true : false; // マイスコアを表示するフラグ
-
+        $showFriendScore = isset($_POST['show_friend_score']) ? true : false; // フレンドスコアを表示するフラグ
         try {
+            // フレンドスコアの場合、フレンドIDを取得
+            if ($showFriendScore) {
+                if (!isset($_SESSION['user_id'])) {
+                    throw new Exception("ログインが必要です。");
+                }
+
+                // 自分のフレンドIDを取得するSQL
+                $friendSql = "SELECT friend_id FROM Friend WHERE user_id = :user_id";
+                $friendStmt = $pdo->prepare($friendSql);
+                $friendStmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+                $friendStmt->execute();
+                $friendIds = $friendStmt->fetchAll(PDO::FETCH_COLUMN, 0); // フレンドIDの配列
+
+                if (empty($friendIds)) {
+                    throw new Exception("フレンドがいません。");
+                }
+
+                // フレンドのスコアを取得
+                $sql = "
+                    SELECT Score.score_id, Score.game_id, Score.user_id, User.user_name, Score.registration_date, Score.score 
+                    FROM Score 
+                    INNER JOIN User ON Score.user_id = User.user_id 
+                    WHERE Score.user_id IN (" . implode(',', $friendIds) . ") 
+                    ORDER BY Score.score DESC, registration_date ASC
+                ";
             // ゲームIDに応じてSQLを切り替え
-            if ($showMyScore) {
+            }else if ($showMyScore) {
                 // マイスコアの場合、ユーザーIDを利用して絞り込み
                 $sql = "
                     SELECT Score.score_id, Score.game_id, Score.user_id, User.user_name, Score.registration_date, Score.score 
@@ -225,8 +250,7 @@
                 </select> 
             </label>  
             <button type="submit" name="show_my_score">マイスコア</button>
-            <button>フレンドスコア</button>
-            <button>マルチスコア</button>
+            <button type="submit" name="show_friend_score">フレンドスコア</button>
         </div>
 
         <div class="table-container">
