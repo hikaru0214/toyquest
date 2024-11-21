@@ -52,5 +52,31 @@ $count = $stmt->fetchColumn();
 			// echo $e->getMessage();
 		}
 	} 
+    // エラーがなければログイン処理
+if (count($err) == 0) {
+    if ($user) {
+        // メールアドレスは一致、パスワードを確認
+        if ($user['password'] === $_POST['password']) {
+            // ログイン成功
+            $_SESSION['user'] = [
+                'user_id' => $user['user_id'],
+                'user_name' => $user['user_name'],
+                'mailaddress' => $user['mailaddress']
+            ];
+            header('Location: signup-check.php');
+            exit;
+        } else {
+            // パスワードが一致しない
+            $err[] = 'パスワードが一致しません。';
+        }
+    } else {
+        // メールアドレスが一致しない
+        $err[] = 'メールアドレスが一致しません。';
+    }
 }
+
+// エラーがある場合は戻る
+$_SESSION['err'] = $err;
+header('Location: signup.php');
+exit;
 ?>

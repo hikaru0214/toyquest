@@ -1,6 +1,11 @@
-<?php
-require_once '../function.php';
+<?php 
+session_start();
+// エラー取得
+$err = $_SESSION['err'] ?? [];
+// セッションのエラー情報をクリア
+unset($_SESSION['err']);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
