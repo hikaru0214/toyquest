@@ -38,22 +38,14 @@ if (empty($username)) {
 
 // エラーがない場合
 if (count($err) === 0) {
-    if ($user && password_verify($password, $user['password'])) {
-        // ログイン成功
-        $_SESSION['user'] = [
-            'username' => $user['username'],
-            'mailaddress' => $user['mailaddress'],
-            'mailaddress' => $user['mailaddress']
-        ];
-        header('Location: signup-check.php');
-        exit;
-    } else {
-        $err[] = '認証情報が間違っています。';
-    }
+    $mailaddress = $_POST['mailaddress'],
+    $password = $_POST['password'],
+    $username = $_POST['username'];
+    header('Location: signup-check.php');
+    exit;
+}else{
+    $_SESSION['err'] = $err;
+    header('Location: signup.php');
+    exit;
 }
-
-// エラーがある場合は戻る
-$_SESSION['err'] = $err;
-header('Location: signup.php');
-exit;
 ?>
