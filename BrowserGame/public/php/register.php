@@ -19,6 +19,8 @@ if (empty($username)) {
     $err[] = 'ユーザー名は30文字以内で入力してください。';
 } elseif (empty($mailaddress)) {
     $err[] = 'メールアドレスが未入力です。';
+}elseif (!filter_var($mailaddress, FILTER_VALIDATE_EMAIL)) {
+    $err[] = '正しいメールアドレスを入力してください。';
 } elseif (empty($password)) {
     $err[] = 'パスワードが未入力です。';
 } elseif (!preg_match('/^[a-zA-Z0-9]{4,7}$/', $password)) {
@@ -38,14 +40,25 @@ if (empty($username)) {
 
 // エラーがない場合
 if (count($err) === 0) {
-    $mailaddress = $_POST['mailaddress'],
-    $password = $_POST['password'],
-    $username = $_POST['username'];
+    // 入力値をセッションに保存
+    $_SESSION['mailaddress'] = $mailaddress;
+    $_SESSION['password'] = $password; // パスワードはハッシュ化する場合はここで対応
+    $_SESSION['username'] = $username;
+
+    // 確認ページにリダイレクト
     header('Location: signup-check.php');
     exit;
-}else{
+} else {
+    // エラー情報をセッションに保存
     $_SESSION['err'] = $err;
+
+    // 入力値もセッションに保存してフォームで再利用
+    $_SESSION['mailaddress'] = $mailaddress;
+    $_SESSION['username'] = $username;
+
+    // 入力ページに戻る
     header('Location: signup.php');
     exit;
 }
+?>
 ?>
