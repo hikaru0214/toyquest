@@ -269,6 +269,7 @@
         }
         // Composerを使用してレンダリング
         composer.render();
+        defaultZoom();
     }
 
     animate();
