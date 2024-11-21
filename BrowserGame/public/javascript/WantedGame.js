@@ -35,6 +35,10 @@ class Game {
         }
     }
 
+    getID(){
+        return this.room_id;
+    }
+
     isFull(){
         return this.player_ids.length>=this.player_limit;
     }

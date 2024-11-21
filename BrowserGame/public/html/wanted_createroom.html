@@ -128,6 +128,8 @@
             <label for="password">パスワード</label>
             <input type="text" id="password" placeholder="パスワードを入力">
         </div>
+
+        <p id="errormsg" style="color: red; display: none;"></p>
         
         <button id="createButton" class="button">作 成</button>
 
@@ -139,6 +141,8 @@
             const createButton = document.getElementById("createButton");
             const roomid_input = document.getElementById("room_id");
             const players_input = document.getElementById("players");
+            const errormsg = document.getElementById("errormsg");
+
             createButton.onclick = function(){
                 const room_settings = {room_id:roomid_input.value,player_limit:players_input.value};
                 socket.emit("create new room",room_settings);
@@ -146,6 +150,10 @@
 
             socket.on("room successfully created",function(){
                 window.location.href='wanted_selectroom.html';
+            });
+            socket.on("room id already exists",function(){
+                errormsg.innerHTML = "同じルームIDが存在します";
+                errormsg.style.display = "block";
             });
         </script>
 
