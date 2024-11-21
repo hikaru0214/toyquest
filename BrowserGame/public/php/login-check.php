@@ -14,6 +14,8 @@ if (empty($_POST["password"])) {
     $err[] = 'パスワードが未入力です。';
 }
 
+// エラーがなければログイン処理
+if (count($err) == 0) {
     if ($user) {
         // メールアドレスは一致、パスワードを確認
         if ($user['password'] === $_POST['password']) {
@@ -33,6 +35,7 @@ if (empty($_POST["password"])) {
         // メールアドレスが一致しない
         $err[] = 'メールアドレスが一致しません。';
     }
+}
 
 // エラーがある場合は戻る
 $_SESSION['err'] = $err;
