@@ -120,7 +120,7 @@
         </div>
         
         <div class="checkbox-group">
-            <input id="access" type="checkbox" id="set-password">
+            <input type="checkbox" id="set-password">
             <label for="set-password">パスワードを設定する</label>
         </div>
         
@@ -142,7 +142,7 @@
             const roomid_input = document.getElementById("room_id");
             const players_input = document.getElementById("players");
             const errormsg = document.getElementById("errormsg");
-            const access = document.getElementById("access");
+            const access = document.getElementById("set-password");
 
             createButton.onclick = function(){
                 var accesstype = access.check?"private":"public";
