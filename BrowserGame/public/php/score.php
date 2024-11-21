@@ -154,11 +154,20 @@
     <?php
         
         $selectedGame = isset($_POST['rankingu']) ? $_POST['rankingu'] : '総合スコア';
-
+        $showMyScore = isset($_POST['show_my_score']) ? true : false; // マイスコアを表示するフラグ
 
         try {
             // ゲームIDに応じてSQLを切り替え
-            if ($selectedGame === '総合スコア') {
+            if ($showMyScore) {
+                // マイスコアの場合、ユーザーIDを利用して絞り込み
+                $sql = "
+                    SELECT Score.score_id, Score.game_id, Score.user_id, User.user_name, Score.registration_date, Score.score 
+                    FROM Score 
+                    INNER JOIN User ON Score.user_id = User.user_id 
+                    WHERE Score.user_id = :user_id 
+                    ORDER BY Score.score DESC, registration_date ASC
+                ";
+            }else if ($selectedGame === '総合スコア') {
                 $sql = "
                     SELECT Score.score_id, Score.game_id, Score.user_id, User.user_name, Score.registration_date, Score.score 
                     FROM Score 
@@ -207,7 +216,7 @@
                     <option <?= $selectedGame === 'WANTED' ? 'selected' : '' ?>>WANTED</option>
                 </select> 
             </label>  
-            <button>マイスコア</button>
+            <button type="submit" name="show_my_score">マイスコア</button>
             <button>フレンドスコア</button>
             <button>マルチスコア</button>
         </div>
