@@ -145,7 +145,7 @@
             const access = document.getElementById("set-password");
 
             createButton.onclick = function(){
-                var accesstype = access.check?"private":"public";
+                var accesstype = access.checked?"private":"public";
                 console.log(accesstype);
                 const room_settings = {room_id:roomid_input.value,player_limit:players_input.value,access:accesstype};
                 socket.emit("create new room",room_settings);
