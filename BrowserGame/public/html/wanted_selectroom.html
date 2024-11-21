@@ -213,6 +213,7 @@
             var accesstypes = roominfo.access;
             room_table.innerHTML = "";
             for(var i = 0;i < limits.length;i++){
+                console.log(accesstypes[i]);
                 room_table.innerHTML += 
                 '<tr><td>'
                     +(accesstypes[i]=="private"?'<span class="lock-icon">🔒</span>':'')+
