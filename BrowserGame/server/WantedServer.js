@@ -25,6 +25,8 @@ io.on('connection',(socket)=>{
     const id = socket.id;
     var room = getAvailableRoomIndex();
     var roomname = "room"+room;
+    var ipaddress = socket.handshake.address;
+    console.log("user connected! ip:"+ipaddress);
 
     socket.on("room query",()=>{
         var limits = [];

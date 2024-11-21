@@ -208,6 +208,7 @@ function receiveObject(obj,ObjClass){
         var room_table = document.getElementById("room_table");
 
         socket.on("roominfo",(roominfo)=>{
+            console.log("room information received");
             var players = roominfo.player;
             var limits = roominfo.limit;
             room_table.innerHTML = "";
