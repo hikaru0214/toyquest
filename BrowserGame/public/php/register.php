@@ -42,8 +42,8 @@ if (count($err) === 0) {
         // ログイン成功
         $_SESSION['user'] = [
             'username' => $user['username'],
+            'mailaddress' => $user['mailaddress'],
             'mailaddress' => $user['mailaddress']
-            'password' => $user['password']
         ];
         header('Location: signup-check.php');
         exit;
