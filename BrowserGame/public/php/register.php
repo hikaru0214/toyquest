@@ -1,48 +1,26 @@
-<?php session_start();?>
-<!-- DB接続 -->
- <?php require '../dbConnect/dbconnect.php';?>
+<?php 
+session_start();
 
-// <?php
-// データベース接続情報
-//$dsn = 'mysql:host=localhost;dbname=your_database;charset=utf8';
-//$username = 'your_username';
-//$password = 'your_password';
-
-//try {
-    // PDOオブジェクトの作成
-    //$pdo = new PDO($dsn, $username, $password);
-    //$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//} catch (PDOException $e) {
-   // die("データベース接続失敗: " . $e->getMessage());
-//}
-?>
- 
-<?php
+// DB接続
+require '../dbConnect/dbconnect.php';
 
 // エラーメッセージ
-$err = "";
+$err = [];
 
+if (empty($_POST["mailaddress"])) {
+    $err[] = 'メールアドレスが未入力です。';
+}
+if (empty($_POST["password"])) {
+    $err[] = 'パスワードが未入力です。';
+}
+if (!preg_match('/^[a-zA-Z0-9]{8,100}$/', $password)) {
+    $err = 'パスワードは英数字で8文字以上100文字以下で入力してください。';
+}
 
-// ログインボタンが押された場合
-if (isset($_POST["signUp"])) {
-	// 1. ユーザIDの入力チェック
-	if (empty($_POST["username"])) {  // 値が空のとき
-		$err = 'ユーザー名が未入力です。';
-	} else if (empty($_POST["mailaddress"])) {
-		$err = 'メールアドレスが未入力です。';
-	} else if (empty($_POST["password"])) {
-		$err = 'パスワードが未入力です。';
-    }else if (!preg_match('/^[a-zA-Z0-9]{8,100}$/', $password)) {
-        $err = 'パスワードは英数字で8文字以上100文字以下で入力してください。';
-	}else{
-        $mailaddress = $_POST["mailaddress"];
-    }
-
-    //$stmt = $pdo->prepare("SELECT COUNT(*) FROM User WHERE mailaddress = :mailaddress");
-        //$stmt->bindValue(':email', $mailaddress, PDO::PARAM_STR);
-        //$stmt->execute();
-        //$count = $stmt->fetchColumn();
-
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM User WHERE mailaddress = :mailaddress");
+$stmt->bindValue(':email', $mailaddress, PDO::PARAM_STR);
+$stmt->execute();
+$count = $stmt->fetchColumn();
 
     // メールアドレスが登録済みかどうかの判定
     if ($count > 0) {
@@ -76,34 +54,3 @@ if (isset($_POST["signUp"])) {
 	} 
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新規登録</title>
-</head>
-<body>
-    <h2>新規登録</h2>
-
-    <div><font color="#ff0000"><?php echo htmlspecialchars($errorMessage, ENT_QUOTES); ?></font></div>
-
-    <form action="register.php" method="POST">
-    <p>
-        <label for="username">ユーザー名</label>
-        <input type="text" name="username">
-    </p>
-    <p>
-        <label for="mailaddress">メールアドレス</label>
-        <input type="email" name="mailaddress">
-    </p>
-    <p>
-        <label for="password">パスワード</label>
-        <input type="password" name="password">
-    </p>
-    <p>
-        <input type="submit" value="新規登録">
-    </p>
-</body>
-</html>

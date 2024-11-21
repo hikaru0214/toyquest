@@ -14,13 +14,6 @@ if (empty($_POST["password"])) {
     $err[] = 'パスワードが未入力です。';
 }
 
-// エラーがなければログイン処理
-if (count($err) == 0) {
-    // メールアドレスが存在するか確認
-    $sql = $pdo->prepare('SELECT * FROM User WHERE mailaddress = ?');
-    $sql->execute([$_POST['mailaddress']]);
-    $user = $sql->fetch(PDO::FETCH_ASSOC);
-
     if ($user) {
         // メールアドレスは一致、パスワードを確認
         if ($user['password'] === $_POST['password']) {
@@ -40,7 +33,6 @@ if (count($err) == 0) {
         // メールアドレスが一致しない
         $err[] = 'メールアドレスが一致しません。';
     }
-}
 
 // エラーがある場合は戻る
 $_SESSION['err'] = $err;
