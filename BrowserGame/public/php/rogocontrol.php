@@ -205,7 +205,7 @@
             if(camera.position.z<=-1){
                 rogofadeout=false;
                 //rogofadeout2=true;
-                window.location.replace('top2.php');
+                window.location.replace('top.php');
             }
         }
         if(rogofadeout2){
