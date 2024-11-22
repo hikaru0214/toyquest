@@ -196,7 +196,7 @@
             ";
         } elseif ($selectedGame === '総合スコア') {
             $sql = "
-                SELECT User.user_id, User.user_name, SUM(Score.score) AS total_score 
+                SELECT User.user_id, User.user_name, SUM(Score.score) AS total_score, MAX(Score.registration_date) AS last_play_date
                 FROM Score 
                 INNER JOIN User ON Score.user_id = User.user_id 
                 WHERE Score.game_id IN (1, 2, 3) 
@@ -267,9 +267,11 @@
                         <?php 
                         $rank = 1; 
                         foreach ($scores as $score): 
-                            $displayDate = isset($score['registration_date']) 
-                                 ?htmlspecialchars($score['registration_date'], ENT_QUOTES, 'UTF-8')
-                                 : '-';
+                            $displayDate = isset($score['last_play_date']) 
+                                ? htmlspecialchars($score['last_play_date'], ENT_QUOTES, 'UTF-8') 
+                                : (isset($score['registration_date']) 
+                                    ? htmlspecialchars($score['registration_date'], ENT_QUOTES, 'UTF-8') 
+                                    : '-'); 
                         ?>
                         <tr>
                             <td><?= $rank ?></td>
