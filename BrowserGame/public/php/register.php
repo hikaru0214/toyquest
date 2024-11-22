@@ -27,7 +27,7 @@ if (empty($username)) {
     $err[] = 'パスワードは英数字で4文字以上10文字以下で入力してください。';
 } else {
     // ユーザーネームの重複確認
-    $stmt = $pdo->prepare("SELECT * FROM User WHERE username = :username");
+    $stmt = $pdo->prepare("SELECT * FROM User WHERE user_name = :username");
     $stmt->bindValue(':username', $username, PDO::PARAM_STR);
     $stmt->execute();
     $existingUsername = $stmt->fetch(PDO::FETCH_ASSOC);
