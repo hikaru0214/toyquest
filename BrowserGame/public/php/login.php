@@ -14,10 +14,10 @@ unset($_SESSION['err']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新規登録</title>
+    <title>ログイン</title>
 </head>
 <body>
-    <h2>新規登録</h2>
+    <h2>ログイン</h2>
     <form action="login-check.php" method="POST">
         <!-- エラーメッセージ表示 -->
         <?php if (!empty($err)): ?>
