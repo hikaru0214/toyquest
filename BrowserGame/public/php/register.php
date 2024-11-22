@@ -23,8 +23,8 @@ if (empty($username)) {
     $err[] = '正しいメールアドレスを入力してください。';
 } elseif (empty($password)) {
     $err[] = 'パスワードが未入力です。';
-} elseif (!preg_match('/^[a-zA-Z0-9]{4,7}$/', $password)) {
-    $err[] = 'パスワードは英数字で4文字以上7文字以下で入力してください。';
+} elseif (!preg_match('/^[a-zA-Z0-9]{4,10}$/', $password)) {
+    $err[] = 'パスワードは英数字で4文字以上10文字以下で入力してください。';
 } else {
     // メールアドレスの重複確認
     $stmt = $pdo->prepare("SELECT * FROM User WHERE mailaddress = :mailaddress");
@@ -41,9 +41,9 @@ if (empty($username)) {
 // エラーがない場合
 if (count($err) === 0) {
     // 入力値をポストに保存
+    $_POST['username'] = $username;
     $_POST['mailaddress'] = $mailaddress;
     $_POST['password'] = $password; // パスワードはハッシュ化する場合はここで対応
-    $_POST['username'] = $username;
 
     // 確認ページにリダイレクト
     header('Location: signup-check.php');
