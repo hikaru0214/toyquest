@@ -305,7 +305,15 @@
         alert("このアプリは横向きでのみ動作します。デバイスを横にしてください。");
     }
     adjustCanvasSize(); // レイアウトを横向きに最適化
-    screen.orientation.lock();
+
+    
+    screen.orientation.lock("landscape")
+    .then(function() {
+        console.log("画面を横向きにロックしました。");
+    })
+    .catch(function(error) {
+        console.log("画面のロックに失敗しました。: " + error.message);
+    });
     }
 
     </script>
