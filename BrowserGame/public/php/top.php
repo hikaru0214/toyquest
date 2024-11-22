@@ -307,8 +307,6 @@
     adjustCanvasSize(); // レイアウトを横向きに最適化
     }
 
-    // デバイスの向きが変わったときにチェック
-    window.addEventListener("orientationchange", checkOrientation);
     </script>
 
 </head>
