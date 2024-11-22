@@ -306,7 +306,7 @@
     }
     adjustCanvasSize(); // レイアウトを横向きに最適化
 
-    
+
     screen.orientation.lock("landscape")
     .then(function() {
         console.log("画面を横向きにロックしました。");
@@ -314,7 +314,7 @@
     .catch(function(error) {
         console.log("画面のロックに失敗しました。: " + error.message);
     });
-    }
+    }//httpsのみ動作可能
 
     </script>
 
