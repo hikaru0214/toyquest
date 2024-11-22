@@ -267,12 +267,15 @@
                         <?php 
                         $rank = 1; 
                         foreach ($scores as $score): 
+                            $displayDate = isset($score['registration_date']) 
+                                 ?htmlspecialchars($score['registration_date'], ENT_QUOTES, 'UTF-8')
+                                 : '-';
                         ?>
                         <tr>
                             <td><?= $rank ?></td>
                             <td><?= htmlspecialchars($score['user_name'], ENT_QUOTES, 'UTF-8') ?></td>
                             <td><?= htmlspecialchars($score['score'] ?? $score['total_score'], ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= htmlspecialchars($score['registration_date'], ENT_QUOTES, 'UTF-8') ?></td>
+                            <td><?= $displayDate ?></td>
                         </tr>
                         <?php 
                         $rank++;
