@@ -40,25 +40,25 @@ input{
 
 
 .notice{
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
     position: absolute;
-    top: 15%;
+    top: 10%;
     right: 40%;
 }
 
 .friend{
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
     position: absolute;
-    top: 15%;
+    top: 10%;
     right: 26%;
 }
 .Logout{
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
     position: absolute;
-    top: 15%;
+    top: 10%;
     right: 10%;
 }
 
@@ -78,13 +78,13 @@ table {
 
 th {
     font-size: 10px;
-    padding: 10px 20px;
+    padding: 10px 15px;
     background-color: #00e2cf; /* 背景色指定 */
     text-align: center;
 }
 td {
     text-align: center;
     font-size: 10px;
-    padding: 10px 20px;
+    padding: 10px 15px;
     background-color: #00e2cf;  /* 背景色指定 */
 }
