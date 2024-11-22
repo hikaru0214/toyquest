@@ -221,10 +221,10 @@
 
         var room_table = document.getElementById("room_table");
 
-        var players = roominfo.player;
-        var limits = roominfo.limit;
-        var roomids = roominfo.roomids;
-        var accesstypes = roominfo.access;
+        var players;
+        var limits;
+        var roomids;
+        var accesstypes;
 
         socket.on("room info",(roominfo)=>{
             console.log("room information received");
@@ -251,6 +251,10 @@
             }else{
                 openModal();
             }
+        }
+
+        function joinRoomWithId(roomid){
+
         }
 
         socket.on("successfully joined room",function(){

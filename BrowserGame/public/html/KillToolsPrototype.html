@@ -78,7 +78,8 @@
     <script type="module">
         import * as THREE from 'three';
 
-        const socket = parent.getSocket();
+        /*const socket = parent.getSocket(); //you cant do that */
+        const socket = io.connect('http://52.68.111.88:6060');
 
         console.log((socket)?"server responded!":"cannot connect to server ;-;");
 

@@ -9,7 +9,7 @@ const io = require("socket.io")(3939,options);
 const Game = require('../public/javascript/WantedGame.js');
 
 const gamerooms = [];
-const users = [];
+const players = {};
 
 for(var i = 0;i < 5;i++){
     gamerooms.push(new Game(i+1,4,"public",""));
@@ -38,23 +38,31 @@ function idIsUnique(id){
 
 io.on('connection',(socket)=>{
     const id = socket.id;
-    var room = getAvailableRoomIndex(); //might not use
-    var roomid = "room"+room; //might not use
     var ipaddress = socket.handshake.address;
     console.log("user connected! ip:"+ipaddress);
 
+    socket.on("get my room",(data)=>{
+        var playerdata = players[data.userid];
+        if(playerdata){
+            socket.join(playerdata.roomid);
+            socket.emit("log on client","joined in the room "+playerdata.room_id);
+        }else{
+            socket.emit("log on client","you are not in a room!");
+        }
+    });
+
     socket.on("room query",()=>{
         var limits = [];
-        var players = [];
+        var playercounts = [];
         var roomids = [];
         var accesstypes = [];
         for(var i = 0;i < gamerooms.length;i++){
             limits.push(gamerooms[i].getPlayerLimit());
-            players.push(gamerooms[i].getPlayerCount());
+            playercounts.push(gamerooms[i].getPlayerCount());
             roomids.push(gamerooms[i].getID());
             accesstypes.push(gamerooms[i].access);
         }
-        socket.emit("room info",{roomids:roomids,limit:limits,player:players,access:accesstypes});
+        socket.emit("room info",{roomids:roomids,limit:limits,player:playercounts,access:accesstypes});
     });
 
     socket.on("create new room",(room_setting)=>{
@@ -72,7 +80,7 @@ io.on('connection',(socket)=>{
 
     socket.on("request join room",function(data){
         var message = "";
-        const game = gamerooms[data.index];
+        const game = gamerooms[data.index]; // might be better to store game objects with roomid as key
         const roomid = game.room_id;
 
         if(game.isFull()){
@@ -83,10 +91,10 @@ io.on('connection',(socket)=>{
 
         if(game.access=="public"){
             game.addPlayer(data.userid,"プレイヤー"+game.getPlayerCount());
-            users.push({user_id:data.userid,room_id:roomid});
+            players[data.userid] = {roomid:roomid};
             socket.emit("successfully joined room");
         }else{
-
+            
         }
     });
     

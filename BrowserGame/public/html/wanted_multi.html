@@ -154,7 +154,33 @@
     <div class="wanted_canvas">
         <canvas id="canvas" width="1000" height="610"></canvas>
     </div>
+
+    <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
+
     <script>
+        const socket = io.connect('http://52.68.111.88:3939');
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        socket.emit("get my room",{userid:getCookie('userid')});
+
+        socket.on("log on client",function(message){
+            console.log(message);
+        });
 
         class Avatar {
             constructor(s,e,m,x,y){
