@@ -255,11 +255,17 @@
     if(model)camera.lookAt(model.position);
     }
 
+    function rotate(){
+        if(model){
+        model.rotation.y += 0.01;
+        }
+    }
+
 
     const clock = new THREE.Clock();
     // アニメーションループ
     function animate() {
-        
+        rotate();
         requestAnimationFrame(animate);
         // キーが押されている場合にカメラを動かす
         moveCamera();
