@@ -44,7 +44,7 @@ input{
     height: 30px;
     position: absolute;
     top: 10%;
-    right: 40%;
+    right: 30%;
 }
 
 .friend{
@@ -52,14 +52,14 @@ input{
     height: 30px;
     position: absolute;
     top: 10%;
-    right: 26%;
+    right: 20%;
 }
 .Logout{
     width: 30px;
     height: 30px;
     position: absolute;
     top: 10%;
-    right: 10%;
+    right: 0%;
 }
 
 .table{
