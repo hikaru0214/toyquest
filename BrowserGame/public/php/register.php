@@ -19,23 +19,34 @@ if (empty($username)) {
     $err[] = 'ユーザー名は30文字以内で入力してください。';
 } elseif (empty($mailaddress)) {
     $err[] = 'メールアドレスが未入力です。';
-}elseif (!filter_var($mailaddress, FILTER_VALIDATE_EMAIL)) {
+} elseif (!filter_var($mailaddress, FILTER_VALIDATE_EMAIL)) {
     $err[] = '正しいメールアドレスを入力してください。';
 } elseif (empty($password)) {
     $err[] = 'パスワードが未入力です。';
 } elseif (!preg_match('/^[a-zA-Z0-9]{4,10}$/', $password)) {
     $err[] = 'パスワードは英数字で4文字以上10文字以下で入力してください。';
 } else {
-    // メールアドレスの重複確認
-    $stmt = $pdo->prepare("SELECT * FROM User WHERE mailaddress = :mailaddress");
-    $stmt->bindValue(':mailaddress', $mailaddress, PDO::PARAM_STR);
+    // ユーザーネームの重複確認
+    $stmt = $pdo->prepare("SELECT * FROM User WHERE username = :username");
+    $stmt->bindValue(':username', $username, PDO::PARAM_STR);
     $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $existingUsername = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user) {
-        $err[] = 'このメールアドレスは既に登録されています。';
+    if ($existingUsername) {
+        $err[] = 'このユーザー名は既に登録されています。';
+    } else {
+        // メールアドレスの重複確認
+        $stmt = $pdo->prepare("SELECT * FROM User WHERE mailaddress = :mailaddress");
+        $stmt->bindValue(':mailaddress', $mailaddress, PDO::PARAM_STR);
+        $stmt->execute();
+        $existingMail = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existingMail) {
+            $err[] = 'このメールアドレスは既に登録されています。';
+        }
     }
 }
+
 
 
 // エラーがない場合
@@ -56,5 +67,4 @@ if (count($err) === 0) {
     header('Location: signup.php');
     exit;
 }
-?>
 ?>
