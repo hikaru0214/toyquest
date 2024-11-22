@@ -1,5 +1,14 @@
-<?php 
+<?php
 session_start();
+
+// トークン確認
+if (!isset($_SESSION['access_token'])) {
+    echo '<h1>エラー</h1>';
+    echo '<p>このページは直接アクセスできません。</p>';
+    echo '<a href="login.php">ログインページへ</a>';
+    exit;
+}
+
 // エラー取得
 $err = $_SESSION['err'] ?? [];
 // セッションのエラー情報をクリア

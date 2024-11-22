@@ -1,5 +1,8 @@
 <?php 
 session_start();
+
+$_SESSION['access_token'] = bin2hex(random_bytes(32));
+
 // エラー取得
 $err = $_SESSION['err'] ?? [];
 // セッションのエラー情報をクリア
