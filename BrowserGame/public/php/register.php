@@ -41,9 +41,9 @@ if (empty($username)) {
 // エラーがない場合
 if (count($err) === 0) {
     // 入力値をポストに保存
-    $_POST['username'] = $username;
-    $_POST['mailaddress'] = $mailaddress;
-    $_POST['password'] = $password; // パスワードはハッシュ化する場合はここで対応
+    $_SESSION['username'] = $username;
+    $_SESSION['mailaddress'] = $mailaddress;
+    $_SESSION['password'] = $password; // パスワードはハッシュ化する場合はここで対応
 
     // 確認ページにリダイレクト
     header('Location: signup-check.php');
