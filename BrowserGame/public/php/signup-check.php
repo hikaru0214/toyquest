@@ -22,8 +22,7 @@
         echo '<dd>',$_POST['password'],'</dd>';
         echo '</dl>';
     ?>
-    <p>記入情報にお間違いないですか？<br>
-        よろしければ、登録ボタンを押下してください。</p>
+    
     <p><button type="submit">登録</button></p>
 </from>
 <a href="signup.php">戻る</a>
