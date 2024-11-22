@@ -17,8 +17,8 @@ try {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // データベースに登録
-    $stmt = $pdo->prepare("INSERT INTO User (username, mailaddress, password) VALUES (:username, :mailaddress, :password)");
-    $stmt->bindValue(':username', $username, PDO::PARAM_STR);
+    $stmt = $pdo->prepare("INSERT INTO User (user_name, mailaddress, password) VALUES (:user_name, :mailaddress, :password)");
+    $stmt->bindValue(':user_name', $username, PDO::PARAM_STR);
     $stmt->bindValue(':mailaddress', $mailaddress, PDO::PARAM_STR);
     $stmt->bindValue(':password', $hashedPassword, PDO::PARAM_STR);
     $stmt->execute();
