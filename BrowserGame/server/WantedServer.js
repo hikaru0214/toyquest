@@ -45,7 +45,7 @@ io.on('connection',(socket)=>{
         var playerdata = players[data.userid];
         if(playerdata){
             socket.join(playerdata.roomid);
-            socket.emit("log on client","joined in the room "+playerdata.room_id);
+            socket.emit("log on client","joined in the room "+playerdata.roomid);
         }else{
             socket.emit("log on client","you are not in a room!");
         }
