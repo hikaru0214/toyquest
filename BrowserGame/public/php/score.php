@@ -194,10 +194,15 @@
                 ";
             }else if ($selectedGame === '総合スコア') {
                 $sql = "
-                    SELECT Score.score_id, Score.game_id, Score.user_id, User.user_name, Score.registration_date, Score.score 
+                   SELECT 
+                        User.user_id, 
+                        User.user_name, 
+                        SUM(Score.score) AS total_score 
                     FROM Score 
                     INNER JOIN User ON Score.user_id = User.user_id 
-                    ORDER BY Score.score DESC, registration_date ASC
+                    WHERE Score.game_id IN (1, 2, 3) -- ゲームID 1: Burush Dengon, 2: チャリ走, 3: WANTED
+                    GROUP BY User.user_id, User.user_name 
+                    ORDER BY total_score DESC
                 ";
             } else {
                 $sql = "
