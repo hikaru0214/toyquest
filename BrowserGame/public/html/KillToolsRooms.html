@@ -52,8 +52,9 @@
     <script type="text/javascript" src="../javascript/KillToolsGame.js"></script>
     <script type="text/javascript" src="../javascript/KillToolsClient.js"></script>
     -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        const socket = io.connect('http://52.68.111.88:6060');
+        var socket = io.connect('http://52.68.111.88:6060');
 
         function getSocket(){
             return socket;
@@ -82,7 +83,10 @@
         }
 
         socket.on("successfully joined a room",function(){
-            window.open("KillToolsPrototype.html","_self");
+            var url = "/KillToolsPrototype.html";
+            $("#iframepage").attr("src",url);
+            console.log("Page change: " + url);
+            //window.open("KillToolsPrototype.html","_self");
         });
     </script>
 </body>
