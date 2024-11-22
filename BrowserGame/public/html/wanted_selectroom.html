@@ -191,6 +191,22 @@
 
     <script>
 
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
         function receiveObject(obj,ObjClass){
             const received = JSON.parse(obj);
             const newobj = new ObjClass;
@@ -205,23 +221,41 @@
 
         var room_table = document.getElementById("room_table");
 
+        var players = roominfo.player;
+        var limits = roominfo.limit;
+        var roomids = roominfo.roomids;
+        var accesstypes = roominfo.access;
+
         socket.on("room info",(roominfo)=>{
             console.log("room information received");
-            var players = roominfo.player;
-            var limits = roominfo.limit;
-            var roomids = roominfo.roomids;
-            var accesstypes = roominfo.access;
+            players = roominfo.player;
+            limits = roominfo.limit;
+            roomids = roominfo.roomids;
+            accesstypes = roominfo.access;
             room_table.innerHTML = "";
             for(var i = 0;i < limits.length;i++){
                 console.log(accesstypes[i]);
                 room_table.innerHTML += 
                 '<tr><td>'
                     +(accesstypes[i]=="private"?'<span class="lock-icon">🔒</span>':'')+
-                    'ルーム'+(roomids[i])+'</td><td>10pt</td><td>'+players[i]+'/'+limits[i]+'</td><td button class="join-button" onclick="openModal()">参加</td></tr>';
+                    'ルーム'+(roomids[i])+'</td><td>10pt</td><td>'+players[i]+'/'+limits[i]+'</td><td button class="join-button" onclick="joinRoom('+i+')">参加</td></tr>';
             }
         });
 
         let displayValue = "";
+
+        function joinRoom(index){
+            if(accesstypes[index]=="public"){
+                const data = {index:index,userid:getCookie("userid")};
+                socket.emit("request join room",data);
+            }else{
+                openModal();
+            }
+        }
+
+        socket.on("successfully joined room",function(){
+            window.location.href = 'wanted_multi.html';
+        });
 
         function openModal() {
             document.getElementById("modal").style.display = "flex";

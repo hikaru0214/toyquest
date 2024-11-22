@@ -60,6 +60,7 @@
 <body>
     <!-- Top link -->
     <a href="#" class="top-link">TOP</a>
+    ユーザID<input id="user_id" type="text">(仮)<button id="save_uid">保存</button>
     
     <!-- Title -->
     <h1>あいつをさがせ！</h1>
@@ -69,5 +70,33 @@
     <a href="wanted_selectroom.html" class="button green">MULTI BATTLE</a>
     <a href="#" class="button blue">HOW TO PLAY</a>
     </div>
+
+    <script>
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        var userid = getCookie('userid');
+        if(userid)document.getElementById('user_id').value = userid;
+
+        document.getElementById('save_uid').onclick = function(){
+            document.cookie = "userid="+userid;
+        }
+
+    </script>
+
 </body>
 </html>

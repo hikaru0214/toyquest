@@ -9,9 +9,17 @@ const io = require("socket.io")(3939,options);
 const Game = require('../public/javascript/WantedGame.js');
 
 const gamerooms = [];
+const users = [];
 
 for(var i = 0;i < 5;i++){
-    gamerooms.push(new Game(i+1,4,"public"));
+    gamerooms.push(new Game(i+1,4,"public",""));
+}
+
+function getGameByRoomId(roomid){
+    for(var i = 0;i < gamerooms.length;i++){
+        if(gamerooms[i].room_id==roomid)return gamerooms[i];
+    }
+    return null;
 }
 
 function getAvailableRoomIndex(){
@@ -53,12 +61,33 @@ io.on('connection',(socket)=>{
         const rid = room_setting.room_id;
 
         if(idIsUnique(rid)){
-            gamerooms.push(new Game(rid,room_setting.player_limit,room_setting.access));
+            const newgame = new Game(rid,room_setting.player_limit,room_setting.access,room_setting.password);
+            gamerooms.push(newgame);
             socket.emit("room successfully created");
         }else{
             socket.emit("room id already exists");
         }
 
+    });
+
+    socket.on("request join room",function(data){
+        var message = "";
+        const game = gamerooms[data.index];
+        const roomid = game.room_id;
+
+        if(game.isFull()){
+            message = "部屋が満員です";
+            socket.emit("failed to join",message);
+            return;
+        }
+
+        if(game.access=="public"){
+            game.addPlayer(data.userid,"プレイヤー"+game.getPlayerCount());
+            users.push({user_id:data.userid,room_id:roomid});
+            socket.emit("successfully joined room");
+        }else{
+
+        }
     });
     
 });
