@@ -1,7 +1,6 @@
 <?php 
 session_start();
-require 'dbConnect/dbconnect.php'; // DB接続
-
+require '../dbConnect/dbconnect.php';
 // セッションデータがない場合は入力画面にリダイレクト
 if (!isset($_SESSION['username'], $_SESSION['mailaddress'], $_SESSION['password'])) {
     header('Location: signup.php');
