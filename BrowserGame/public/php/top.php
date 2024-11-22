@@ -42,7 +42,7 @@
 
     
     // カメラの位置設定
-    camera.position.set(5, 6, 0);
+    camera.position.set(4, 6, 0);
     
 
     // ライトの追加
