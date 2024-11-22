@@ -268,7 +268,8 @@
                         $rank = 1; 
                         foreach ($scores as $score): 
                             $displayDate = isset($score['registration_date']) 
-                                 htmlspecialchars($score['registration_date'], ENT_QUOTES, 'UTF-8')
+                                 ?htmlspecialchars($score['registration_date'], ENT_QUOTES, 'UTF-8')
+                                 : '-';
                         ?>
                         <tr>
                             <td><?= $rank ?></td>
