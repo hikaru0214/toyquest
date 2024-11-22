@@ -305,6 +305,7 @@
         alert("このアプリは横向きでのみ動作します。デバイスを横にしてください。");
     }
     adjustCanvasSize(); // レイアウトを横向きに最適化
+    screen.orientation.lock();
     }
 
     </script>
