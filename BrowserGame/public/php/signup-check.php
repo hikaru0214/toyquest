@@ -1,5 +1,13 @@
-<?php 
+<?php
 session_start();
+
+// トークン確認
+if (!isset($_SESSION['access_token'])) {
+    echo '<h1>エラー</h1>';
+    echo '<p>このページは直接アクセスできません。</p>';
+    echo '<a href="login.php">ログインページへ</a>';
+    exit;
+}
 
 // セッションデータがない場合は入力画面にリダイレクト
 if (!isset($_SESSION['username'], $_SESSION['mailaddress'], $_SESSION['password'])) {
