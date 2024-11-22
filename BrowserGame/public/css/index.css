@@ -40,23 +40,23 @@ input{
 
 
 .notice{
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     position: absolute;
     top: 10%;
     right: 10%;
 }
 
 .friend{
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     position: absolute;
     top: 10%;
     right: 5%;
 }
 .Logout{
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     position: absolute;
     top: 10%;
     right: 0%;
