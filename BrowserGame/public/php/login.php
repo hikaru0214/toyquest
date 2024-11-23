@@ -41,18 +41,24 @@ unset($_SESSION['err']);
         form {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: center;
         }
-        form p {
-            margin: 10px 0;
+        .form-group {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 15px;
         }
         label {
             font-size: 16px;
-            margin-bottom: 5px;
+            width: 100px;
+            text-align: right;
+            margin-right: 10px;
         }
         input[type="email"],
         input[type="password"] {
-            width: 100%;
+            flex: 1;
             padding: 8px;
             font-size: 16px;
             border: 1px solid #ccc;
@@ -94,7 +100,7 @@ unset($_SESSION['err']);
 </head>
 <body>
     <div class="container">
-        <h2>toy</h2>
+        <h2>ログイン</h2>
         <form action="login-check.php" method="POST">
             <!-- エラーメッセージ表示 -->
             <?php if (!empty($err)): ?>
@@ -105,17 +111,15 @@ unset($_SESSION['err']);
                 </ul>
             <?php endif; ?>
 
-            <p>
+            <div class="form-group">
                 <label for="mailaddress">メールアドレス</label>
                 <input type="email" name="mailaddress" required>
-            </p>
-            <p>
+            </div>
+            <div class="form-group">
                 <label for="password">パスワード</label>
                 <input type="password" name="password" required>
-            </p>
-            <p>
-                <input type="submit" value="ログイン">
-            </p>
+            </div>
+            <input type="submit" value="ログイン">
         </form>
         <div class="links">
             <a href="change_password.php">パスワードを忘れた方</a>
