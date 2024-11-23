@@ -18,16 +18,13 @@ unset($_SESSION['err']);
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             background-color: #f9f9f9;
         }
         .container {
-            width: 400px;
+            width: 65%;
             padding: 20px;
             border: 1px solid #000;
             background-color: #fff;
