@@ -44,7 +44,7 @@ unset($_SESSION['err']);
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            width: 200%;
+            width: 200px;
             margin-bottom: 15px;
         }
         label {
