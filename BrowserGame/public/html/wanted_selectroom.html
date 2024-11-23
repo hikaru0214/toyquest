@@ -246,7 +246,7 @@
 
         function joinRoom(index){
             if(accesstypes[index]=="public"){
-                const data = {index:index,userid:getCookie("userid")};
+                const data = {index:index,userid:getCookie("userid"),username:getCookie("username")};
                 socket.emit("request join room",data);
             }else{
                 openModal();

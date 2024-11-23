@@ -29,6 +29,7 @@ class Game {
     }
 
     removePlayer(id){
+        delete this.player_data[id];
         for(var i = 0;i < this.player_ids.length;i++){
             if(this.player_ids[i]==id){
                 this.player_ids.splice(i,1);

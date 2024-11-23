@@ -60,7 +60,9 @@
 <body>
     <!-- Top link -->
     <a href="#" class="top-link">TOP</a>
-    ユーザID<input id="user_id" type="text">(仮)<button id="save_uid">保存</button>
+    <p>ユーザID<input id="user_id" type="text">(仮)</p>
+    <p>ユーザネーム<input id="user_name" type="text"></p>
+    <button id="save_uid">保存</button>
     
     <!-- Title -->
     <h1>あいつをさがせ！</h1>
@@ -90,10 +92,13 @@
         }
 
         var userid = getCookie('userid');
+        var username = getCookie('username');
         if(userid)document.getElementById('user_id').value = userid;
+        if(username)document.getElementById('user_name').value = username;
 
         document.getElementById('save_uid').onclick = function(){
             document.cookie = "userid="+userid;
+            document.cookie = "username="+username;
         }
 
     </script>

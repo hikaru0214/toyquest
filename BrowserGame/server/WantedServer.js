@@ -40,12 +40,17 @@ io.on('connection',(socket)=>{
     const id = socket.id;
     var ipaddress = socket.handshake.address;
     console.log("user connected! ip:"+ipaddress);
+    var page = "";
+    var userid;
 
     socket.on("get my room",(data)=>{
-        var playerdata = players[data.userid];
+        userid = data.userid;
+        var playerdata = players[userid]
         if(playerdata){
             socket.join(playerdata.roomid);
             socket.emit("log on client","joined in the room "+playerdata.roomid);
+            page="inroom";
+            console.log("プレイヤー"+playerdata.username+"が部屋"+playerdata.roomid+"に入りました。");
         }else{
             socket.emit("log on client","you are not in a room!");
         }
@@ -90,11 +95,21 @@ io.on('connection',(socket)=>{
         }
 
         if(game.access=="public"){
-            game.addPlayer(data.userid,"プレイヤー"+game.getPlayerCount());
-            players[data.userid] = {roomid:roomid};
+            game.addPlayer(data.userid,data.username);
+            players[data.userid] = {roomid:roomid,username:data.username};
             socket.emit("successfully joined room");
         }else{
             
+        }
+    });
+
+    socket.on('disconnect', () => {
+        if(page=="inroom"){
+            var playerdata = players[userid];
+            const game = getGameByRoomId(playerdata.room_id);
+            game.removePlayer(userid);
+            socket.leave(playerdata.roomid);
+            console.log("プレイヤー"+playerdata.username+"が部屋"+playerdata.roomid+"に入りました。");
         }
     });
     
