@@ -106,7 +106,7 @@ io.on('connection',(socket)=>{
     socket.on('disconnect', () => {
         if(page=="inroom"){
             var playerdata = players[userid];
-            const game = getGameByRoomId(playerdata.room_id);
+            const game = getGameByRoomId(playerdata.roomid);
             game.removePlayer(userid);
             socket.leave(playerdata.roomid);
             console.log("プレイヤー"+playerdata.username+"が部屋"+playerdata.roomid+"に入りました。");
