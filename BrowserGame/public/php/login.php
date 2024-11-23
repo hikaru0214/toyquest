@@ -47,7 +47,7 @@ unset($_SESSION['err']);
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            width: 100%;
+            width: 200%;
             margin-bottom: 15px;
         }
         label {
@@ -106,7 +106,7 @@ unset($_SESSION['err']);
             <?php if (!empty($err)): ?>
                 <ul>
                     <?php foreach ($err as $error): ?>
-                        <li><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></li>
+                        <li style="color: red;"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></li>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
