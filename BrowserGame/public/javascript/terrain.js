@@ -8,13 +8,14 @@ class Terrain{
     }
 
     // 衝突の判定
-    intersect(player){
+    intersect(player, velocityY){
         // プレイヤーが足場に乗っている
         return (
             this.x < 40 + player.width &&
             this.x + this.width > 40 &&
             this.y > player.y &&
-            this.y < player.y + player.height
+            // 足場に少しめり込んでしまうため落下速度も考慮
+            this.y < player.y + player.height + velocityY
         );
     }
 
@@ -24,10 +25,4 @@ class Terrain{
     }
 }
 
-// if (typeof module !== 'undefined' && module.exports) {
-//     // Node.js環境（require使用時）
-    module.exports = Terrain;
-//   } else if (typeof window !== 'undefined') {
-//     // ブラウザ環境（script tag使用時）
-//     window.Player = Terrain;
-//   }
+module.exports = Terrain;

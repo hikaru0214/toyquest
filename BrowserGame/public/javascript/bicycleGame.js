@@ -2,8 +2,6 @@ class Game{
     constructor(roomId){
         // ゲームルームのID
         this.roomID = roomId;
-        // 基準値からの差分を格納
-        this.xOffset = 0;
         // プレイヤークラスを配列に格納
         this.player = [];
         // 足場クラスを配列に格納
@@ -12,6 +10,8 @@ class Game{
         this.gravity = 0.8;
         // ゲーム開始フラグ
         this.isStartFlg = false;
+        // ゲームスコア
+        this.score = 0;
     }
 
     // プレイヤーの初期設定
@@ -36,13 +36,14 @@ class Game{
     onUpdateFrame(Terrain, io){
         // プレイヤーの移動
         this.proceedProcess();
-        // xOffsetを更新
-        this.rect();
         // 毎フレームスクロールごとの足場情報の更新
         this.scrollProcess(Terrain);
         // 自由落下判定
         this.fallProcess();
-
+        // ゲームオーバー判定
+        this.gameOverProcess();
+        // スコアの更新
+        this.scoreProcess();
         // 更新したGameインスタンスをクライアント側に送信
         io.to(this.roomID).emit("Update-Entity", this);
     }
@@ -53,12 +54,6 @@ class Game{
             // 各プレイヤーの位置を更新
             this.player[i].update();
         }
-    }
-
-    // 描画する時にキャラクター以外のオブジェクトをその差分分動かす
-    rect(){
-        // 補正量を算出
-        this.xOffset = this.player[0].x - 40;
     }
 
     // スクロールのための描画位置設定
@@ -80,6 +75,17 @@ class Game{
         }
     }
 
+    gameOverProcess(){
+        for(var i = 0;i<this.player.length;i++){
+            // 各プレイヤーの位置を更新
+            this.player[i].gameOverCheck();
+        }
+    }
+
+    scoreProcess(){
+        this.score += 1;
+    }
+
     // ジャンプ処理
     jumpProcess(operate_PlayerID, keyState){
         // ジャンプしたプレイヤーを探す
@@ -88,17 +94,16 @@ class Game{
         this.player[playerIndex].jump(keyState)
     }
 
-    // 移動量から描画開始地点を算出
+    // 移動量から足場の描画開始地点を算出
     getInitRectPoint(){
-        // 足場の描画開始地点を算出
-        return (this.xOffset % 200)*(-1);
+        return ((this.player[0].x-40) % 200)*(-1);
     }
 
     // 足場の表示・非表示を管理
     terrainManage(Terrain,startX){
         // 画面左にフェードアウトするタイミング
         // 足場の描画地点が-200以下になる＆移動量が200以上の場合
-        if(startX === 0 && this.xOffset >= 200){
+        if(startX === 0 && (this.player[0].x-40) >= 200){
             // 左の足場を削除
             this.terrainArray.splice(0,1);
             // 右からフェードインする足場を追加
@@ -115,13 +120,6 @@ class Game{
             this.terrainArray[index].onUpdateTerrainX(renderPoint);
             // 次の足場へ
             index++;
-        }
-    }
-
-    gameOver(){
-        for(var i = 0;i<this.player.length;i++){
-            // 各プレイヤーの位置を更新
-            this.player[i].gameOverCheck();
         }
     }
 
