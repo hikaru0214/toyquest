@@ -1,10 +1,23 @@
 <?php
 session_start();
-if (isset($_SESSION['User'])) {
-    unset($_SESSION['User']);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-session_destroy(); 
+// セッションデータをクリア
+$_SESSION = array();
+
+// セッションID削除（Cookieの削除）
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
+
+// セッション破棄
+session_destroy();
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -28,14 +41,12 @@ session_destroy();
     </style>
 </head>
 <body>
-<?php unset($_SESSION['User']);?>
 <div class="container">
     <p style="font-size: 28px;">ログアウトが完了しました</p>
     <div class="buttons">
-        <input type="button"  onclick="location.href='./login.php'" value="ログイン画面へ"style="width:100px; height:40px; font-size:12px;">
+        <input type="button" onclick="location.href='./login.php'" value="ログイン画面へ" style="width:100px; height:40px; font-size:12px;">
     </div>
 </div>
 
 </body>
 </html>
-    
