@@ -17,18 +17,17 @@ unset($_SESSION['err']);
     <title>ログイン</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            background-image:url(../img/wanted_top.jpg);
+            background-size:cover;/*全画面*/
+            background-attachment: fixed;         /* 固定 */
+            background-position: center center;   /* 縦横中央 */
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
-            background-color: #f9f9f9;
         }
         .container {
-            width: 400px;
-            padding: 20px;
+            width: 60%;
+            padding: 3s0px;
             border: 1px solid #000;
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
