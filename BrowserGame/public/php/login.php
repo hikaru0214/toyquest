@@ -18,13 +18,16 @@ unset($_SESSION['err']);
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
+            height: 100vh;
             background-color: #f9f9f9;
         }
         .container {
-            width: 65%;
+            width: 400px;
             padding: 20px;
             border: 1px solid #000;
             background-color: #fff;
@@ -44,7 +47,7 @@ unset($_SESSION['err']);
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            width: 200px;
+            width: 200%;
             margin-bottom: 15px;
         }
         label {
@@ -62,7 +65,7 @@ unset($_SESSION['err']);
             border-radius: 4px;
         }
         input[type="submit"] {
-            width: 100%;
+            width: 60%;
             padding: 10px;
             font-size: 16px;
             color: #fff;
