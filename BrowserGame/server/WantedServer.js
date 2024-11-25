@@ -49,10 +49,12 @@ io.on('connection',(socket)=>{
         if(playerdata){
             socket.join(playerdata.roomid);
             socket.emit("log on client","joined in the room "+playerdata.roomid);
+            socket.emit("send player data",getGameByRoomId(playerdata.roomid).player_data);
             page="inroom";
             console.log("プレイヤー"+playerdata.username+"が部屋"+playerdata.roomid+"に入りました。");
         }else{
             socket.emit("log on client","you are not in a room!");
+            socket.emit("exit room");
         }
     });
 
@@ -110,6 +112,8 @@ io.on('connection',(socket)=>{
             game.removePlayer(userid);
             socket.leave(playerdata.roomid);
             console.log("プレイヤー"+playerdata.username+"が部屋"+playerdata.roomid+"に入りました。");
+        }else{
+            console.log("socket disconnected");
         }
     });
     

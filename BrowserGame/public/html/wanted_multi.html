@@ -10,6 +10,8 @@
             background-size: cover; /* Full screen */
             background-attachment: fixed; /* Fixed */
             background-position: center center; /* Centered vertically and horizontally */
+            image-rendering: pixelated;
+            padding: 0px;
         }
         .out {
             position: absolute;
@@ -95,6 +97,14 @@
         .score {
             font-size: 36px;
         }
+        #ol_canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            position: fixed;
+            z-index: 20;
+        }
         .wanted_canvas {
             position: absolute;
             right: 100px;
@@ -132,7 +142,7 @@
         </div>
         <div class="wanted-title">WANTED</div>
     </div>
-    <div class="player">
+    <div id="player_list" class="player">
         <div class="player-entry">
             <div class="name" style="color: red">player 1</div>
             <div class="score" style="color:  red">99pt</div>
@@ -155,9 +165,20 @@
         <canvas id="canvas" width="1000" height="610"></canvas>
     </div>
 
+    <div class="overlay">
+        <canvas id="ol_canvas"></canvas>
+    </div>
+
     <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
 
     <script>
+        var own_id = getCookie('userid');
+        var players = {};
+
+        players[own_id] = {order:-1,mcx:0,mcy:0};
+
+        player_colors = ["red","blue","yellow","green"];
+
         const socket = io.connect('http://52.68.111.88:3939');
 
         function getCookie(cname) {
@@ -180,6 +201,29 @@
 
         socket.on("log on client",function(message){
             console.log(message);
+        });
+
+        socket.on("exit room",function(){
+            window.location.href = 'wanted_selectroom.html';
+        });
+
+        socket.on("send player data",function(playerdata){
+            console.log(playerdata);
+            players = playerdata;
+
+            const player_list = document.getElementById("player_list");
+            player_list.innerHTML = "";
+            var i = 0;
+            Object.keys(players).forEach(function(key){
+                var p = players[key];
+
+                player_list.innerHTML+='<div class="player-entry">'+
+                    '<div class="name" style="color: '+player_colors[i]+'">'+p.username+'</div>'+
+                    '<div class="score" style="color:  red">99pt</div>'+
+                    '</div>';
+                
+                i++;
+            });
         });
 
         class Avatar {
@@ -272,36 +316,6 @@
         };
         mouthimg.src = "../img/mouth_atlas.gif";
 
-        /*document.getElementById("skin_prev").onclick=function(){
-            r_skin++;
-        };
-
-        document.getElementById("skin_next").onclick=function(){
-            r_skin--;
-        };
-
-        document.getElementById("eye_prev").onclick=function(){
-            r_eye++;
-        };
-
-        document.getElementById("eye_next").onclick=function(){
-            r_eye--;
-        };
-
-        document.getElementById("mouth_prev").onclick=function(){
-            r_mouth++;
-        };
-
-        document.getElementById("mouth_next").onclick=function(){
-            r_mouth--;
-        };
-        document.getElementById("randomize").onclick=function(){
-            r_skin = parseInt(Math.random()*28,10);
-            r_eye = parseInt(Math.random()*57,10);
-            r_mouth = parseInt(Math.random()*51,10);
-            avatars.push(new Avatar(r_skin,r_eye,r_mouth,Math.random()*canvas.width,Math.random()*canvas.height));
-        };*/
-
         function setSpritePosition(r_skin,r_eye,r_mouth){
             
             var skin_row = parseInt(r_skin/10,10);
@@ -350,6 +364,29 @@
             if(mouth!=null)context.drawImage(mouth,mouth_sx,mouth_sy,w,h,x,y,sx,sy);
         }
 
+        const ol_canvas = document.getElementById("ol_canvas");
+
+        function sendCursor(e){
+            let rect = ol_canvas.getBoundingClientRect();
+            var x = e.clientX-rect.x;
+            var y = e.clientY-rect.y;
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            if(players[own_id]){
+                players[own_id].mcx = x/w;
+                players[own_id].mcy = y/h;
+            }
+        }
+
+        document.addEventListener("mousemove",sendCursor);
+
+        var cursor;
+        var cursorimg = new Image();
+        cursorimg.onload = function(){
+            cursor = this;
+        }
+        cursorimg.src="../img/cursorkawaii.png";
+
         function draw(){
             context.fillStyle = "white";
             context.fillRect(0,0,canvas.width,canvas.height);
@@ -365,6 +402,21 @@
 
                 if(avatars[i].life<=0)avatars.splice(i,1);
             }
+
+            ol_canvas.width = window.innerWidth;
+            ol_canvas.height = window.innerHeight;
+
+            var ol_context = ol_canvas.getContext("2d");
+
+            ol_context.imageSmoothingEnabled = false;
+
+            ol_context.clearRect(0,0,ol_canvas.width,ol_canvas.height);
+            ol_context.fillStyle = "red";
+
+            Object.keys(players).forEach(function(key){
+                var p = players[key];
+                ol_context.drawImage(cursor,p.mcx*window.innerWidth,p.mcy*window.innerHeight,32,32);
+            });
         }
 
         const draw_interval = 1000.0/60.0;

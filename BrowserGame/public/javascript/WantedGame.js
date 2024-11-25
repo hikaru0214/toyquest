@@ -24,7 +24,7 @@ class Game {
     }
 
     addPlayer(id,name){
-        this.player_data[id] = {username: name};
+        this.player_data[id] = {username: name,mcx:0,mcy:0,order:this.player_ids.length};
         this.player_ids.push(id);
     }
 
