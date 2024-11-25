@@ -332,9 +332,9 @@
     <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>
     <input type="button" class="button2" onclick="location.href='../html/brush_dengon.html'" value="ブラシ伝言"></button>
     <input type="button" class="button3" onclick="location.href='../html/wanted_top.html'" value="あいつを探せ"></button>
-    <input type="image" src="../img/notice.png" class="notice" value="お知らせ"></button>
-    <input type="image" src="../img/friend.png" class="friend" value="フレンド"></button>
-    <input type="image" src="../img/Logout.png" class="Logout" value="ログアウト"></button>
+    <input type="image" src="../img/notice_icon.png" class="notice" onclick="location.href=''" value="お知らせ"></button>
+    <input type="image" src="../img/friend_icon.png" class="friend" onclick="location.href=''" value="フレンド"></button>
+    <input type="image" src="../img/Logout.png" class="Logout" onclick="location.href='logout.php'" value="ログアウト"></button>
     <div class="table">
         <a href="score.php" class="table_title">ランキング</a>
     <table>
