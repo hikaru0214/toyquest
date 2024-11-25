@@ -34,7 +34,7 @@ session_destroy();
             margin-top:10%;
             text-align: center;
         }
-        .buttons {
+        .link {
             margin-top: 50px;
             margin-bottom: 20px;
         }
@@ -43,8 +43,8 @@ session_destroy();
 <body>
 <div class="container">
     <p style="font-size: 28px;">ログアウトが完了しました</p>
-    <div class="buttons">
-        <input type="button" onclick="location.href='./login.php'" value="ログイン画面へ" style="width:100px; height:40px; font-size:12px;">
+    <div class="link">
+    <a href="change_password.php"　style="font-size:12px;">ログインページへ</a>
     </div>
 </div>
 
