@@ -44,7 +44,7 @@ session_destroy();
 <div class="container">
     <p style="font-size: 28px;">ログアウトが完了しました</p>
     <div class="link">
-    <a href="change_password.php"　style="font-size:12px;">ログインページへ</a>
+    <a href="login.php"　style="font-size:12px;">ログインページへ</a>
     </div>
 </div>
 
