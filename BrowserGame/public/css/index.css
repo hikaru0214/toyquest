@@ -43,7 +43,7 @@ input{
     width: 35px;
     height: 35px;
     position: absolute;
-    top: 10%;
+    top: 5%;
     right: 10%;
 }
 
@@ -51,14 +51,14 @@ input{
     width: 35px;
     height: 35px;
     position: absolute;
-    top: 10%;
+    top: 5%;
     right: 5%;
 }
 .Logout{
     width: 35px;
     height: 35px;
     position: absolute;
-    top: 10%;
+    top: 5%;
     right: 0%;
 }
 
