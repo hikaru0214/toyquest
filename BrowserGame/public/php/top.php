@@ -352,7 +352,7 @@
 
         foreach($sql as $row) {
         $Rank+=1;
-        if($Rank<10){
+        if($Rank<=10){
         echo "<tr><td>".$Rank;
         echo "</td><td>".$row['user_name'];
         echo "</td><td>".$row['total_score'];
@@ -360,7 +360,9 @@
         }
         
         if($row['user_id']==4){
+            if($Rank<=10){
             $userRank_in=true;
+            }
             $userRank=$Rank;
             $user_score=$row['total_score'];
             }
