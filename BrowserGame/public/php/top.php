@@ -336,7 +336,7 @@
     <input type="image" src="../img/friend.png" class="friend" value="フレンド"></button>
     <input type="image" src="../img/Logout.png" class="Logout" value="ログアウト"></button>
     <div class="table">
-        <a href="score.php">ランキング</a>
+        <a href="score.php" class="table_title">ランキング</a>
     <table>
         <tr>
         <td>Rank</td><td>name</td><td>score</td>
