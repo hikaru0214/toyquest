@@ -358,7 +358,7 @@
         echo "</td><td>".$row['total_score'];
         echo "</td></tr>";
         
-        if($row['user_id']==1){
+        if($row['user_id']==4){
             $userRank_in=true;
             $userRank=$Rank;
             $user_score=$row['total_score'];
