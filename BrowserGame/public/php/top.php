@@ -352,11 +352,12 @@
 
         foreach($sql as $row) {
         $Rank+=1;
-
+        if($Rank<10){
         echo "<tr><td>".$Rank;
         echo "</td><td>".$row['user_name'];
         echo "</td><td>".$row['total_score'];
         echo "</td></tr>";
+        }
         
         if($row['user_id']==4){
             $userRank_in=true;
