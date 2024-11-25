@@ -10,6 +10,7 @@ const Game = require('../public/javascript/KillToolsGame.js');
 
 const gamerooms = [];
 
+
 for(var i = 0;i < 16;i++){
     gamerooms.push(new Game());
 }
@@ -26,9 +27,6 @@ io.on("connection",(socket)=>{
     var id = socket.id;
 
     socket.on("join_room",(r)=>{
-        var room = getAvailableRoomIndex();
-        var room_name = "room_"+room;
-        socket.join(room_name);
     });
 
     socket.emit("ask job");
@@ -42,6 +40,13 @@ io.on("connection",(socket)=>{
         }
         var roominfo = {room_count:gamerooms.length,limit:room_player_limits,count:room_player_counts};
         socket.emit("roominfo",roominfo);
+    });
+
+    socket.on("request join room",(data)=>{
+        const game = gamerooms[data.index];
+        game.addPlayer(id);
+        socket.join(game.room_id);
+        socket.emit("successfully joined a room");
     });
 
 

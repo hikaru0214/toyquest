@@ -52,8 +52,14 @@
     <script type="text/javascript" src="../javascript/KillToolsGame.js"></script>
     <script type="text/javascript" src="../javascript/KillToolsClient.js"></script>
     -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script type="text/javascript">
-        const socket = io.connect('http://52.68.111.88:6000');
+        var socket = io.connect('http://52.68.111.88:6060');
+
+        function getSocket(){
+            return socket;
+        }
+
         socket.emit("ask roominfo");
 
         document.getElementById("updateroom").onclick = function(){
@@ -67,8 +73,17 @@
             for(var i = 0;i < rooms;i++){
                 var limit = roominfo.limit[i];
                 var count = roominfo.count[i];
-                area.innerHTML += '<div id="room">'+'<p>'+count+'/'+limit+'</p>'+'</div>';
+                area.innerHTML += '<div id="room" onclick="joinRoom('+i+')">'+'<p>'+count+'/'+limit+'</p>'+'</div>';
             }
+        });
+
+        function joinRoom(index){
+            var data = {index:index};
+            socket.emit("request join room",data);
+        }
+
+        socket.on("successfully joined a room",function(){
+            window.open("KillToolsPrototype.html","test");
         });
     </script>
 </body>

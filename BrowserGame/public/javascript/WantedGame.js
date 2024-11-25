@@ -1,5 +1,5 @@
 class Game {
-    constructor(room_id,player_limit,access){
+    constructor(room_id,player_limit,access,password){
         this.room_id = room_id;
         this.player_limit = player_limit;
         this.minimum_players = 2;
@@ -7,6 +7,7 @@ class Game {
         this.player_data = {};
         this.player_ids = [];
         this.access = access; //public or private
+        this.password = password;
         this.timer = 0;
     }
     setTimer(){
@@ -28,6 +29,7 @@ class Game {
     }
 
     removePlayer(id){
+        delete this.player_data[id];
         for(var i = 0;i < this.player_ids.length;i++){
             if(this.player_ids[i]==id){
                 this.player_ids.splice(i,1);

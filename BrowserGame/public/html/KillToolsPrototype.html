@@ -73,10 +73,12 @@
       </style>
 </head>
 <body style="padding: 0px; margin: 0px; image-rendering:pixelated;">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
     <script type="module">
         import * as THREE from 'three';
 
+        /*const socket = parent.getSocket(); //you cant do that */
         const socket = io.connect('http://52.68.111.88:6060');
 
         console.log((socket)?"server responded!":"cannot connect to server ;-;");

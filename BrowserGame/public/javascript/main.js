@@ -3,13 +3,16 @@ let keyState = [];
 // アニメーションの判別ID
 let animationId = null;
 function gameLoop(){
-    
+    // 自分にカメラを向ける
+    render.setOffset();
     // 描画のリセット（毎回しないと前のフレームの描画が残る）
     render.resetRender();
     // 足場の描画
     render.drawTerrain(game);
     // プレイヤーの描画
     render.drawPlayer(game);
+    // スコア描画
+    render.drawScore(game);
     // 次のフレームへ
     animationId = requestAnimationFrame(gameLoop);
 }

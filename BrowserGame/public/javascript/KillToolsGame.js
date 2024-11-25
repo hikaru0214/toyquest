@@ -9,6 +9,9 @@ class Game {
 
     getPlayerLimit(){return this.player_limit;}
     getPlayerCount(){return this.players.length;}
+    addPlayer(id){
+        this.player_ids.push(id);
+    }
     isFull(){return this.players.length >= this.player_limit;}
 }
 module.exports = Game;

@@ -126,7 +126,7 @@
         
         <div class="form-group">
             <label for="password">パスワード</label>
-            <input type="text" id="password" placeholder="パスワードを入力">
+            <input type="number" id="password" placeholder="パスワードを入力">
         </div>
 
         <p id="errormsg" style="color: red; display: none;"></p>
@@ -143,11 +143,13 @@
             const players_input = document.getElementById("players");
             const errormsg = document.getElementById("errormsg");
             const access = document.getElementById("set-password");
+            const password_input = document.getElementById("password");
 
             createButton.onclick = function(){
                 var accesstype = access.checked?"private":"public";
                 console.log(accesstype);
-                const room_settings = {room_id:roomid_input.value,player_limit:players_input.value,access:accesstype};
+                const room_settings = 
+                {room_id:roomid_input.value,player_limit:players_input.value,access:accesstype,password:password_input.value};
                 socket.emit("create new room",room_settings);
             }
 
