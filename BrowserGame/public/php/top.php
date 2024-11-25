@@ -344,7 +344,7 @@
         <?php
         $sql=$pdo->prepare('SELECT Score.user_id, SUM(Score.score) AS total_score, User.user_name 
             FROM Score JOIN User ON Score.user_id = User.user_id 
-            GROUP BY Score.user_id ORDER BY total_score ASC');
+            GROUP BY Score.user_id ORDER BY total_score DESC');
         $sql->execute();
 
         $Rank=0;
