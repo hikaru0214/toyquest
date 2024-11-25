@@ -40,7 +40,7 @@ if (count($err) === 0) {
                 'user_name' => $user['user_name'],
                 'mailaddress' => $user['mailaddress']
             ];
-            header('Location: top.php');
+            header('Location: rogocontrol.php');
             exit;
         } else {
             $err[] = 'パスワードが一致しません。';
