@@ -96,9 +96,13 @@
         if(userid)document.getElementById('user_id').value = userid;
         if(username)document.getElementById('user_name').value = username;
 
+        console.log(document.cookie);
+
         document.getElementById('save_uid').onclick = function(){
             document.cookie = "userid="+userid;
             document.cookie = "username="+username;
+            console.log("ユーザ情報が保存されました");
+            console.log(document.cookie);
         }
 
     </script>
