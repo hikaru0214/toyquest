@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Three.js ドットエフェクトの実装</title>
+    <title>ホーム</title>
     <link rel="stylesheet" href="../css/index.css">
     <link rel="manifest" href="../json/app.json">
     <script type="importmap">
@@ -288,7 +288,7 @@
 
 
     
-
+    
     document.body.style.overflow = 'hidden';//ページのスクロール無効
     function defaultZoom() {
     document.body.style.zoom = "100%";
@@ -298,7 +298,8 @@
     function checkOrientation() {
     const isLandscape = window.innerWidth > window.innerHeight;
     if (!isLandscape) {
-        alert("このアプリは横向きでのみ動作します。デバイスを横にしてください。");
+        const caveat = document.getElementById("caveat");
+        caveat.classList.toggle("hidden")
     }
     }
     window.addEventListener("orientationchange", () => {
@@ -328,7 +329,8 @@
 </head>
 <body>
     <div class="container">
-    
+    <!--<img src="backcaveat.png">-->
+    <img id="caveat"src="caveat.png"class="hidden">
     <h3 class="player">プレイヤー名</h3>
 
     <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>

@@ -8,6 +8,13 @@ body{
     position: fixed;
 }
 
+.hidden {
+    position: fixed;
+    display: none;
+    left: 13%;
+    top: 50%; 
+}
+
 /* ボタンをキャンバス上に配置 */
 
 input{
