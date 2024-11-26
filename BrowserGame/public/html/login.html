@@ -6,37 +6,40 @@
     <title>ゲームタイトル - ログイン</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f9f9f9;
+        background-image:url(../img/wanted_top.jpg);
+        background-size:cover;/*全画面*/
+        background-attachment: fixed;         /* 固定 */
+        background-position: center center;   /* 縦横中央 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
         }
         .container {
             text-align: center;
-            width: 300px;
+            width: 46%;
         }
         h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
+            position: relative;
+            font-size: 40px;
+            top:70px;
+            margin-bottom: 100px;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-top: 30px;
             text-align: left;
             position: relative;
         }
         .form-group label {
-            font-size: 14px;
+            font-size: 20px;
             display: inline-block;
-            margin-right: 10px;
+            /*margin-right: 10px;*/
         }
         .form-group input {
             width: 100%;
             height: 30px;
-            font-size: 14px;
-            padding: 5px;
+            font-size: 18px;
+            padding: 15px;
             box-sizing: border-box;
         }
         .form-group .toggle-password {
@@ -50,7 +53,7 @@
             display: block;
             width: 100%;
             height: 40px;
-            margin-top: 20px;
+            margin-top: 50px;
             font-size: 16px;
             background-color: #000;
             color: #fff;
@@ -58,14 +61,14 @@
             cursor: pointer;
         }
         .links {
-            margin-top: 10px;
-            font-size: 12px;
+            margin-top: 18px;
+            font-size: 18px;
             text-align: right;
         }
         .links a {
             text-decoration: none;
             color: #000;
-            margin-left: 10px;
+            margin-left: 15px;
         }
         .links a:hover {
             text-decoration: underline;

@@ -106,10 +106,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="container">
             <h2>パスワード再設定</h2>
         </div>
-        <form action="change_password_complete.html" method="post">
+        <form action="" method="post">
             <div class="form-group">
-                <label for="email">メールアドレス</label>
-                <input type="email" id="email" name="email" required>'
+                <label for="mailaddress">メールアドレス</label>
+                <input type="email" id="mailaddress" name="mailaddress" required>'
             </div>
             <div class="form-group">
                 <label for="new-password">新しいパスワード</label>

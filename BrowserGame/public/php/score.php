@@ -182,7 +182,7 @@
                 WHERE Score.user_id IN (" . implode(',', $friendIds) . ") 
                 ORDER BY Score.score DESC, Score.registration_date ASC
             ";
-        } elseif ($showMyScore) {
+        } elseif ($showMyScore && (!isset($_SESSION['user_id']) || empty($_SESSION['user_id']))) {
             if (!isset($_SESSION['user_id'])) {
                 throw new Exception("ログインが必要です。");
             }
@@ -194,6 +194,7 @@
                 WHERE Score.user_id = :user_id 
                 ORDER BY Score.score DESC, Score.registration_date ASC
             ";
+           
         } elseif ($selectedGame === '総合スコア') {
             $sql = "
                 SELECT User.user_id, User.user_name, SUM(Score.score) AS total_score, MAX(Score.registration_date) AS last_play_date
