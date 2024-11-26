@@ -281,14 +281,7 @@
 
     animate();
 
-    // リサイズ処理の追加
-    window.addEventListener('resize', () => {
-    
-    });
 
-
-    
-    
     document.body.style.overflow = 'hidden';//ページのスクロール無効
     function defaultZoom() {
     document.body.style.zoom = "100%";
@@ -400,7 +393,7 @@
     <img src="../img/backcaveat.png" class="backcaveatimg">
     <img src="../img/caveat.png" class="caveatimg">
     </div>
-    
+
 </div>
 </div>
 

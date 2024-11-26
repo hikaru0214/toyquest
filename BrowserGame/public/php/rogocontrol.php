@@ -33,12 +33,10 @@
 
     const camera = new THREE.PerspectiveCamera(65, width / height, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({
-        canvas: document.querySelector("#myCanvas"),
         antialias: true
     });
     renderer.setSize(width, height);
-
-    
+    document.body.appendChild( renderer.domElement );
 
     
     // カメラの位置設定
@@ -183,14 +181,10 @@
 
     // キーが押された際にフラグを更新。Arrowは矢印(移動)
     window.addEventListener("keydown", (event) => {
-        
         if (event.code === "Space") {
             rogofadeout=true;
             event.preventDefault();//キーのデフォルトの操作を無効化。ここではスペースキー押下時の下スクロールを制限
         }
-        
-
-        
     });
 
 
@@ -220,10 +214,6 @@
 
 
 
-
-
-
-
     const clock = new THREE.Clock();
     // アニメーションループ
     function animate() {
@@ -244,17 +234,35 @@
 
     animate();
 
-    // リサイズ処理の追加
-    window.addEventListener('resize', () => {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
 
-        renderer.setSize(width, height);
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
+    document.body.style.overflow = 'hidden';//ページのスクロール無効
+    function defaultZoom() {
+    document.body.style.zoom = "100%";
+    }
+    defaultZoom();//画面拡縮無効
+    
+    function checkOrientation() {
+    const isLandscape = window.innerWidth > window.innerHeight;
+    if (!isLandscape) {
+        const caveat = document.getElementById("caveat");
+        caveat.classList.remove("hidden");
+    }
+    if (isLandscape) {
+        const caveat = document.getElementById("caveat");
+        caveat.classList.add("hidden");
+    }
+    }
+    window.addEventListener("orientationchange", () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
-        composer.setSize(width, height);
-        dotPass.uniforms["resolution"].value.set(width, height);
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+
+    composer.setSize(width, height);
+    dotPass.uniforms["resolution"].value.set(width, height);
+    checkOrientation();
     });
 
     
@@ -264,7 +272,10 @@
 </head>
 <body>
     <div class="container">
-    <canvas id="myCanvas"></canvas>
+    <div class="hidden" id="caveat">
+    <img src="../img/backcaveat.png" class="backcaveatimg">
+    <img src="../img/caveat.png" class="caveatimg">
+    </div>
     </div>
 </body>
 </html>
