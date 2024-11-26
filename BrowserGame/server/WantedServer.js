@@ -118,6 +118,7 @@ io.on('connection',(socket)=>{
             var playerdata = players[userid];
             const game = getGameByRoomId(playerdata.roomid);
             game.removePlayer(userid);
+            socket.broadcast.to(playerdata.roomid).emit("send player data",getGameByRoomId(playerdata.roomid).player_data);
             socket.leave(playerdata.roomid);
             console.log("プレイヤー"+playerdata.username+"が部屋"+playerdata.roomid+"に入りました。");
             delete players[userid];
