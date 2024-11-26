@@ -41,7 +41,7 @@ io.on('connection',(socket)=>{
     var ipaddress = socket.handshake.address;
     console.log("user connected! ip:"+ipaddress);
     var page = "";
-    var userid;
+    var userid = "";
 
     socket.on("get my room",(data)=>{
         userid = data.userid;
@@ -56,6 +56,13 @@ io.on('connection',(socket)=>{
         }else{
             socket.emit("log on client","you are not in a room!");
             socket.emit("exit room");
+        }
+    });
+
+    socket.on("cursor update",data=>{
+        var playerdata = players[userid];
+        if(playerdata){
+            socket.broadcast.to(playerdata.roomid).emit("cursor broadcast",{userid:userid,x:data.x,y:data.y});
         }
     });
 
@@ -113,6 +120,7 @@ io.on('connection',(socket)=>{
             game.removePlayer(userid);
             socket.leave(playerdata.roomid);
             console.log("プレイヤー"+playerdata.username+"が部屋"+playerdata.roomid+"に入りました。");
+            delete players[userid];
         }else{
             console.log("socket disconnected");
         }

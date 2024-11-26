@@ -226,6 +226,11 @@
             });
         });
 
+        socket.on("cursor broadcast",data=>{
+            players[data.userid].mcx = data.x;
+            players[data.userid].mcy = data.y;
+        });
+
         class Avatar {
             constructor(s,e,m,x,y){
                 this.skin = s;
@@ -375,6 +380,8 @@
             if(players[own_id]){
                 players[own_id].mcx = x/w;
                 players[own_id].mcy = y/h;
+                var data = {x:(x/w),y:(y/h)};
+                socket.emit("cursor update",data);
             }
         }
 
