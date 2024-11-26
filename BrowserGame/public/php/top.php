@@ -334,8 +334,8 @@
 <body>
     <div class="container">
     <!--<img src="backcaveat.png">-->
-    <div class="hidden">
-    <img id="caveat" src="../img/caveat.png" class="caveatimg">
+    <div class="hidden" id="caveat">
+    <img  src="../img/caveat.png" class="caveatimg">
     </div>
     <h3 class="player">プレイヤー名</h3>
 
