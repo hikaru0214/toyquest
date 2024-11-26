@@ -21,8 +21,92 @@ unset($_SESSION['err']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>新規登録</title>
+    <style>
+            body {
+            background-image:url(../img/wanted_top.jpg);
+            background-size:cover;/*全画面*/
+            background-attachment: fixed;         /* 固定 */
+            background-position: center center;   /* 縦横中央 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /*min-height: 100vh;*/
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            width: 46%;
+        }
+        h1 {
+            position: relative;
+            font-size: 40px;
+            top:70px;
+            margin-bottom: 100px;
+        }
+        .form-group {
+            margin-top: 30px;
+            text-align: left;
+            position: relative;
+        }
+        .form-group label {
+            font-size: 20px;
+            display: inline-block;
+            /*margin-right: 10px;*/
+        }
+        .form-group input {
+            width: 100%;
+            height: 30px;
+            font-size: 18px;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        .form-group .toggle-password {
+            font-size: 18px;
+            cursor: pointer;
+            color: #888;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .login-btn {
+            display: block;
+            width: 100%;
+            height: 40px;
+            margin-top: 50px;
+            font-size: 16px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .links {
+            margin-top: 18px;
+            font-size: 18px;
+            text-align: right;
+        }
+        .links a {
+            text-decoration: none;
+            color: #000;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('password');
+            const icon = document.getElementById('toggle-icon');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                icon.textContent = '🙈'; // アイコン変更（目を隠す）
+            } else {
+                passwordField.type = 'password';
+                icon.textContent = '👁️'; // アイコン変更（目を開ける）
+            }
+        }
+    </script>
 </head>
 <body>
+<div class="container">
     <h2>新規登録</h2>
     <form action="register.php" method="POST">
 
@@ -34,20 +118,24 @@ unset($_SESSION['err']);
                 <?php endforeach; ?>
             </ul>
     <?php endif; ?>
-    <p>
-        <label for="username">ユーザー名</label>
-        <input type="text" name="username">
-    </p>
-    <p>
-        <label for="mailaddress">メールアドレス</label>
-        <input type="email" name="mailaddress">
-    </p>
-    <p>
-        <label for="password">パスワード</label>
-        <input type="password" name="password">
-    </p>
-    <p>
-        <input type="submit" value="新規登録">
-    </p>
+    <div class="form-group">
+                <label for="username">ユーザーネーム</label>
+                <input type="text" id="username" name="username">
+            </div>
+            <div class="form-group">
+                <label for="mailaddress">メールアドレス</label>
+                <input type="email" id="mailaddress" name="mailaddress">
+            </div>
+            <div class="form-group">
+                <label for="password">パスワード</label>
+                <span class="toggle-password" id="toggle-icon" onclick="togglePasswordVisibility()">👁️</span>
+                <input type="password" id="password" name="password">
+            </div>
+            <button type="submit" class="login-btn">確認へ</button>
+        </form>
+        <div class="links">
+            <a href="#">戻る</a>
+        </div>
+    </div>
 </body>
 </html>

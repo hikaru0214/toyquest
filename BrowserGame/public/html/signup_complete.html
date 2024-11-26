@@ -6,36 +6,46 @@
     <title>G2-3</title>
 
     <style>
-        input {
-            margin-top: 3vh;
-            margin-bottom: 3vh;
+        body {
+            background-image:url(../img/wanted_top.jpg);
+            background-size:cover;
+            background-attachment: fixed;
+            background-position: center center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
         }
-        button {
-            background-color: white;
-            color: black;
-            border: 1px solid #ccc;
-            padding: 10px 20px;
-            cursor: pointer;
-            flex-grow: 1;
-            margin-right: 5px;
-            border-radius: 5px;
+        .container {
+            text-align: center;
+            width: 46%;
+            display: flex;
+            flex-direction: column; /* 縦方向に配置 */
+            align-items: center;    /* 中央揃え */
+            margin-top: 150px;      /* 全体の位置調整 */
+        }
+        h1 {
+            font-size: 30px;
+        }
+        .links {
+            margin-top: 30px; /* 適用されるよう修正 */
+            font-size: 24px;
+        }
+        .links a {
+            text-decoration: none;
+            color: #000;
+        }
+        .links a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div style="text-align: center;">
-
-        <h1>新規作成確認</h1>
-        <div style="margin-top: 20vh;">
-
-            新規作成が完了しました
-
-            <br>
-
-            <button onclick="location.href='./login.html'">ログイン</button>
+    <div class="container">
+        <h1>新規作成が完了しました</h1>
+        <div class="links">
+            <a href="#">ログインへ</a>
         </div>
-
     </div>
-    
 </body>
 </html>
