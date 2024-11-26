@@ -114,12 +114,12 @@ unset($_SESSION['err']);
 
             <div class="form-group">
                 <label for="email">メールアドレス</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" name="email">
             </div>
             <div class="form-group">
                 <label for="password">パスワード</label>
                 <span class="toggle-password" id="toggle-icon" onclick="togglePasswordVisibility()">👁️</span>
-                <input type="password" id="password" name="password" required>
+                <input type="password" name="password">
             </div>
             <button type="submit" class="login-btn">ログイン</button>
         <div class="links">
