@@ -17,15 +17,17 @@ unset($_SESSION['err']);
     <title>ログイン</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            background-image:url(../img/wanted_top.jpg);
+            background-size:cover;/*全画面*/
+            background-attachment: fixed;         /* 固定 */
+            background-position: center center;   /* 縦横中央 */
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            background-color: #f9f9f9;
         }
         .container {
-            width: 65%;
-            padding: 20px;
+            width: 60%;
+            padding: 3s0px;
             border: 1px solid #000;
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -44,7 +46,7 @@ unset($_SESSION['err']);
             display: flex;
             justify-content: flex-start;
             align-items: center;
-            width: 200px;
+            width: 200%;
             margin-bottom: 15px;
         }
         label {
@@ -62,7 +64,7 @@ unset($_SESSION['err']);
             border-radius: 4px;
         }
         input[type="submit"] {
-            width: 100%;
+            width: 60%;
             padding: 10px;
             font-size: 16px;
             color: #fff;

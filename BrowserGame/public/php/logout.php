@@ -2,45 +2,36 @@
 session_start();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログアウト</title>
     <style>
-       
-       .withbutton {
+        body {
             display: flex;
             justify-content: center;
-            margin-top: 20px;
+        }
+        .container {
+            margin-top:10%;
+            text-align: center;
+        }
+        .buttons {
+            margin-top: 50px;
+            margin-bottom: 20px;
         }
     </style>
-    <title>ログアウト画面</title>
 </head>
 <body>
-    <div class="Header">
-    <a style="left: 0;top: 0;position: absolute;" onclick="history.back()"><i class="fas fa-angle-left fa-2x"></i></a>
-        SWEETSTOWN
+
+<div class="container">
+    <p style="font-size: 28px;">現在のアカウントからログアウトしますか？</p>
+    <div class="buttons">
+        <input type="button"  onclick="history.back()" value="いいえ" style="width:100px; height:40px; margin-right: 50px; font-size:20px;">
+        <input type="button"  onclick="location.href='./logout-complete.php'" value="はい"style="width:100px; height:40px; font-size:20px;">
     </div>
-    <br>
-    <br>
-    <div class="withdrawal">
-        <h1>●ログアウト手続き</h1>
-        <hr noshade><br>
-        <p class="withp">「ログアウトする」ボタンを押すと<br>
-            ログアウトが完了いたします。<br>
-            本当にログアウトしてもよろしいですか？</p>
-        
-        
-            <div class="withbutton">
-                <form action="top.php" method="post">
-                <input type="submit" name="cancel" value="キャンセル" style="width:100px;height:50px">
-                </form>
-                <form action="logout-ok.php" method="post">
-                <input type="submit" name="withdraw" value="ログアウトする" style="width:100px;height:50px" class="with">
-                </form>
-            </div>
-    </div>
+</div>
+
 </body>
 </html>

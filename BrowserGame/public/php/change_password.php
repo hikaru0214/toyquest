@@ -98,13 +98,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $error_message = "このメールアドレスは登録されていません。";
     }
-} else {
-    $error_message = "無効なリクエストです。";
-}
+} 
 ?>
 
     
-        <a href="login.html"><span class="back-arrow">&larr;</span></a>
+        <a href="login.php"><span class="back-arrow">&larr;</span></a>
         <div class="container">
             <h2>パスワード再設定</h2>
         </div>

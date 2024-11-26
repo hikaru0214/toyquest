@@ -1,20 +1,18 @@
-@media (orientation: portrait) {
-    body {
-        transform: rotate(90deg);
-        transform-origin: top left;
-        width: 100vh;
-        height: 100vw;
-        overflow: hidden;
-    }
+body{
+    padding: 0px;
+    margin: 0px;
+    image-rendering:pixelated;
 }
 .container {
-    position: relative;
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 /* ボタンをキャンバス上に配置 */
 
 input{
-    position: absolute;
+    position: fixed;
     transform: translate(-50%, -50%); /* 中央揃え */
     padding: 10px 20px;
     font-size: 16px;
@@ -33,7 +31,7 @@ input{
     top: 70%; 
 }
 .player{
-    position: absolute;
+    position: fixed;
     left: 5%;
     top:18%;
 }   
@@ -42,29 +40,29 @@ input{
 .notice{
     width: 35px;
     height: 35px;
-    position: absolute;
-    top: 10%;
+    position: fixed;
+    top: 5%;
     right: 10%;
 }
 
 .friend{
     width: 35px;
     height: 35px;
-    position: absolute;
-    top: 10%;
+    position: fixed;
+    top: 5%;
     right: 5%;
 }
 .Logout{
     width: 35px;
     height: 35px;
-    position: absolute;
-    top: 10%;
+    position: fixed;
+    top: 5%;
     right: 0%;
 }
 
 .table{
-    position: absolute;
-    top: 15%;
+    position: fixed;
+    top: 10%;
     right: 5%;
 }
 

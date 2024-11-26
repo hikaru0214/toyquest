@@ -35,10 +35,11 @@
 
     const camera = new THREE.PerspectiveCamera(65, width / height, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({
-        canvas: document.querySelector("#myCanvas"),
         antialias: true
     });
     renderer.setSize(width, height);
+    
+    document.body.appendChild( renderer.domElement );
 
     
     // カメラの位置設定
@@ -293,11 +294,8 @@
     dotPass.uniforms["resolution"].value.set(width, height);
     });
 
-    // デバイスの向きが変わった際にも同様の処理を呼び出す
-    window.addEventListener("orientationchange", () => {
-        checkOrientation();
-        adjustCanvasSize(); // 必要に応じて再描画
-    });
+
+    
 
     document.body.style.overflow = 'hidden';//ページのスクロール無効
     function defaultZoom() {
@@ -310,7 +308,7 @@
     if (!isLandscape) {
         alert("このアプリは横向きでのみ動作します。デバイスを横にしてください。");
     }
-    adjustCanvasSize(); // レイアウトを横向きに最適化
+    
 
 
     screen.orientation.lock("landscape")
@@ -327,16 +325,19 @@
 </head>
 <body>
     <div class="container">
-    <canvas id="myCanvas"></canvas>
+    
     <h3 class="player">プレイヤー名</h3>
+
     <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>
     <input type="button" class="button2" onclick="location.href='../html/brush_dengon.html'" value="ブラシ伝言"></button>
     <input type="button" class="button3" onclick="location.href='../html/wanted_top.html'" value="あいつを探せ"></button>
-    <input type="image" src="../img/notice.png" class="notice" value="お知らせ"></button>
-    <input type="image" src="../img/friend.png" class="friend" value="フレンド"></button>
-    <input type="image" src="../img/Logout.png" class="Logout" value="ログアウト"></button>
+
+    <input type="image" src="../img/notice_icon.png" class="notice" onclick="location.href=''" value="お知らせ"></button>
+    <input type="image" src="../img/friend_icon.png" class="friend" onclick="location.href=''" value="フレンド"></button>
+    <input type="image" src="../img/Logout_icon.png" class="Logout" onclick="location.href='logout.php'" value="ログアウト"></button>
+
     <div class="table">
-        <h3 class="table_title">ランキング</h3>
+        <a href="score.php" class="table_title">ランキング</a>
     <table>
         <tr>
         <td>Rank</td><td>name</td><td>score</td>
@@ -344,7 +345,7 @@
         <?php
         $sql=$pdo->prepare('SELECT Score.user_id, SUM(Score.score) AS total_score, User.user_name 
             FROM Score JOIN User ON Score.user_id = User.user_id 
-            GROUP BY Score.user_id ORDER BY total_score ASC');
+            GROUP BY Score.user_id ORDER BY total_score DESC');
         $sql->execute();
 
         $Rank=0;
@@ -352,14 +353,18 @@
 
         foreach($sql as $row) {
         $Rank+=1;
-
+        if($Rank<=10){
         echo "<tr><td>".$Rank;
         echo "</td><td>".$row['user_name'];
         echo "</td><td>".$row['total_score'];
         echo "</td></tr>";
+        }
         
-        if($row['user_id']==1){
+        if($row['user_id']==4){
+            if($Rank<=10){
             $userRank_in=true;
+            }
+            $username=$row['user_name'];
             $userRank=$Rank;
             $user_score=$row['total_score'];
             }
@@ -374,11 +379,11 @@
 
         if($userRank_in==true){
             echo "<tr><td>".$userRank;
-            echo "</td><td>あなた</td><td>".$user_score;
+            echo "</td><td>あなた(".$username.")</td><td>".$user_score;
             echo "</td></tr>";
         }else{
             echo "<tr><td>圏外";
-            echo "</td><td>あなた</td><td>".$user_score;
+            echo "</td><td>あなた(".$username.")</td><td>".$user_score;
             echo "</td></tr>";
         }
         ?>
