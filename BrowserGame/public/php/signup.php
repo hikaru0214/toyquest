@@ -107,7 +107,7 @@ unset($_SESSION['err']);
 </head>
 <body>
 <div class="container">
-    <h2>新規登録</h2>
+    <h1>新規登録</h1>
     <form action="register.php" method="POST">
 
     <!-- エラーメッセージ表示 -->
