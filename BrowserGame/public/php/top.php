@@ -330,7 +330,7 @@
 <body>
     <div class="container">
     <!--<img src="backcaveat.png">-->
-    <img id="caveat"src="caveat.png"class="hidden">
+    <img id="caveat"src="../img/caveat.png"class="hidden">
     <h3 class="player">プレイヤー名</h3>
 
     <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>
