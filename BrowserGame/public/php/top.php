@@ -301,6 +301,10 @@
         const caveat = document.getElementById("caveat");
         caveat.classList.toggle("hidden")
     }
+    if (isLandscape) {
+        const caveat = document.getElementById("caveat");
+        caveat.classList.toggle("hidden")
+    }
     }
     window.addEventListener("orientationchange", () => {
     const width = window.innerWidth;
