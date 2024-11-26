@@ -309,6 +309,9 @@
         alert("このアプリは横向きでのみ動作します。デバイスを横にしてください。");
     }
     
+    window.addEventListener("orientationchange", () => {
+        checkOrientation();
+    });
 
 
     screen.orientation.lock("landscape")
