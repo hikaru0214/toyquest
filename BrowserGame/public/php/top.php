@@ -299,11 +299,11 @@
     const isLandscape = window.innerWidth > window.innerHeight;
     if (!isLandscape) {
         const caveat = document.getElementById("caveat");
-        caveat.classList.add("hidden");
+        caveat.classList.remove("hidden");
     }
     if (isLandscape) {
         const caveat = document.getElementById("caveat");
-        caveat.classList.remove("hidden");
+        caveat.classList.add("hidden");
     }
     }
     window.addEventListener("orientationchange", () => {
