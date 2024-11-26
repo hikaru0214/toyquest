@@ -39,17 +39,7 @@
         antialias: true
     });
     renderer.setSize(width, height);
-    window.addEventListener('resize', () => {
-    gamewidth = window.innerWidth;
-    gameheight = window.innerHeight;
-    camera.fov = fov;
-    camera.aspect = aspectratio;
-
-    renderer.setSize(gamewidth, gameheight);
-    camera.updateProjectionMatrix();
-    camera.fov = fov;
-    camera.aspect = aspectratio;
-    });
+    
 
     
     // カメラの位置設定
@@ -293,15 +283,15 @@
 
     // リサイズ処理の追加
     window.addEventListener('resize', () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    gamewidth = window.innerWidth;
+    gameheight = window.innerHeight;
+    camera.fov = fov;
+    camera.aspect = aspectratio;
 
-    renderer.setSize(width, height);
-    camera.aspect = width / height;
+    renderer.setSize(gamewidth, gameheight);
     camera.updateProjectionMatrix();
-
-    composer.setSize(width, height);
-    dotPass.uniforms["resolution"].value.set(width, height);
+    camera.fov = fov;
+    camera.aspect = aspectratio;
     });
 
     // デバイスの向きが変わった際にも同様の処理を呼び出す
