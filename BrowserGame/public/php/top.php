@@ -333,10 +333,6 @@
 </head>
 <body>
     <div class="container">
-    <div class="hidden" id="caveat">
-    <img src="../img/caveat.png" class="caveatimg">
-    <img src="../img/backcaveat.png" class="backcaveatimg">
-    </div>
     <h3 class="player">プレイヤー名</h3>
 
     <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>
@@ -399,6 +395,12 @@
         }
         ?>
     </table>
+
+    <div class="hidden" id="caveat">
+    <img src="../img/backcaveat.png" class="backcaveatimg">
+    <img src="../img/caveat.png" class="caveatimg">
+    </div>
+    
 </div>
 </div>
 
