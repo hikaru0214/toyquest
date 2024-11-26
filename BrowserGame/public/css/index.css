@@ -10,7 +10,7 @@ body{
 /* ボタンをキャンバス上に配置 */
 
 input{
-    position: absolute;
+    position: fixed;
     transform: translate(-50%, -50%); /* 中央揃え */
     padding: 10px 20px;
     font-size: 16px;
