@@ -113,7 +113,7 @@ if (!isset($_SESSION['username'], $_SESSION['mailaddress'], $_SESSION['password'
             <div class="form-group">
                 <label for="username">ユーザーネーム</label>
                 <div>
-                    <?php <input type="text" echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>
+                    <?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>
                 </div>
             </div>
             <div class="form-group">
