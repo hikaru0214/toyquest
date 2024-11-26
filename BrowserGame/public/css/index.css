@@ -13,8 +13,8 @@ body{
     display: none;
     left: 13%;
     top: 50%; 
-    width: 35px;
-    height: 35px;
+    width: 500px;
+    height: 500px;
 }
 
 /* ボタンをキャンバス上に配置 */
