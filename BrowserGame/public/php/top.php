@@ -39,6 +39,17 @@
         antialias: true
     });
     renderer.setSize(width, height);
+    window.addEventListener('resize', () => {
+    gamewidth = window.innerWidth;
+    gameheight = window.innerHeight;
+    camera.fov = fov;
+    camera.aspect = aspectratio;
+
+    renderer.setSize(gamewidth, gameheight);
+    camera.updateProjectionMatrix();
+    camera.fov = fov;
+    camera.aspect = aspectratio;
+    });
 
     
     // カメラの位置設定
@@ -329,7 +340,7 @@
     <div class="container">
     <canvas id="myCanvas"></canvas>
     <h3 class="player">プレイヤー名</h3>
-    
+
     <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>
     <input type="button" class="button2" onclick="location.href='../html/brush_dengon.html'" value="ブラシ伝言"></button>
     <input type="button" class="button3" onclick="location.href='../html/wanted_top.html'" value="あいつを探せ"></button>
