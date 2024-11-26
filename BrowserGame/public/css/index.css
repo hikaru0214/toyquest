@@ -14,10 +14,10 @@ body{
 }
 .caveatimg{
     position: fixed;
-    left: 0%;
-    top: 0%; 
-    width: 500px;
-    height: 500px;
+    left: 50%;
+    top: 50%; 
+    width: 600px;
+    height: 600px;
 }
 .backcaveatimg{
     position: fixed;
