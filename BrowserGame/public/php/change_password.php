@@ -104,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
     
-        <a href="login.html"><span class="back-arrow">&larr;</span></a>
+        <a href="login.php"><span class="back-arrow">&larr;</span></a>
         <div class="container">
             <h2>パスワード再設定</h2>
         </div>
