@@ -35,11 +35,11 @@
 
     const camera = new THREE.PerspectiveCamera(65, width / height, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({
-        canvas: document.querySelector("#myCanvas"),
         antialias: true
     });
     renderer.setSize(width, height);
     
+    document.body.appendChild( renderer.domElement );
 
     
     // カメラの位置設定
@@ -283,16 +283,17 @@
 
     // リサイズ処理の追加
     window.addEventListener('resize', () => {
-    gamewidth = window.innerWidth;
-    gameheight = window.innerHeight;
-    camera.fov = fov;
-    camera.aspect = aspectratio;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
-    renderer.setSize(gamewidth, gameheight);
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    camera.fov = fov;
-    camera.aspect = aspectratio;
+
+    composer.setSize(width, height);
+    dotPass.uniforms["resolution"].value.set(width, height);
     });
+
 
     // デバイスの向きが変わった際にも同様の処理を呼び出す
     window.addEventListener("orientationchange", () => {
@@ -328,7 +329,7 @@
 </head>
 <body>
     <div class="container">
-    <canvas id="myCanvas"></canvas>
+    
     <h3 class="player">プレイヤー名</h3>
 
     <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>
