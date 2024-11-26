@@ -302,8 +302,7 @@
     }
     }
     window.addEventListener("orientationchange", () => {
-        checkOrientation();
-        const width = window.innerWidth;
+    const width = window.innerWidth;
     const height = window.innerHeight;
 
     renderer.setSize(width, height);
@@ -312,6 +311,7 @@
 
     composer.setSize(width, height);
     dotPass.uniforms["resolution"].value.set(width, height);
+    checkOrientation();
     });
 
 
