@@ -122,7 +122,6 @@ unset($_SESSION['err']);
                 <input type="password" id="password" name="password" required>
             </div>
             <button type="submit" class="login-btn">ログイン</button>
-            </form>
         <div class="links">
             <a href="change_password.php">パスワードを忘れた方</a>
             <a href="signup.php">新規</a>
