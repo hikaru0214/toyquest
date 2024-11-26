@@ -98,9 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $error_message = "このメールアドレスは登録されていません。";
     }
-} else {
-    $error_message = "無効なリクエストです。";
-}
+} 
 ?>
 
     
