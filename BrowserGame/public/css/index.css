@@ -33,7 +33,7 @@ input{
     top: 70%; 
 }
 .player{
-    position: absolute;
+    position: fixed;
     left: 5%;
     top:18%;
 }   
@@ -42,7 +42,7 @@ input{
 .notice{
     width: 35px;
     height: 35px;
-    position: absolute;
+    position: fixed;
     top: 5%;
     right: 10%;
 }
@@ -50,14 +50,14 @@ input{
 .friend{
     width: 35px;
     height: 35px;
-    position: absolute;
+    position: fixed;
     top: 5%;
     right: 5%;
 }
 .Logout{
     width: 35px;
     height: 35px;
-    position: absolute;
+    position: fixed;
     top: 5%;
     right: 0%;
 }
