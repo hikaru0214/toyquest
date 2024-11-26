@@ -283,15 +283,7 @@
 
     // リサイズ処理の追加
     window.addEventListener('resize', () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    renderer.setSize(width, height);
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-
-    composer.setSize(width, height);
-    dotPass.uniforms["resolution"].value.set(width, height);
+    
     });
 
 
@@ -308,9 +300,18 @@
     if (!isLandscape) {
         alert("このアプリは横向きでのみ動作します。デバイスを横にしてください。");
     }
-    
+    }
     window.addEventListener("orientationchange", () => {
-        checkOrientation();
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+
+    composer.setSize(width, height);
+    dotPass.uniforms["resolution"].value.set(width, height);
+    checkOrientation();
     });
 
 
@@ -320,8 +321,7 @@
     })
     .catch(function(error) {
         console.log("画面のロックに失敗しました。: " + error.message);
-    });
-    }//httpsのみ動作可能
+    });//httpsのみ動作可能
 
     </script>
 
