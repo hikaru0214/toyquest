@@ -50,6 +50,7 @@ io.on('connection',(socket)=>{
             socket.join(playerdata.roomid);
             socket.emit("log on client","joined in the room "+playerdata.roomid);
             socket.emit("send player data",getGameByRoomId(playerdata.roomid).player_data);
+            socket.broadcast.to(playerdata.roomid).emit("send player data",getGameByRoomId(playerdata.roomid).player_data);
             page="inroom";
             console.log("プレイヤー"+playerdata.username+"が部屋"+playerdata.roomid+"に入りました。");
         }else{
