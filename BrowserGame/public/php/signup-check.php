@@ -111,13 +111,17 @@ if (!isset($_SESSION['username'], $_SESSION['mailaddress'], $_SESSION['password'
         <form action="signup-ok.php" method="post">
             <h1>登録確認</h1>
             <div class="form-group">
-                <dt>ユーザーネーム</dt>
-                <dd><?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?></dd>
-                <dt>メールアドレス</dt>
-                <dd><?php echo htmlspecialchars($_SESSION['mailaddress'], ENT_QUOTES, 'UTF-8'); ?></dd>
-                <dt>パスワード</dt>
-                <dd><?php echo str_repeat('*', strlen($_SESSION['password'])); // 表示をマスク ?></dd>
-            
+            <label for="username">ユーザーネーム</label>
+                <?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>
+            </div>
+            <div class="form-group">
+                <label for="mailaddress">メールアドレス</label>
+                    <?php echo htmlspecialchars($_SESSION['mailaddress'], ENT_QUOTES, 'UTF-8'); ?>
+            </div>
+            <div class="form-group">
+                <label for="password">パスワード</label>
+                    <?php echo str_repeat('*', strlen($_SESSION['password'])); // 表示をマスク ?>
+            </div>
             <button type="submit" class="login-btn">確認へ</button>
         </form>
         <div class="links">
