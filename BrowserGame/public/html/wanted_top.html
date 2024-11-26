@@ -93,14 +93,18 @@
 
         var userid = getCookie('userid');
         var username = getCookie('username');
-        if(userid)document.getElementById('user_id').value = userid;
-        if(username)document.getElementById('user_name').value = username;
+
+        var userid_input = document.getElementById('user_id');
+        var username_input = document.getElementById('user_name');
+
+        if(userid)userid_input.value = userid;
+        if(username)username_input.value = username;
 
         console.log(document.cookie);
 
         document.getElementById('save_uid').onclick = function(){
-            document.cookie = "userid="+userid;
-            document.cookie = "username="+username;
+            document.cookie = "userid="+userid_input.value;
+            document.cookie = "username="+username_input.value;
             console.log("ユーザ情報が保存されました");
             console.log(document.cookie);
         }
