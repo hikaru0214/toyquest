@@ -194,8 +194,7 @@
                 WHERE Score.user_id = :user_id 
                 ORDER BY Score.score DESC, Score.registration_date ASC
             ";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+           
         } elseif ($selectedGame === '総合スコア') {
             $sql = "
                 SELECT User.user_id, User.user_name, SUM(Score.score) AS total_score, MAX(Score.registration_date) AS last_play_date
