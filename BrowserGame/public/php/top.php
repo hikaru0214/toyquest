@@ -299,11 +299,11 @@
     const isLandscape = window.innerWidth > window.innerHeight;
     if (!isLandscape) {
         const caveat = document.getElementById("caveat");
-        caveat.classList.toggle("hidden")
+        caveat.classList.add("hidden");
     }
     if (isLandscape) {
         const caveat = document.getElementById("caveat");
-        caveat.classList.toggle("hidden")
+        caveat.classList.remove("hidden");
     }
     }
     window.addEventListener("orientationchange", () => {
@@ -334,7 +334,9 @@
 <body>
     <div class="container">
     <!--<img src="backcaveat.png">-->
-    <img id="caveat"src="../img/caveat.png"class="hidden">
+    <div class="hidden">
+    <img id="caveat" src="../img/caveat.png" class="caveatimg">
+    </div>
     <h3 class="player">プレイヤー名</h3>
 
     <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>

@@ -9,8 +9,11 @@ body{
 }
 
 .hidden {
-    position: fixed;
     display: none;
+    
+}
+.caveatimg{
+    position: fixed;
     left: 13%;
     top: 50%; 
     width: 500px;
