@@ -113,8 +113,8 @@ unset($_SESSION['err']);
             <?php endif; ?>
 
             <div class="form-group">
-                <label for="email">メールアドレス</label>
-                <input type="email" name="email">
+                <label for="mailaddress">メールアドレス</label>
+                <input type="email" name="mailaddress">
             </div>
             <div class="form-group">
                 <label for="password">パスワード</label>
