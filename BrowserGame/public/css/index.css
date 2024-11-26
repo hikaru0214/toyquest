@@ -1,6 +1,6 @@
 body{
-    padding: 0%;
-    margin: 0%;
+    padding: 100px;
+    margin: 100px;
     image-rendering:pixelated;
 }
 .container {
