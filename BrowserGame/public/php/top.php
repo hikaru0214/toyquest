@@ -283,15 +283,14 @@
 
     // リサイズ処理の追加
     window.addEventListener('resize', () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    width = window.innerWidth;
+    height = window.innerHeight;
 
     renderer.setSize(width, height);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
 
     composer.setSize(width, height);
-    dotPass.uniforms["resolution"].value.set(width, height);
     });
 
 
