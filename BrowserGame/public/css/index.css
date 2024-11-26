@@ -4,7 +4,7 @@ body{
     image-rendering:pixelated;
 }
 .container {
-    position: fixed;
+    position: absolute;
 }
 
 /* ボタンをキャンバス上に配置 */

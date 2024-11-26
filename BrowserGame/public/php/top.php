@@ -324,6 +324,7 @@
 
 </head>
 <body>
+    <div class="container">
     
     <h3 class="player">プレイヤー名</h3>
 
@@ -335,7 +336,7 @@
     <input type="image" src="../img/friend_icon.png" class="friend" onclick="location.href=''" value="フレンド"></button>
     <input type="image" src="../img/Logout_icon.png" class="Logout" onclick="location.href='logout.php'" value="ログアウト"></button>
 
-    < class="table">
+    <div class="table">
         <a href="score.php" class="table_title">ランキング</a>
     <table>
         <tr>
@@ -387,6 +388,7 @@
         }
         ?>
     </table>
+</div>
 </div>
 
 </body>
