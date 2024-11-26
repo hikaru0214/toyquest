@@ -295,11 +295,7 @@
     });
 
 
-    // デバイスの向きが変わった際にも同様の処理を呼び出す
-    window.addEventListener("orientationchange", () => {
-        checkOrientation();
-        adjustCanvasSize(); // 必要に応じて再描画
-    });
+    
 
     document.body.style.overflow = 'hidden';//ページのスクロール無効
     function defaultZoom() {
@@ -312,7 +308,7 @@
     if (!isLandscape) {
         alert("このアプリは横向きでのみ動作します。デバイスを横にしてください。");
     }
-    adjustCanvasSize(); // レイアウトを横向きに最適化
+    
 
 
     screen.orientation.lock("landscape")
