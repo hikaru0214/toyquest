@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 ?>
 
     <div class="container">
-    <h2>パスワード再設定完了</h2>
+    <h2>パスワード再設定</h2>
     <?php if (!empty($success_message)): ?>
         <p class="message"><?php echo htmlspecialchars($success_message, ENT_QUOTES, 'UTF-8'); ?></p>
         <a href="login.php">ログイン画面へ</a>
