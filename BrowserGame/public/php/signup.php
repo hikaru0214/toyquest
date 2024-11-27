@@ -60,13 +60,6 @@ unset($_SESSION['err']);
             padding: 15px;
             box-sizing: border-box;
         }
-        .form-group .toggle-password {
-            font-size: 18px;
-            cursor: pointer;
-            color: #888;
-            display: inline-block;
-            vertical-align: middle;
-        }
         .login-btn {
             display: block;
             width: 100%;
@@ -91,19 +84,6 @@ unset($_SESSION['err']);
             text-decoration: underline;
         }
     </style>
-    <script>
-        function togglePasswordVisibility() {
-            const passwordField = document.getElementById('password');
-            const icon = document.getElementById('toggle-icon');
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                icon.textContent = '🙈'; // アイコン変更（目を隠す）
-            } else {
-                passwordField.type = 'password';
-                icon.textContent = '👁️'; // アイコン変更（目を開ける）
-            }
-        }
-    </script>
 </head>
 <body>
 <div class="container">
@@ -128,8 +108,11 @@ unset($_SESSION['err']);
             </div>
             <div class="form-group">
                 <label for="password">パスワード</label>
-                <span class="toggle-password" id="toggle-icon" onclick="togglePasswordVisibility()">👁️</span>
                 <input type="password" id="password" name="password">
+            </div>
+            <div class="form-group">
+                <label for="password-check">パスワード</label>
+                <input type="password" id="password-check" name="password-check">
             </div>
             <button type="submit" class="login-btn">確認へ</button>
         </form>
