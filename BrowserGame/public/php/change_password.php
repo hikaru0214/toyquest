@@ -1,6 +1,3 @@
-<?php session_start(); ?>
-<!-- DB接続 -->
-<?php require '../dbConnect/dbconnect.php'; ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -55,61 +52,17 @@
     </style>
 </head>
 <body>
-<?php
 
-$error_message = ""; // エラーメッセージの初期化
-
-
-// フォームが送信されたか確認
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // フォームからデータを取得
-    $mailaddress = $_POST['mailaddress'];
-    $new_password = $_POST['new-password'];
-    $confirm_password = $_POST['confirm-password'];
-
-    // 新しいパスワードと確認用パスワードが一致するか確認
-    if ($new_password !== $confirm_password) {
-        $error_message = "新しいパスワードが一致しません。";
-        exit;
-    }
-
-    // メールアドレスがデータベースに存在するか確認
-    $stmt = $pdo->prepare("SELECT * FROM User WHERE mailaddress = :mailaddress");
-    $stmt->bindParam(':mailaddress', $mailaddress, PDO::PARAM_STR);
-    $stmt->execute();
-    $user = $stmt->fetch();
-
-    if ($user) {
-        // 新しいパスワードをハッシュ化
-        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-
-        // パスワードを更新
-        $stmt = $pdo->prepare("UPDATE User SET password = :password WHERE mailaddress = :mailaddress");
-        $stmt->bindParam(':password', $hashed_password, PDO::PARAM_STR);
-        $stmt->bindParam(':mailaddress', $mailaddress, PDO::PARAM_STR);
-
-        if ($stmt->execute()) {
-            $error_message = "パスワードが更新されました。";
-            header("Location: change_password_complete.html"); // 完了ページへリダイレクト
-            exit;
-        } else {
-            $error_message = "パスワード更新中にエラーが発生しました。";
-        }
-    } else {
-        $error_message = "このメールアドレスは登録されていません。";
-    }
-} 
-?>
 
     
         <a href="login.php"><span class="back-arrow">&larr;</span></a>
         <div class="container">
             <h2>パスワード再設定</h2>
         </div>
-        <form action="" method="post">
+        <form action="change_password_complete.php" method="post">
             <div class="form-group">
                 <label for="mailaddress">メールアドレス</label>
-                <input type="email" id="mailaddress" name="mailaddress" required>'
+                <input type="email" id="mailaddress" name="mailaddress" required>
             </div>
             <div class="form-group">
                 <label for="new-password">新しいパスワード</label>
@@ -122,8 +75,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit" class="submit-btn">登録</button>
         </form>  
         <!-- エラーメッセージ表示 -->
-    <?php if (!empty($error_message)): ?>
-        <p class="error"><?php echo htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8'); ?></p>
-    <?php endif; ?>
+    
 </body>
 </html>
