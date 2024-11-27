@@ -226,7 +226,11 @@
     // カメラを移動させる関数
     function moveCamera() {
         if(pageload&&camera.position.y>=3){
-            camera.position.y -= 0.1;
+            if (!isLandscape) {
+            const caveat = document.getElementById("caveat");
+            caveat.classList.remove("hidden");
+            }
+        camera.position.y -= 0.1;
         }
         if (isMovingLeft) {
             //camera.position.x -= 0.1;
