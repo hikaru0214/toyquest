@@ -38,7 +38,7 @@ session_start();
             font-size: 30px;
         }
         .links {
-            margin-top: 30px; /* 適用されるよう修正 */
+            margin-top: 40px; /* 適用されるよう修正 */
             font-size: 24px;
         }
     </style>
