@@ -227,7 +227,7 @@
     let pageload=true;
     // カメラを移動させる関数
     function moveCamera() {
-        if(pageload&&camera.position.y>=3){
+        if(pageload&&camera.position.y>=3){//ロード時にカメラをy:3まで下げる
             if (!isLandscape) {
             const caveat = document.getElementById("caveat");
             caveat.classList.remove("hidden");
@@ -295,7 +295,7 @@
     defaultZoom();//画面拡縮無効
     
     function checkOrientation() {
-    
+    const isLandscape = window.innerWidth > window.innerHeight;
     if (!isLandscape) {
         const caveat = document.getElementById("caveat");
         caveat.classList.remove("hidden");
