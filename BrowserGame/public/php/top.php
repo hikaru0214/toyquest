@@ -25,7 +25,6 @@
     import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
     import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 
-    const isLandscape = window.innerWidth > window.innerHeight;
 
     // シーン、カメラ、レンダラーの設定
     const width = window.innerWidth;
@@ -228,10 +227,6 @@
     // カメラを移動させる関数
     function moveCamera() {
         if(pageload&&camera.position.y>=3){//ロード時にカメラをy:3まで下げる
-            if (!isLandscape) {
-            const caveat = document.getElementById("caveat");
-            caveat.classList.remove("hidden");
-            }
         camera.position.y -= 0.1;
         }
         if (isMovingLeft) {
@@ -283,6 +278,8 @@
         // Composerを使用してレンダリング
         composer.render();
         defaultZoom();
+
+        checkOrientation();//画面が縦向きなら横向きにするように警告
     }
 
     animate();
@@ -294,18 +291,18 @@
     }
     defaultZoom();//画面拡縮無効
     
-    function checkOrientation() {
+    function checkOrientation() {//画面が横なら警告
     const isLandscape = window.innerWidth > window.innerHeight;
     if (!isLandscape) {
         const caveat = document.getElementById("caveat");
-        caveat.classList.remove("hidden");
+        caveat.classList.remove("hidden");  
     }
     if (isLandscape) {
         const caveat = document.getElementById("caveat");
         caveat.classList.add("hidden");
     }
     }
-    window.addEventListener("orientationchange", () => {
+    window.addEventListener("orientationchange", () => {//画面の幅に合わせる
     const width = window.innerWidth;
     const height = window.innerHeight;
 
@@ -315,7 +312,6 @@
 
     composer.setSize(width, height);
     dotPass.uniforms["resolution"].value.set(width, height);
-    checkOrientation();
     });
 
 
