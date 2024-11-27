@@ -177,6 +177,7 @@
 
         players[own_id] = {order:-1,mcx:0,mcy:0};
 
+        cursor_fn = ["../img/cursorred.png","../img/cursorblue.png","../img/cursoryellow.png","../img/cursorgreen.png"];
         player_colors = ["red","blue","yellow","green"];
 
         const socket = io.connect('http://52.68.111.88:3939');
@@ -197,7 +198,7 @@
             return "";
         }
 
-        socket.emit("get my room",{userid:getCookie('userid')});
+        socket.emit("get my room",{userid:own_id});
 
         socket.on("log on client",function(message){
             console.log(message);
@@ -387,12 +388,31 @@
 
         document.addEventListener("mousemove",sendCursor);
 
-        var cursor;
-        var cursorimg = new Image();
-        cursorimg.onload = function(){
-            cursor = this;
+class ImageLoader { //超テキトーに書いた画像読み込みを簡単にするクラス、適切でないかも
+    constructor(filename){
+        this.img = new Image();
+        this.filename = filename;
+        this.image = null;
+        const self = this;
+        this.img.onload = function(){self.image = this;};
+        this.img.src = this.filename;
+    }
+    getImage(){
+        return this.image;
+    }
+}
+        /*
+        var redcursor = new ImageLoader(cursor_fn[0]);
+        var bluecursor = new ImageLoader(cursor_fn[1]);
+        var yellowcursor = new ImageLoader(cursor_fn[2]);
+        var greencursor = new ImageLoader(cursor_fn[3]);
+        */
+
+        var cursorimgs = [];
+
+        for(var i = 0;i < 4;i++){
+            cursorimgs[i] = new ImageLoader(cursor_fn[i]);
         }
-        cursorimg.src="../img/cursorkawaii.png";
 
         function draw(){
             context.fillStyle = "white";
@@ -422,7 +442,7 @@
 
             Object.keys(players).forEach(function(key){
                 var p = players[key];
-                ol_context.drawImage(cursor,p.mcx*window.innerWidth,p.mcy*window.innerHeight,32,32);
+                ol_context.drawImage((cursorimgs[p.order]).getImage(),p.mcx*window.innerWidth,p.mcy*window.innerHeight,32,32);
             });
         }
 
