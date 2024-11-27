@@ -154,7 +154,7 @@ loader.load(
 
 // アニメーション更新
 const clock = new THREE.Clock();
-function animate() {
+function testanimate() {
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
 
@@ -163,7 +163,7 @@ function animate() {
 
     renderer.render(scene, camera);
 }
-animate();
+testanimate();
 
 
 const ch_geom = new THREE.BoxGeometry(50,50,50);
