@@ -230,6 +230,8 @@
 
         // Composerを使用してレンダリング
         composer.render();
+
+        checkOrientation();
     }
 
     animate();
