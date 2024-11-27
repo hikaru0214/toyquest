@@ -264,7 +264,6 @@
 
     composer.setSize(width, height);
     dotPass.uniforms["resolution"].value.set(width, height);
-    checkOrientation();
     });
 
     

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="manifest" href="../json/KillTools.json">
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
+          }
+        }
+      </script>
+      <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
+      <style>
+
+        .avatar {
+            background-size: 1000% 1000%;
+            display: block;
+            box-sizing: border-box;
+            margin: 0px;
+            padding: 0px;
+            position: absolute;
+            image-rendering: pixelated;
+            width: 160px;
+            height: 160px;
+        }
+
+        @font-face {
+            font-family: rasterfont_us;
+            src: url(../fonts/WebPlus_IBM_VGA_8x16.woff);
+        }
+
+        #ui_overlay {
+            width: 100%;
+            height: 100%;
+            margin: 10px;
+            position: fixed;
+            color: white;
+            display: none;
+        }
+        #player_avatar {
+            position: fixed;
+            bottom: 0;
+        }
+        #crosshair {
+            position: fixed;
+            color: white;
+            text-align:unset;
+            margin: 0px;
+            padding: 0px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            font-size: 16px;
+        }
+        #requestFocus {
+            font-family: rasterfont_us;
+            color: white;
+            background-color: #0000ffff;
+            position: fixed;
+            margin: 0px;
+            padding: 0px;
+            top: 50%;
+            left: 50%;
+            width: 35%;
+            height: 35%;
+            transform: translate(-50%,-50%);
+            border: double white 2px;
+            cursor:pointer;
+        }
+      </style>
+</head>
+<body style="padding: 0px; margin: 0px; image-rendering:pixelated;">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        /*const socket = parent.getSocket(); //you cant do that */
+        const socket = io.connect('http://52.68.111.88:6060');
+
+        console.log((socket)?"server responded!":"cannot connect to server ;-;");
+
+var fov = 90;
+var gamewidth = window.innerWidth;
+var gameheight = window.innerHeight;
+var aspectratio = 16/9;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( fov, aspectratio, 0.1, 1000 );
+
+camera.rotation.order = "YXZ";
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( gamewidth, gameheight );
+document.body.appendChild( renderer.domElement );
+
+window.addEventListener('resize', () => {
+
+    gamewidth = window.innerWidth;
+    gameheight = window.innerHeight;
+    camera.fov = fov;
+    camera.aspect = aspectratio;
+
+    renderer.setSize(gamewidth, gameheight);
+    camera.updateProjectionMatrix();
+    camera.fov = fov;
+    camera.aspect = aspectratio;
+});
+
+// GLTFモデルの読み込み。GLTFLoaderのインポートが必要
+let gltf; // GLTFオブジェクトを格納する変数
+let mixer1, mixer2; // 2つのアニメーションミキサーを用意
+let model1, model2; // 2つのモデルインスタンス
+
+const loader = new GLTFLoader();
+loader.load(
+    "../models/ハウス2.glb",
+    function (loadedGltf) {
+        gltf = loadedGltf;
+
+        // モデル1の設定
+        model1 = gltf.scene.clone(); // モデルを複製
+        model1.scale.set(0.02, 0.02, 0.02);
+        model1.position.set(0, 1, 0);
+        model1.rotation.set(0, 0, 0);
+        scene.add(model1);
+
+        // アニメーションミキサー1
+        mixer1 = new THREE.AnimationMixer(model1);
+        const clip1 = THREE.AnimationClip.findByName(gltf.animations, 'stopmotion'); // アニメーション名で検索
+        if (clip1) mixer1.clipAction(clip1).play();
+
+        // モデル2の設定
+        model2 = gltf.scene.clone(); // モデルを複製
+        model2.scale.set(0.02, 0.02, 0.02);
+        model2.position.set(0, 3, 0);
+        model2.rotation.set(0, 0, 0);
+        scene.add(model2);
+
+        // アニメーションミキサー2
+        mixer2 = new THREE.AnimationMixer(model2);
+        const clip2 = THREE.AnimationClip.findByName(gltf.animations, 'Walk'); // アニメーション名で検索
+        if (clip2) mixer2.clipAction(clip2).play();
+    },
+    undefined,
+    function (error) {
+        console.error('Error loading the GLTF model:', error);
+    }
+);
+
+// アニメーション更新
+const clock = new THREE.Clock();
+function animate() {
+    requestAnimationFrame(animate);
+    const delta = clock.getDelta();
+
+    if (mixer1) mixer1.update(delta);
+    if (mixer2) mixer2.update(delta);
+
+    renderer.render(scene, camera);
+}
+animate();
+
+
+const ch_geom = new THREE.BoxGeometry(50,50,50);
+const cv_geom = new THREE.BoxGeometry(50,79,50);
+const cross_material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+const ch_mesh = new THREE.Mesh(ch_geom,cross_material);
+const cv_mesh = new THREE.Mesh(cv_geom,cross_material);
+
+ch_mesh.position.y=100;
+cv_mesh.position.y=100-7;
+
+ch_mesh.scale.z = 0.2;
+cv_mesh.scale.z = 0.2;
+
+ch_mesh.scale.x = 0.5;
+cv_mesh.scale.x = 0.5;
+ch_mesh.scale.y = 0.5;
+cv_mesh.scale.y = 0.5;
+
+scene.add(ch_mesh);
+scene.add(cv_mesh);
+
+const geometry = new THREE.BoxGeometry( 3, 3, 3 );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const cube = new THREE.Mesh( geometry, material );
+cube.position.y=2;
+scene.add( cube );
+
+scene.add(new THREE.GridHelper(200,200));
+
+    const particles = [];
+    const players = [];
+    const rockets = [];
+    const platforms = [];
+
+const cube_geometry = new THREE.BoxGeometry(1,1,1);
+
+class Platform {
+    constructor(pos,size){
+        this.pos = pos.negate();
+        this.size = size;
+        this.color = parseInt(Math.random()*0xffffff);
+        this.material = new THREE.MeshBasicMaterial({color: this.color});
+        this.geometry = new THREE.BoxGeometry(this.size.x,this.size.y,this.size.z);
+        this.mesh = new THREE.Mesh(this.geometry,this.material);
+        scene.add(this.mesh);
+
+        this.mesh.position.copy(this.pos.sub(this.size.divideScalar(2)));
+    }
+
+    update(player){
+        var xin = player.pos.x > this.pos.x && player.pos.x < (this.pos.x+this.size.x);
+        var zin = player.pos.z > this.pos.z && player.pos.z < (this.pos.z+this.size.z);
+        if((xin&&zin)&&(player.pos.y+player.vel.y)-4 <= this.mesh.position.y){
+            player.vel.y=0.01;
+            player.landed=true;
+        }
+    }
+}
+
+platforms.push(new Platform(new THREE.Vector3(-10,-10,-10),new THREE.Vector3(20,1,20)));
+
+platforms.push(new Platform(new THREE.Vector3(0,0,0),new THREE.Vector3(1,1,1)));
+
+
+class DustParticle {
+    constructor(x,y,z,s,l,c){
+        this.size = s;
+        this.pos = new THREE.Vector3(x,y,z);
+        this.life = l;
+
+        this.color = c;
+        this.material =  new THREE.MeshBasicMaterial({color:this.color});
+        this.mesh = new THREE.Mesh(cube_geometry,this.material);
+        scene.add(this.mesh);
+
+        this.mesh.position.x = this.pos.x;
+        this.mesh.position.y = this.pos.y;
+        this.mesh.position.z = this.pos.z;
+    }
+
+    move(vel){
+        this.pos.x+=vel.x;
+        this.pos.y+=vel.y;
+        this.pos.z+=vel.z;
+    }
+
+    update(){
+        this.pos.y+=0.05;
+        this.life--;
+        this.size-=0.06;
+        if(this.size<=0)this.size=0;
+        this.mesh.scale.set(this.size,this.size,this.size);
+        this.mesh.position.x = this.pos.x;
+        this.mesh.position.y = this.pos.y;
+        this.mesh.position.z = this.pos.z;
+    }
+
+    isDead(){
+        return this.life <= 0;
+    }
+
+    removeFromScene(){
+        scene.remove(this.mesh);
+        this.mesh.material.dispose();
+    }
+    
+}
+
+const rocket_geometry = new THREE.BoxGeometry(0.5,0.5,2);
+
+class Rocket {
+    constructor(pos,look_horizontal,look_vertical){
+        this.pos = new THREE.Vector3().copy(pos);
+        this.speed = 1.2;
+        this.vel = new THREE.Vector3();
+        this.life = 60*3;
+
+        this.mesh = new THREE.Mesh(rocket_geometry,new THREE.MeshBasicMaterial({color:0xaaaaaa}));
+        scene.add(this.mesh);
+
+        this.mesh.position.x = this.pos.x;
+        this.mesh.position.y = this.pos.y;
+        this.mesh.position.z = this.pos.z;
+
+        console.log(this.vel);
+
+        this.mesh.rotation.order = "YXZ";
+
+        this.mesh.rotation.set(look_vertical,look_horizontal,0);
+        this.mesh.getWorldDirection(this.vel);
+        this.vel.multiplyScalar(-this.speed);
+    }
+
+    update(){
+
+        this.life--;
+
+        this.pos.x += this.vel.x;
+        this.pos.y += this.vel.y;
+        this.pos.z += this.vel.z;
+
+        this.mesh.position.x = this.pos.x;
+        this.mesh.position.y = this.pos.y;
+        this.mesh.position.z = this.pos.z;
+
+        if(this.pos.y < 0)this.life=0;
+    }
+
+    isDead(){
+        return this.life <= 0;
+    }
+
+    removeFromScene(){
+        for(var i = 0;i < 20;i++){
+            var rx = (Math.random()*1)-0.5;
+            var ry = (Math.random()*1)-0.5;
+            var rz = (Math.random()*1)-0.5;
+            rx*=2;
+            ry*=2;
+            rz*=2;
+            particles.push(new DustParticle(this.pos.x+rx,this.pos.y+ry,this.pos.z+rz,1,20,0xffaa00));
+        }
+        for(var i = 0;i < 10;i++){
+            var rx = (Math.random()*1)-0.5;
+            var ry = (Math.random()*1)-0.5;
+            var rz = (Math.random()*1)-0.5;
+            rx*=6;
+            ry*=6;
+            rz*=6;
+            particles.push(new DustParticle(this.pos.x+rx,this.pos.y+ry,this.pos.z+rz,1.5,40,0xdddddd));
+        }
+        scene.remove(this.mesh);
+        this.mesh.material.dispose();
+    }
+}
+
+const player_geometry = new THREE.BoxGeometry(2,4,2);
+
+class Player{
+            constructor(){
+                this.look_horizontal = 0;
+                this.look_vertical = 0;
+                this.pos = new THREE.Vector3((Math.random()*50)-25,200+(Math.random()*1000),(Math.random()*50)-25);
+                this.vel = new THREE.Vector3(0,0,0);
+                this.vel_forward = 0.05;
+                this.vel_strafe  = 0.1;
+                this.landed = false;
+
+                this.color = parseInt(Math.random()*0xffffff,10);
+                this.material = new THREE.MeshBasicMaterial({color:this.color});
+
+                this.life = 100;
+
+                this.material = new THREE.MeshBasicMaterial({color:this.color});
+                this.box = new THREE.Mesh(player_geometry,this.material);
+                scene.add(this.box);
+
+                this.box.position.x = this.pos.x;
+                this.box.position.y = this.pos.y;
+                this.box.position.z = this.pos.z;
+
+                this.interval = 0;
+                this.interval_jump = 0;
+                this.jump_interval = 60;
+
+            }
+
+            goForward(){
+                if(!this.landed)return;
+                this.vel.x+=Math.sin(this.look_horizontal)*-this.vel_forward;
+                this.vel.z+=Math.cos(this.look_horizontal)*-this.vel_forward;
+            }
+
+            goBackward(){
+                if(!this.landed)return;
+                this.vel.x+=Math.sin(this.look_horizontal)*-this.vel_forward;
+                this.vel.z+=Math.cos(this.look_horizontal)*-this.vel_forward;
+            }
+
+            strafeLeft(){
+                if(!this.landed)return;
+                this.vel.x+=Math.sin(this.look_horizontal+Math.PI/2)*-this.vel_forward;
+                this.vel.z+=Math.cos(this.look_horizontal+Math.PI/2)*-this.vel_forward;
+            }
+
+            strafeRight(){
+                if(!this.landed)return;
+                this.vel.x+=Math.sin(this.look_horizontal+Math.PI/2)*this.vel_forward;
+                this.vel.z+=Math.cos(this.look_horizontal+Math.PI/2)*this.vel_forward;
+            }
+
+            jump(){
+                if(!this.landed)return;
+            this.vel.y=0.5;
+            this.landed = false;
+            }
+
+            lookRandom(){
+                this.interval++;
+                if(this.interval >= 30){
+                    this.look_horizontal=Math.random()*Math.PI*2;
+                    this.interval=0;
+                }
+            }
+
+            jumpRandom(){
+                this.interval_jump++;
+                if(this.interval_jump >= this.jump_interval){
+                this.jump();
+                this.interval_jump=0;
+                this.jump_interval = 20+Math.random()*120;
+                }
+            }
+
+            applyGravity(){
+                this.vel.y-=0.02;
+            }
+
+            shyAway(player){
+                var distance = this.pos.distanceTo(player.pos);
+                if(distance<2){
+                var v1 = new THREE.Vector3().copy(this.pos);
+                var v2 = new THREE.Vector3().copy(player.pos);
+                var d = v1.sub(v2);
+                d=d.normalize();
+                this.vel.x+=d.x*0.05;
+                this.vel.z+=d.z*0.05;
+                }
+            }
+
+            update(){
+
+                this.look_horizontal+=0.08;
+
+                if((this.pos.y+this.vel.y)-4 <= 0){
+                    this.vel.y=0;
+                    this.landed=true;
+                }
+
+                //this.goForward();
+
+                this.lookRandom();
+
+                //this.jumpRandom();
+
+                if(this.landed){
+                    this.vel.x*=0.9; //摩擦
+                    this.vel.z*=0.9;
+                }else{
+                    this.vel.x*=1; //摩擦
+                    this.vel.z*=1;
+                }
+
+                this.pos.x+=this.vel.x;
+                this.pos.y+=this.vel.y;
+                this.pos.z+=this.vel.z;
+                this.box.position.x = this.pos.x;
+                this.box.position.y = this.pos.y-2;
+                this.box.position.z = this.pos.z;
+                this.box.rotation.y = this.look_horizontal;
+
+                if(this.vel.length()>=0.1&&this.landed){
+                    var rx = ((Math.random()*1)-0.5)*1.5;
+                    var ry = ((Math.random()*1)-0.5)/2;
+                    var rz = ((Math.random()*1)-0.5)*1.5;
+                    particles.push(new DustParticle(this.pos.x+rx,ry+this.pos.y-4,rz+this.pos.z,1,15,0xcccccc));
+                }
+                this.landed=false;
+            }
+
+            isDead(){
+                return this.life <= 0;
+            }
+
+            removeFromScene(){
+                scene.remove(this.box);
+                this.box.material.dispose();
+            }
+
+}
+
+const keys = {};
+const mouse = [];
+
+document.addEventListener('mousedown',(e)=>{
+    mouse[e.button] = true;
+    //e.preventDefault();
+});
+
+document.addEventListener('mouseup',(e)=>{
+    mouse[e.button] = false;
+    //e.preventDefault();
+});
+
+document.addEventListener("keydown",(e)=>{
+    keys[e.code]=true;
+});
+document.addEventListener("keyup",(e)=>{
+    keys[e.code]=false;
+});
+
+    for(var i = 0;i < 50;i++){
+        players.push(new Player());
+    }
+
+    var player_pos = new THREE.Vector3(0,100,90);
+    var player_vel = new THREE.Vector3(0,0,0);
+    var forward_vel = 0.05;
+    var player_horizontal_look = 0;
+    var player_vertical_look = 0;
+    var pause = false;
+    var look_velocity = 0.05;
+    var landed = false;
+    
+    document.addEventListener("mousemove",function(e){
+        var reduce = 600.0;
+        if(document.pointerLockElement){
+        player_horizontal_look-=e.movementX/reduce;
+        player_vertical_look-=e.movementY/reduce;
+        }
+    });
+
+    const requestFocusElement = document.getElementById("requestFocus");
+
+    requestFocusElement.onclick = async function(){
+        console.log("test");
+        if(!document.pointerLockElement){
+            await document.body.requestPointerLock({
+                unadjustedMovement:true,
+            });
+            requestFocusElement.style.display = "none";
+        }
+    }
+
+    function elementDisplayById(id,show){
+        document.getElementById(id).style.display  = show?"block":"none";
+    }
+
+    var increment = 0;
+
+    var spectate = false;
+
+    var specbutton = document.getElementById("spectate");
+
+        specbutton.onclick = function(){
+            console.log("モードトグル");
+            spectate=!spectate;
+            specbutton.innerHTML=spectate?"モブモード":"観戦モード";
+            console.log(spectate);
+    };
+
+    function update(){
+
+        console.log(spectate);
+
+        if(!document.pointerLockElement)requestFocusElement.style.display="block";
+
+        if(document.pointerLockElement){
+            requestFocusElement.style.display="none"
+        if(mouse[0]){
+            var fire_pos = new THREE.Vector3().copy(player_pos);
+            fire_pos.y-=1;
+            rockets.push(new Rocket(fire_pos,player_horizontal_look,player_vertical_look));
+            mouse[0]=false;
+        }
+
+        if(mouse[2]){
+            camera.fov = fov/3;
+            camera.updateProjectionMatrix();
+        }else{
+            camera.fov = fov;
+            camera.updateProjectionMatrix();
+        }
+        }
+
+        if(keys["ArrowLeft"])player_horizontal_look += look_velocity;
+        if(keys["ArrowRight"])player_horizontal_look -= look_velocity;
+        if(keys["ArrowUp"])player_vertical_look += look_velocity;
+        if(keys["ArrowDown"])player_vertical_look -= look_velocity;
+
+        //player_vel.addScalar(0.9);
+        //player_pos.add(player_vel);
+
+        cube.rotation.x += 0.03;
+        cube.rotation.y += 0.03;
+
+        increment+=0.05;
+        cube.position.y+=Math.sin(increment)*0.2;
+
+        if(spectate){
+            landed=true;
+            if(keys["ShiftLeft"])player_vel.y-=0.1;
+            player_vel.y*=0.9;
+        }else{
+            player_vel.y-=0.02; //重力
+        }
+
+        if((player_pos.y+player_vel.y)-4 <= 0){
+            player_vel.y=0;
+            landed=true;
+        }
+
+
+        if(landed){
+            forward_vel=0.05;
+        }else{
+            forward_vel=0.003;
+        }
+
+        if(document.pointerLockElement){
+        if(keys["KeyW"]){
+            player_vel.x+=Math.sin(player_horizontal_look)*-forward_vel;
+            player_vel.z+=Math.cos(player_horizontal_look)*-forward_vel;
+        }
+        if(keys["KeyS"]){
+            player_vel.x+=Math.sin(player_horizontal_look)*forward_vel;
+            player_vel.z+=Math.cos(player_horizontal_look)*forward_vel;
+        }
+        if(keys["KeyA"]){
+            player_vel.x+=Math.sin(player_horizontal_look+Math.PI/2)*-forward_vel;
+            player_vel.z+=Math.cos(player_horizontal_look+Math.PI/2)*-forward_vel;
+        }
+        if(keys["KeyD"]){
+            player_vel.x+=Math.sin(player_horizontal_look+Math.PI/2)*forward_vel;
+            player_vel.z+=Math.cos(player_horizontal_look+Math.PI/2)*forward_vel;
+        }
+
+        if(keys["Space"]&&landed){
+            player_vel.y=0.5;
+            landed = false;
+        }
+        }
+
+        if(landed){
+        player_vel.x*=0.9; //摩擦
+        player_vel.z*=0.9;
+        }else{
+            player_vel.x*=0.995; //摩擦
+            player_vel.z*=0.995;
+        }
+
+        player_pos.x+=player_vel.x
+        player_pos.y+=player_vel.y
+        player_pos.z+=player_vel.z
+
+        if(player_vel.length()>=0.1&&landed){
+            var rx = ((Math.random()*1)-0.5)*1.5;
+            var ry = ((Math.random()*1)-0.5)/2;
+            var rz = ((Math.random()*1)-0.5)*1.5;
+            particles.push(new DustParticle(player_pos.x+rx,ry+player_pos.y-4,rz+player_pos.z,1,15,0xcccccc));
+        }
+
+        landed=false;
+
+        for(var i = 0;i < players.length;i++){
+            players[i].applyGravity();
+        }
+
+        for(var i = 0;i < particles.length;i++){
+            particles[i].update();
+            if(particles[i].isDead()){
+                particles[i].removeFromScene();
+                particles.splice(i,1);
+            }
+        }
+
+        for(var i = 0;i < rockets.length;i++){
+            rockets[i].update();
+            if(rockets[i].isDead()){
+
+                for(var j = 0;j < players.length;j++){
+                    var distance = players[j].pos.distanceTo(rockets[i].pos);
+                    if(distance < 15){
+                        var p = new THREE.Vector3().copy(players[j].pos);
+                        p.y-=2.5;
+                        var r = new THREE.Vector3().copy(rockets[i].pos);
+                        var d = p.sub(r);
+                        d=d.normalize();
+                        d.divideScalar(distance/4);
+                        players[j].vel.add(d);
+                    }
+                }
+
+                var distance = player_pos.distanceTo(rockets[i].pos);
+                    if(distance < 15){
+                        var p = new THREE.Vector3().copy(player_pos);
+                        p.y-=2.5;
+                        var r = new THREE.Vector3().copy(rockets[i].pos);
+                        var d = p.sub(r);
+                        d=d.normalize();
+                        d.divideScalar(distance/4);
+                        player_vel.add(d);
+                    }
+
+                rockets[i].removeFromScene();
+                rockets.splice(i,1);
+            }
+        }
+
+        for(var i = 0;i < platforms.length;i++){
+            for(var j = 0;j < players.length;j++){
+            platforms[i].update(players[j]);
+            }
+        }
+
+        for(var i = 0;i < players.length;i++){
+            players[i].update();
+            for(var j = 0;j < players.length;j++){
+                players[i].shyAway(players[j]);
+            }
+            if(players[i].isDead()){
+                players[i].removeFromScene();
+                players.splice(i,1);
+            }
+        }
+    }
+
+    setInterval(update,1000/60);
+
+    elementDisplayById("ui_overlay",true);
+
+    function animate() {
+        camera.position.x = player_pos.x;
+        camera.position.y = player_pos.y-1;
+        camera.position.z = player_pos.z;
+
+        camera.rotation.set(player_vertical_look,player_horizontal_look,0);
+
+	    renderer.render( scene, camera );
+    }
+renderer.setAnimationLoop( animate );
+    </script>
+
+    <div id="ui_overlay">
+        <p id="crosshair" >[ + ]</p>
+        移動 : W,A,S,Dキー
+        <br>
+        向き : ↑,←,↓,→キー、またはマウス(画面をクリックしてフォーカス)
+        <br>
+        ジャンプ : スペースキー
+        <br>
+        <button id="spectate">観戦モード</button>
+        <br>
+        ユーザーネーム<input type="text"><button>適用</button>
+        <br>
+        <div id="player_avatar" style="width: 160px; height: 160px;margin: 5px; display: inline-block;vertical-align: top;">
+            <div id="skin" class="avatar" style="background-image: url('../img/color_atlas.gif');"></div>
+            <div id="eye" class="avatar" style="background-image: url('../img/eyes_atlas.gif');"></div>
+            <div id="mouth" class="avatar" style="background-image: url('../img/mouth_atlas.gif');"></div>
+        </div>
+    </div>
+
+    <div id="requestFocus">
+        <p class="blink" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 32px; margin: 0px; padding: 0px;">
+            CLICK TO FOCUS
+        </p>
+    </div>
+
+    <script>
+
+        var blink = false;
+        var blinkel = document.getElementsByClassName("blink");
+        setInterval(function(){
+            blink=!blink;
+            for(var i = 0;i < blinkel.length;i++){
+                blinkel[i].style.display = blink?"block":"none";
+            }
+        },500)
+
+        function setSpritePosition(r_skin,r_eye,r_mouth){
+            r_skin = parseInt(r_skin);
+            r_eye = parseInt(r_eye);
+            r_mouth = parseInt(r_mouth);
+            
+            var skin_row = parseInt(r_skin/10,10);
+            var skin_col = r_skin%10;
+            var skin_sx = skin_col*-100;
+            var skin_sy = skin_row*-100;
+
+            var eye_row = parseInt(r_eye/10,10);
+            var eye_col = r_eye%10;
+            var eye_sx = eye_col*-100;
+            var eye_sy = eye_row*-100;
+
+            var mouth_row = parseInt(r_mouth/10,10);
+            var mouth_col = r_mouth%10;
+            var mouth_sx = mouth_col*-100;
+            var mouth_sy = mouth_row*-100;
+
+            document.getElementById("skin").style.backgroundPositionX = skin_sx+"%";
+            document.getElementById("skin").style.backgroundPositionY = skin_sy+"%";
+
+            document.getElementById("eye").style.backgroundPositionX = eye_sx+"%";
+            document.getElementById("eye").style.backgroundPositionY = eye_sy+"%";
+
+            document.getElementById("mouth").style.backgroundPositionX = mouth_sx+"%";
+            document.getElementById("mouth").style.backgroundPositionY = mouth_sy+"%";
+        }
+
+        setSpritePosition(Math.random()*28,Math.random()*57,Math.random()*51);
+    </script>
+    
+</body>
+</html>
