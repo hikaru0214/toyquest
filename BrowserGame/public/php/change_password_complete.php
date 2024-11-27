@@ -25,6 +25,17 @@
         .container a:hover {
             text-decoration: underline;
         }
+        /* エラーメッセージ用のスタイル */
+        .error {
+            color: red; /* 赤色 */
+            margin-top: 10px;
+            text-align: center;
+        }
+        .message{
+            color: green; /* 緑色 */
+            margin-top: 10px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
