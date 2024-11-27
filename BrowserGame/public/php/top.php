@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <title>ホーム</title>
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="manifest" href="../json/app.json">
+    <link rel="manifest" href="../json/ToyQuest.json">
     <script type="importmap">
     {
         "imports": {
