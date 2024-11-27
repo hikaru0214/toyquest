@@ -25,6 +25,8 @@
     import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
     import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 
+    const isLandscape = window.innerWidth > window.innerHeight;
+
     // シーン、カメラ、レンダラーの設定
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -293,7 +295,7 @@
     defaultZoom();//画面拡縮無効
     
     function checkOrientation() {
-    const isLandscape = window.innerWidth > window.innerHeight;
+    
     if (!isLandscape) {
         const caveat = document.getElementById("caveat");
         caveat.classList.remove("hidden");
