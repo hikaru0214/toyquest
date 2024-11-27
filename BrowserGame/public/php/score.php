@@ -234,7 +234,7 @@
     }
     ?>
 
-    <a href="javascript:history.back();" class="back-button">戻る</a>
+    <a href="top.php" class="back-button">戻る</a>
 
     <div class="container">
         <h1>ランキング</h1>

@@ -74,7 +74,7 @@
             </div>
             <button type="submit" class="submit-btn">登録</button>
         </form>  
-        <!-- エラーメッセージ表示 -->
+        
     
 </body>
 </html>
