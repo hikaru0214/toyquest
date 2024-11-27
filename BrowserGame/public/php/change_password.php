@@ -52,9 +52,7 @@
     </style>
 </head>
 <body>
-
-
-    
+        
         <a href="login.php"><span class="back-arrow">&larr;</span></a>
         <div class="container">
             <h2>パスワード再設定</h2>
@@ -78,3 +76,23 @@
     
 </body>
 </html>
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    const password = document.getElementById('new-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    // 英数字8文字以上のチェック
+    if (!/^[a-zA-Z0-9]{8,}$/.test(password)) {
+        alert("パスワードは英数字8文字以上で入力してください。");
+        e.preventDefault(); // フォーム送信をキャンセル
+        return;
+    }
+
+    // パスワードの一致確認
+    if (password !== confirmPassword) {
+        alert("新しいパスワードが一致しません。");
+        e.preventDefault(); // フォーム送信をキャンセル
+        return;
+    }
+});
+</script>
