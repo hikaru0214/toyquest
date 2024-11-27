@@ -59,7 +59,7 @@ input{
     width: 40px;
     height: 40px;
     position: fixed;
-    top: 5%;
+    top: 8%;
     right: 14%;
 }
 
@@ -67,14 +67,14 @@ input{
     width: 40px;
     height: 40px;
     position: fixed;
-    top: 5%;
+    top: 8%;
     right: 7%;
 }
 .Logout{
     width: 40px;
     height: 40px;
     position: fixed;
-    top: 5%;
+    top: 8%;
     right: 0%;
 }
 
