@@ -18,8 +18,7 @@ $err = [];
 // 入力チェック
 if (empty($_POST['mailaddress'])) {
     $err[] = 'メールアドレスが未入力です。';
-}
-if (empty($_POST['password'])) {
+}else if (empty($_POST['password'])) {
     $err[] = 'パスワードが未入力です。';
 }
 
