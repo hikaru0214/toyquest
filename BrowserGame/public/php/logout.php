@@ -32,8 +32,16 @@ session_start();
         }
         .links {
             margin-top: 50px; /* 適用されるよう修正 */
-            font-size: 24px;
+            font-size: 30px;
         }
+        .links a {
+            text-decoration: none;
+            color: #000;
+            margin-left: 15px;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        } 
     </style>
 </head>
 <body>
