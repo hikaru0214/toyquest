@@ -16,9 +16,10 @@ require '../dbConnect/dbconnect.php';
 $err = [];
 
 // POSTデータの取得
+$username = $_POST['username'] ?? '';
 $mailaddress = $_POST['mailaddress'] ?? '';
 $password = $_POST['password'] ?? '';
-$username = $_POST['username'] ?? '';
+$password_check = $_POST['password_check'] ?? '';
 
 // バリデーション
 if (empty($username)) {
