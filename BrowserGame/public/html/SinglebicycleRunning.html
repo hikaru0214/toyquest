@@ -7,8 +7,14 @@
     <title>Document</title>
 </head>
 <body>
-    <div name="result" style="display: none; position: fixed; top: 50%; left: 50%;">test</div>
-    <canvas id="gameCanvas" width="1500" height="700"></canvas>
+    <div id="result" name="result" style="display: none; border: 2px solid black; position: fixed; top: 25%; left: 40%; padding: 2% 8% 3% 8%; background-color: white;">
+        <h1>GAME OVER</h1>
+        <h2 style="margin: auto;">ベスト更新</h2>
+        <h3 id="score"></h3>
+        <div><button >スタート</button></div>
+        <div><button >キャンセル</button></div>
+    </div>
+    <canvas id="gameCanvas" width="1450" height="700"></canvas>
     <script type="text/javascript" src="./javascript/render.js"></script>
     <script type="text/javascript" src="./javascript/gameClient.js"></script>
     <script type="text/javascript" src="./javascript/main.js"></script>

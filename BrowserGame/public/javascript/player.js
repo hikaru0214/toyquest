@@ -1,3 +1,4 @@
+const DBservice = require('./DBservice');
 class Player{
     constructor(socketID,x,y,width,height,velocityY,jumpStrength){
         this.socketID = socketID;
@@ -15,6 +16,9 @@ class Player{
         this.styleColor = '#' + Math.floor(Math.random()*16777215).toString(16);
         // ゲームオーバーフラグ
         this.isOverFlg = false;
+        // ゲームスコア
+        this.score = 0;
+
     }
     update(){
         this.x += 4;
@@ -63,10 +67,15 @@ class Player{
         }
     }
 
+    scoreUpdate(){
+        this.score += 1;
+    }
+
     // ゲームオーバー判定
     gameOverCheck(){
         // プレイヤーが落下して画面外に落ちた時
-        if(this.y > 800){
+        if(this.y > 800 && this.isOverFlg === false){
+            // DBservice.dbConnect(this.score);
             this.y = 350;
             // ゲームオーバーにする
             this.isOverFlg = true;

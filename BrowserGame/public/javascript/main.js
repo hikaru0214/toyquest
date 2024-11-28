@@ -32,6 +32,9 @@ document.addEventListener('keydown', function(e) {
 function waitTime(){
     // gameを受け取った＆人数がそろった
     if(game !== null && game.isStartFlg){
+        if(param !== "/single"){
+            document.getElementsByClassName("container")[0].style.display = "none";
+        }
         // ゲーム開始
         animationId = requestAnimationFrame(gameLoop);
     }else {

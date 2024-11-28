@@ -6,12 +6,12 @@ class Game{
         this.player = [];
         // 足場クラスを配列に格納
         this.terrainArray = [];
+        // 移動速度
+        this.velocityX = 0;
         // ゲームの重力
         this.gravity = 0.8;
         // ゲーム開始フラグ
         this.isStartFlg = false;
-        // ゲームスコア
-        this.score = 0;
     }
 
     // プレイヤーの初期設定
@@ -24,6 +24,13 @@ class Game{
         for(let i = 0;i<9;i++){
             this.terrainArray[i] = new Terrain(i*200, 400);
         }
+    }
+
+    removePlayer(socketID){
+        for(var i = 0;i<this.player.length;i++){
+            if(this.player[i].socketID === socketID) this.player.splice(i, 1);
+        }
+        console.log("playerインスタンス: "+this.player)
     }
 
     // 1フレームごとに行う処理
@@ -54,6 +61,7 @@ class Game{
             // 各プレイヤーの位置を更新
             this.player[i].update();
         }
+        this.velocityX += 4;
     }
 
     // スクロールのための描画位置設定
@@ -83,7 +91,12 @@ class Game{
     }
 
     scoreProcess(){
-        this.score += 1;
+        for(var i = 0;i<this.player.length;i++){
+            if(this.player[i].isOverFlg === false){
+                // 各プレイヤーの位置を更新
+                this.player[i].scoreUpdate();
+            }
+        }
     }
 
     // ジャンプ処理
@@ -96,14 +109,14 @@ class Game{
 
     // 移動量から足場の描画開始地点を算出
     getInitRectPoint(){
-        return ((this.player[0].x-40) % 200)*(-1);
+        return ((this.velocityX-40) % 200)*(-1);
     }
 
     // 足場の表示・非表示を管理
     terrainManage(Terrain,startX){
         // 画面左にフェードアウトするタイミング
         // 足場の描画地点が-200以下になる＆移動量が200以上の場合
-        if(startX === 0 && (this.player[0].x-40) >= 200){
+        if(startX === 0 && (this.velocityX-40) >= 200){
             // 左の足場を削除
             this.terrainArray.splice(0,1);
             // 右からフェードインする足場を追加
