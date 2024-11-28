@@ -1,6 +1,6 @@
 {
   "name": "Node.js",
-  "dockerComposeFile": "./docker-compose.yml",
+  "image": "mcr.microsoft.com/devcontainers/base:jammy",
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "18.18.2"
