@@ -37,7 +37,6 @@ session_start();
         .links a {
             text-decoration: none;
             color: #000;
-            margin-left: 15px;
         }
         .links a:hover {
             text-decoration: underline;
