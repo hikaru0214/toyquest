@@ -51,6 +51,7 @@ if (count($err) === 0) {
 
 // エラーがある場合は戻る
 $_SESSION['err'] = $err;
+$_SESSION['mailaddress'] = $mailaddress;
 header('Location: login.php');
 exit;
 ?>
