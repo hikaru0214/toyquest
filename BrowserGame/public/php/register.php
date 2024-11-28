@@ -31,9 +31,9 @@ if (empty($username)) {
     $err[] = '正しいメールアドレスを入力してください。';
 } elseif (empty($password)) {
     $err[] = 'パスワードが未入力です。';
-} elseif (!preg_match('/^[a-zA-Z0-9]{4,10}$/', $password)) {
-    $err[] = 'パスワードは英数字で4文字以上10文字以下で入力してください。';
-} elseif ($password != $password_check) {
+} elseif (!preg_match('/^[a-zA-Z0-9]{4,8}$/', $password)) {
+    $err[] = 'パスワードは英数字で4文字以上8文字以下で入力してください。';
+} elseif ($password !== $password_check) {
     $err[] = '確認パスワードが一致しません。';
 } else {
     // ユーザーネームの重複確認
