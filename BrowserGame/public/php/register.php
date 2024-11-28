@@ -23,7 +23,7 @@ $username = $_POST['username'] ?? '';
 // バリデーション
 if (empty($username)) {
     $err[] = 'ユーザー名が未入力です。';
-} elseif (strlen($username) > 30) {
+} elseif (mb_strlen($username) > 30) {
     $err[] = 'ユーザー名は30文字以内で入力してください。';
 } elseif (empty($mailaddress)) {
     $err[] = 'メールアドレスが未入力です。';
@@ -33,6 +33,8 @@ if (empty($username)) {
     $err[] = 'パスワードが未入力です。';
 } elseif (!preg_match('/^[a-zA-Z0-9]{4,10}$/', $password)) {
     $err[] = 'パスワードは英数字で4文字以上10文字以下で入力してください。';
+} elseif ($password != $password_check) {
+    $err[] = '確認パスワードが一致しません。';
 } else {
     // ユーザーネームの重複確認
     $stmt = $pdo->prepare("SELECT * FROM User WHERE user_name = :username");
