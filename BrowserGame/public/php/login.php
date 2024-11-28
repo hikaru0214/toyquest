@@ -17,10 +17,6 @@ unset($_SESSION['err']);
     <title>ログイン</title>
     <style>
        body {
-        padding:0;
-        margin:0;
-        font-size:100%;
-        line-height:1.5em;
         background-image:url(../img/wanted_top.jpg);
         background-size:cover;/*全画面*/
         background-attachment: fixed;         /* 固定 */

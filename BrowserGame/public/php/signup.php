@@ -41,7 +41,7 @@ unset($_SESSION['err']);
             position: relative;
             font-size: 40px;
             top:40px;
-            margin-bottom: 100px;
+            margin-bottom: 40px;
         }
         .form-group {
             margin-top: 30px;
@@ -117,7 +117,7 @@ unset($_SESSION['err']);
             <button type="submit" class="login-btn">確認へ</button>
         </form>
         <div class="links">
-            <a href="history.back()">戻る</a>
+            <a href="login.php">戻る</a>
         </div>
     </div>
 </body>

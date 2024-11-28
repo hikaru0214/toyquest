@@ -53,8 +53,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     // パスワード確認
-    if (!preg_match('/^[a-zA-Z0-9]{8,}$/', $new_password)) {
-        $error_message = "パスワードは英数字8文字以上で入力してください。";
+    if (!preg_match('/^[a-zA-Z0-9]{4,8}$/', $new_password)) {
+        $error_message = "パスワードは英数字で4文字以上8文字以下で入力してください。";
     } elseif ($new_password !== $confirm_password) {    
         $error_message = "新しいパスワードが一致しません。";
     } else {

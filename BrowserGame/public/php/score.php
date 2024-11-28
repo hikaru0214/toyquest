@@ -173,27 +173,28 @@
 
             if (empty($friendIds)) {
                 throw new Exception("フレンドがいません。");
-            }
-
-            $sql = "
+            }else{
+                $sql = "
                 SELECT User.user_id, User.user_name, Score.score, Score.registration_date 
                 FROM Score 
                 INNER JOIN User ON Score.user_id = User.user_id 
                 WHERE Score.user_id IN (" . implode(',', $friendIds) . ") 
                 ORDER BY Score.score DESC, Score.registration_date ASC
             ";
+            }
+
         } elseif ($showMyScore && (!isset($_SESSION['user_id']) || empty($_SESSION['user_id']))) {
             if (!isset($_SESSION['user_id'])) {
                 throw new Exception("ログインが必要です。");
-            }
-
-            $sql = "
+            }else{
+                $sql = "
                 SELECT User.user_id, User.user_name, Score.score, Score.registration_date 
                 FROM Score 
                 INNER JOIN User ON Score.user_id = User.user_id 
                 WHERE Score.user_id = :user_id 
                 ORDER BY Score.score DESC, Score.registration_date ASC
             ";
+            }
            
         } elseif ($selectedGame === '総合スコア') {
             $sql = "
