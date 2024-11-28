@@ -255,16 +255,16 @@
     function checkOrientation() {
     const isLandscape = window.innerWidth > window.innerHeight;
     if (!isLandscape) {
+        stopAnimation('rogoA');
+        stopAnimation('rogoB');
         const caveat = document.getElementById("caveat");
         caveat.classList.remove("hidden");
-        //stopAnimation('rogoA');
-        //stopAnimation('rogoB');
     }
     if (isLandscape) {
+        restartAnimation('rogoA');
+        restartAnimation('rogoB');
         const caveat = document.getElementById("caveat");
         caveat.classList.add("hidden");
-        //restartAnimation('rogoA');
-        //restartAnimation('rogoB');
     }
     }
     window.addEventListener("orientationchange", () => {
