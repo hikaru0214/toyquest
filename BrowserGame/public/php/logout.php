@@ -32,7 +32,7 @@ session_start();
         }
         .links {
             margin-top: 50px; /* 適用されるよう修正 */
-            font-size: 30px;
+            font-size: 26px;
         }
         .links a {
             text-decoration: none;
@@ -50,7 +50,7 @@ session_start();
     <h1>現在のアカウントからログアウトしますか？</h1>
     <div class="links">
         <a href="top.php" style="margin-right: 50px;">いいえ</a>
-        <a href="logout-complete.php">はい</a>
+        <a href="logout-complete.php" style="color:red;">はい</a>
     </div>
 </div>
 
