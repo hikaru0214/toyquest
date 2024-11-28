@@ -114,8 +114,8 @@ io.on('connection',(socket)=>{
     });
 
     socket.on('disconnect', () => {
-        if(page=="inroom"){
-            var playerdata = players[userid];
+        var playerdata = players[userid];
+        if(page=="inroom"&&playerdata){
             const game = getGameByRoomId(playerdata.roomid);
             game.removePlayer(userid);
             socket.broadcast.to(playerdata.roomid).emit("send player data",getGameByRoomId(playerdata.roomid).player_data);
