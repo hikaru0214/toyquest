@@ -73,8 +73,6 @@ if (count($err) === 0) {
 } else {
     // エラー情報をセッションに保存
     $_SESSION['err'] = $err;
-    $_SESSION['username'] = $username;
-    $_SESSION['mailaddress'] = $mailaddress;
 
     // 入力ページに戻る
     header('Location: signup.php');
