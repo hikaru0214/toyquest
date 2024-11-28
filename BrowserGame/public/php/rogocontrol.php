@@ -134,6 +134,15 @@
     }
 }
 
+    function restartAnimation(name){//アニメーションを再開する
+        const clip = gltf.animations.find(clip => clip.name === name);
+    if (clip) {
+        const action = mixer.clipAction(clip);
+        action.paused=false;
+    } else {
+        console.error(`アニメーション "${name}" が見つかりません`);
+    }
+    }
 
 
     // カスタムドットシェーダーの定義
@@ -248,10 +257,14 @@
     if (!isLandscape) {
         const caveat = document.getElementById("caveat");
         caveat.classList.remove("hidden");
+        stopAnimation('rogoA');
+        stopAnimation('rogoB');
     }
     if (isLandscape) {
         const caveat = document.getElementById("caveat");
         caveat.classList.add("hidden");
+        restartAnimation('rogoA');
+        restartAnimation('rogoB');
     }
     }
     window.addEventListener("orientationchange", () => {
