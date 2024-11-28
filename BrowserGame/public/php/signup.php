@@ -40,7 +40,7 @@ unset($_SESSION['err']);
         h1 {
             position: relative;
             font-size: 40px;
-            top:70px;
+            top:40px;
             margin-bottom: 100px;
         }
         .form-group {
@@ -111,13 +111,13 @@ unset($_SESSION['err']);
                 <input type="password" id="password" name="password">
             </div>
             <div class="form-group">
-                <label for="password-check">パスワード</label>
-                <input type="password" id="password-check" name="password-check">
+                <label for="password_check">確認用パスワード</label>
+                <input type="password" id="password_check" name="password_check">
             </div>
             <button type="submit" class="login-btn">確認へ</button>
         </form>
         <div class="links">
-            <a href="#">戻る</a>
+            <a href="history.back()">戻る</a>
         </div>
     </div>
 </body>
