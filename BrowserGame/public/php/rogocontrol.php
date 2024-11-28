@@ -257,14 +257,14 @@
     if (!isLandscape) {
         const caveat = document.getElementById("caveat");
         caveat.classList.remove("hidden");
-        stopAnimation('rogoA');
-        stopAnimation('rogoB');
+        //stopAnimation('rogoA');
+        //stopAnimation('rogoB');
     }
     if (isLandscape) {
         const caveat = document.getElementById("caveat");
         caveat.classList.add("hidden");
-        restartAnimation('rogoA');
-        restartAnimation('rogoB');
+        //restartAnimation('rogoA');
+        //restartAnimation('rogoB');
     }
     }
     window.addEventListener("orientationchange", () => {
