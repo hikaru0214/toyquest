@@ -9,27 +9,40 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ログアウト</title>
     <style>
-        body {
+    body {
+            background-image:url(../img/wanted_top.jpg);
+            background-size:cover;
+            background-attachment: fixed;
+            background-position: center center;
             display: flex;
             justify-content: center;
+            align-items: center;
+            margin: 0;
         }
         .container {
-            margin-top:10%;
             text-align: center;
+            width: 46%;
+            display: flex;
+            flex-direction: column; /* 縦方向に配置 */
+            align-items: center;    /* 中央揃え */
+            margin-top: 150px;      /* 全体の位置調整 */
         }
-        .buttons {
-            margin-top: 50px;
-            margin-bottom: 20px;
+        h1 {
+            font-size: 30px;
+        }
+        .links {
+            margin-top: 50px; /* 適用されるよう修正 */
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <p style="font-size: 28px;">現在のアカウントからログアウトしますか？</p>
-    <div class="buttons">
-        <input type="button"  onclick="history.back()" value="いいえ" style="width:100px; height:40px; margin-right: 50px; font-size:20px;">
-        <input type="button"  onclick="location.href='./logout-complete.php'" value="はい"style="width:100px; height:40px; font-size:20px;">
+    <h1>現在のアカウントからログアウトしますか？</h1>
+    <div class="links">
+        <a href="top.php" style="margin-right: 50px;">いいえ</a>
+        <a href="logout-complete.php">はい</a>
     </div>
 </div>
 
