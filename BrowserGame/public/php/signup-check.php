@@ -30,11 +30,11 @@ if (!isset($_SESSION['username'], $_SESSION['mailaddress'], $_SESSION['password'
             <hr>
             <dl>
                 <dt>ユーザーネーム</dt>
-                <dd><?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?></dd>
+                <dd><input type="text" name="username" value="<?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>"></dd>
                 <dt>メールアドレス</dt>
-                <dd><?php echo htmlspecialchars($_SESSION['mailaddress'], ENT_QUOTES, 'UTF-8'); ?></dd>
+                <dd><input type="mailaddress" name="mailaddress" value="<?php echo htmlspecialchars($_SESSION['mailaddress'], ENT_QUOTES, 'UTF-8'); ?>"></dd>
                 <dt>パスワード</dt>
-                <dd><?php echo str_repeat('*', strlen($_SESSION['password'])); // 表示をマスク ?></dd>
+                <dd><input type="password" name="password" value="<?php echo str_repeat('*', strlen($_SESSION['password'])); // 表示をマスク ?>"></dd>
             </dl>
             <p><button type="submit">登録</button></p>
         </form>
