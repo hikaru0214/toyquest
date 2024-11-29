@@ -100,11 +100,11 @@ unset($_SESSION['err']);
     <?php endif; ?>
     <div class="form-group">
                 <label for="username">ユーザーネーム</label>
-                <input type="text" id="username" name="username">
+                <input type="text" name="username" value="<?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>">
             </div>
             <div class="form-group">
                 <label for="mailaddress">メールアドレス</label>
-                <input type="email" id="mailaddress" name="mailaddress">
+                <input type="email" name="mailaddress" value="<?php echo htmlspecialchars($mailaddress, ENT_QUOTES, 'UTF-8'); ?>">
             </div>
             <div class="form-group">
                 <label for="password">パスワード</label>
