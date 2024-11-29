@@ -152,6 +152,7 @@
 </head>
 <body>
 <?php
+    $user = $_SESSION['user']; // セッションからユーザー情報を取得
     // 初期設定
     $selectedGame = isset($_POST['rankingu']) ? $_POST['rankingu'] : '総合スコア';
     $showMyScore = isset($_POST['show_my_score']) ? true : false;
@@ -233,16 +234,6 @@
         echo "エラー: " . $e->getMessage();
         exit;
     }
-    echo 'セッションID: ' . session_id();
-    echo '<pre>';
-print_r($_SESSION);
-echo '</pre>';
-echo '<pre>';
-echo 'セッションデータ: ';
-print_r($_SESSION);
-echo 'POSTデータ: ';
-print_r($_POST);
-echo '</pre>';
     ?>
 
     <a href="top.php" class="back-button">戻る</a>
