@@ -11,8 +11,11 @@ if (!isset($_SESSION['access_token'])) {
 
 // エラー取得
 $err = $_SESSION['err'] ?? [];
-// セッションのエラー情報をクリア
-unset($_SESSION['err']);
+// 入力内容取得
+$username=$_SESSION['input']['username'] ?? '';
+$mailaddress=$_SESSION['input']['mailaddress'] ?? '';
+// セッションのエラー情報と入力データをクリア
+unset($_SESSION['err'],$_SESSION['input']);
 ?>
 
 <!DOCTYPE html>
