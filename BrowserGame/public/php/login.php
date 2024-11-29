@@ -6,9 +6,9 @@ $_SESSION['access_token'] = bin2hex(random_bytes(32));
 // エラー取得
 $err = $_SESSION['err'] ?? [];
 // 入力内容取得
-$mailaddress = $_SESSION['input']['mailaddress'] ?? '';
+$mailaddress=$_SESSION['input']['mailaddress'] ?? '';
 // セッションのエラー情報と入力データをクリア
-unset($_SESSION['err'], $_SESSION['input']);
+unset($_SESSION['err'],$_SESSION['input']);
 ?>
 
 <!DOCTYPE html>
@@ -46,6 +46,7 @@ unset($_SESSION['err'], $_SESSION['input']);
         .form-group label {
             font-size: 20px;
             display: inline-block;
+            /*margin-right: 10px;*/
         }
         .form-group input {
             width: 100%;
