@@ -1,13 +1,5 @@
 
 <?php require '../dbConnect/dbconnect.php';?>
-<?php
-session_start(); // セッションの開始
-
-// デバッグ用: セッションデータを表示
-echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
-?>
 <!DOCTYPE html>
 <html>
 <head>
