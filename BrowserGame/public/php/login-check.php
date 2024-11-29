@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 // トークン確認
 if (!isset($_SESSION['access_token'])) {
     echo '<h1>エラー</h1>';
@@ -7,18 +8,22 @@ if (!isset($_SESSION['access_token'])) {
     echo '<a href="login.php">ログインページへ</a>';
     exit;
 }
+
 // DB接続
 require '../dbConnect/dbconnect.php';
+
 // エラーメッセージ配列
 $err = [];
+
 // 入力内容保存用
 $input = [
     'mailaddress' => $_POST['mailaddress'] ?? '',
 ];
+
 // 入力チェック
 if (empty($_POST['mailaddress'])) {
     $err[] = 'メールアドレスが未入力です。';
-}else if (empty($_POST['password'])) {
+} else if (empty($_POST['password'])) {
     $err[] = 'パスワードが未入力です。';
 }
 
