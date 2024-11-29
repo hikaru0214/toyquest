@@ -101,7 +101,7 @@ if (!isset($_SESSION['username'], $_SESSION['mailaddress'], $_SESSION['password'
                 <label for="password">パスワード</label>
                 <input type="password" name="password" value="<?php echo str_repeat('*', strlen($_SESSION['password']));  ?>">
             </div>
-            <button type="submit">登録</button>
+            <button type="submit" class="login-btn">登録</button>
         </form>
             <div class="links">
                 <a href="signup.php">戻る</a>
