@@ -233,6 +233,23 @@
         echo "エラー: " . $e->getMessage();
         exit;
     }
+    if ($showMyScore) {
+        echo '$showMyScore: true<br>';
+    } else {
+        echo '$showMyScore: false<br>';
+    }
+    
+    if (!isset($_SESSION['user_id'])) {
+        echo '$_SESSION[\'user_id\'] が未設定です<br>';
+    } else {
+        echo '$_SESSION[\'user_id\'] が存在しています<br>';
+    }
+    
+    if (empty($_SESSION['user_id'])) {
+        echo '$_SESSION[\'user_id\'] が空です<br>';
+    } else {
+        echo '$_SESSION[\'user_id\'] に値があります: ' . $_SESSION['user_id'] . '<br>';
+    }
     echo '<pre>';
 print_r($_SESSION);
 echo '</pre>';
