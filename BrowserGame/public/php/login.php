@@ -5,8 +5,10 @@ $_SESSION['access_token'] = bin2hex(random_bytes(32));
 
 // エラー取得
 $err = $_SESSION['err'] ?? [];
-// セッションのエラー情報をクリア
-unset($_SESSION['err']);
+// 入力内容取得
+$mailaddress=$_SESSION['input']['mailaddress'] ?? '';
+// セッションのエラー情報と入力データをクリア
+unset($_SESSION['err'],$_SESSION['input']);
 ?>
 
 <!DOCTYPE html>
