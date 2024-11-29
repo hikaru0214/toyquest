@@ -104,7 +104,7 @@ if (!isset($_SESSION['username'], $_SESSION['mailaddress'], $_SESSION['password'
             <button type="submit" class="login-btn">登録</button>
         </form>
             <div class="links">
-                <a href="signup.php">戻る</a>
+                <a href="signup.php" onclick="<?php $_SESSION['input'] = ['username' => $_SESSION['username'], 'mailaddress' => $_SESSION['mailaddress']]; ?>">戻る</a>
             </div>
     </div>
 </body>
