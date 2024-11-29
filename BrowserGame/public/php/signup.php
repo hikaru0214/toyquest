@@ -103,7 +103,7 @@ unset($_SESSION['err']);
                 <input type="text" name="username" value="<?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>">
             </div>
             <div class="form-group">
-                <label for="mailaddress">メールアドレスs</label>
+                <label for="mailaddress">メールアドレス</label>
                 <input type="email" name="mailaddress" value="<?php echo htmlspecialchars($mailaddress, ENT_QUOTES, 'UTF-8'); ?>">
             </div>
             <div class="form-group">
