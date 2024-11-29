@@ -233,25 +233,15 @@
         echo "エラー: " . $e->getMessage();
         exit;
     }
-    if ($showMyScore) {
-        echo '$showMyScore: true<br>';
-    } else {
-        echo '$showMyScore: false<br>';
-    }
-    
-    if (!isset($_SESSION['user_id'])) {
-        echo '$_SESSION[\'user_id\'] が未設定です<br>';
-    } else {
-        echo '$_SESSION[\'user_id\'] が存在しています<br>';
-    }
-    
-    if (empty($_SESSION['user_id'])) {
-        echo '$_SESSION[\'user_id\'] が空です<br>';
-    } else {
-        echo '$_SESSION[\'user_id\'] に値があります: ' . $_SESSION['user_id'] . '<br>';
-    }
+    echo 'セッションID: ' . session_id();
     echo '<pre>';
 print_r($_SESSION);
+echo '</pre>';
+echo '<pre>';
+echo 'セッションデータ: ';
+print_r($_SESSION);
+echo 'POSTデータ: ';
+print_r($_POST);
 echo '</pre>';
     ?>
 
@@ -269,7 +259,7 @@ echo '</pre>';
                         <option <?= $selectedGame === 'WANTED' ? 'selected' : '' ?>>WANTED</option>
                     </select>
                 </label>
-                <button type="submit" name="show_my_score">マイスコア</button>
+                <button type="submit" name="show_my_score" value="1">マイスコア</button>
                 <button type="submit" name="show_friend_score">フレンドスコア</button>
             </div>
         </form>
