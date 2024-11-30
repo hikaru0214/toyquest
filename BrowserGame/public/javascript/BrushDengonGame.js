@@ -55,6 +55,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(this.state=="round"&&this.getTimer(3)<=0){
             io.to(room_name).emit("clear canvas");
             var painterName = this.getPlayerById(this.getDrawerId()).name;
+            console.log("next painter is : "+painterName);
             io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3,painterName:painterName})
             this.setTimer();
             this.state = "painternotice";
