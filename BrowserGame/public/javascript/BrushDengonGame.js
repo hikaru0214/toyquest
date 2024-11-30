@@ -47,14 +47,15 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             for(var i = 0;i < this.player_ids.length;i++){
                 this.drawer_queue.push({id:this.player_ids[i],drew:false});
             }
-            io.to(room_name).emit("show_client_overlay_timed",{id:"round",time:3});
+            io.to(room_name).emit("show_client_overlay_timed",{id:"round",time:3,roundcount:this.round});
             this.setTimer();
             this.state="round";
         }
 
         if(this.state=="round"&&this.getTimer(3)<=0){
             io.to(room_name).emit("clear canvas");
-            io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3})
+            var painterName = this.getPlayerById(this.getDrawerId()).name;
+            io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3,painterName:painterName})
             this.setTimer();
             this.state = "painternotice";
         }

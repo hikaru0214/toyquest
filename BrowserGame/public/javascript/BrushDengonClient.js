@@ -1,6 +1,29 @@
 var socket = io.connect('http://52.68.111.88:7000');
 let own_id = "";
 
+let client_name = getCookie('username');
+let clientGame = null;
+
+var ol_timer = 0;
+var ol_timespan = 0;
+var ol_elementId = "";
+var ol_timer_onend = function(){};
+
+const canvas = document.getElementById("canvas");
+const context = canvas.getContext("2d");
+context.imageSmoothingEnabled=false;
+context.antiAlias = false;
+
+var current_mouse_x = 0;
+var current_mouse_y = 0;
+var last_mouse_x = 0;
+var last_mouse_y = 0;
+var mouse_pressed = false;
+
+var paint_color = "black";
+var brush_thickness = 8;
+var cursor_type = "brush"; //brush か bucket か spray ブラシ、　バケツ、スプレー
+
 const characters = "abcdefghijklmnopqrstuvwxy0123456789";
 function getRandomString(length){ //ランダム文字列
     var x = "";
@@ -28,11 +51,6 @@ setVisibleElementById("overlay",false);
 setVisibleElementById("round",false);
 setVisibleElementById("selectword",false);
 setVisibleElementById("painternotice",false);
-
-var ol_timer = 0;
-var ol_timespan = 0;
-var ol_elementId = "";
-var ol_timer_onend = function(){};
 
 function showOverlayByIdWithTimespan(id,timespan,onend){
     ol_timer = Date.now();
@@ -80,9 +98,6 @@ function updateScoreBoard(){ //スコアボード更新
     }
 }
 
-let client_name = getCookie('username');
-let clientGame = null;
-
 socket.on('connection established',(data)=>{
     console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
     own_id = data.id;
@@ -103,7 +118,6 @@ socket.on('game update',(game)=>{
     clientGame = receiveObject(game,Game);
     updateScoreBoard();
     showPalette(clientGame.isDrawing(own_id));
-    document.getElementById("round_count").innerHTML = clientGame.round;
     switch(clientGame.state){
         case "standby":
             showPalette(true);
@@ -126,6 +140,15 @@ socket.on("get word",(word)=>{
 
 socket.on("show_client_overlay_timed",(data)=>{
     hideAllOverlay();
+
+    switch(data.id){
+        case "painternotice":
+            document.getElementById("painter_name").innerHTML = data.painterName;
+            break;
+        case "round":
+            document.getElementById("round_count").innerHTML = "ラウンド "+data.roundcount;
+            break;
+    }
     showOverlayByIdWithTimespan(data.id,data.time*1000,function(){});
 });
 
@@ -145,21 +168,6 @@ socket.on('message to everyone in room',message=>{
     chatlog.appendChild(item);
     chatlog.scrollTop = chatlog.scrollHeight;
 });
-
-const canvas = document.getElementById("canvas");
-const context = canvas.getContext("2d");
-context.imageSmoothingEnabled=false;
-context.antiAlias = false;
-
-var current_mouse_x = 0;
-var current_mouse_y = 0;
-var last_mouse_x = 0;
-var last_mouse_y = 0;
-var mouse_pressed = false;
-
-var paint_color = "black";
-var brush_thickness = 8;
-var cursor_type = "brush"; //brush か bucket か spray ブラシ、　バケツ、スプレー
 
 function getClientData(){
     var cx = current_mouse_x;
