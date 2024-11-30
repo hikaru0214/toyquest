@@ -146,8 +146,8 @@ socket.on("show_client_overlay_timed",(data)=>{
             document.getElementById("painter_name").innerHTML = data.painterName;
             break;
         case "round":
-            document.getElementById("round_count").innerHTML = "ラウンド "+data.roundcount+1;
-            document.getElementById("round").innerHTML = "ラウンド "+data.roundcount+1;
+            document.getElementById("round_count").innerHTML = "ラウンド "+(data.roundcount+1);
+            document.getElementById("round").innerHTML = "ラウンド "+(data.roundcount+1);
             break;
     }
     showOverlayByIdWithTimespan(data.id,data.time*1000,function(){});
