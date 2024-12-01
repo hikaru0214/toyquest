@@ -53,8 +53,6 @@ io.on('connection', (socket) => {
         socket.broadcast.to(room_name).emit("game update",JSON.stringify(gamerooms[room]));
         io.to(room_name).emit("message to everyone in room",data.name+"が入室しました！");
         console.log("player "+data.name+" joined in the room "+room);
-
-        //secretword[room] = gamerooms[room].startGame();
     });
 
     socket.on('textchat',(message)=>{
