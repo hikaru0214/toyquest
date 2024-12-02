@@ -26,7 +26,6 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.player_data = []; //プレイヤー情報、名前(name),スコア (score)
         this.access = "public"; //部屋アクセスタイプ　0(公開) 1(プライベート)
         this.state = "standby"; //部屋状態 //standby待機中 , roundstart,ラウンド中,
-        this.turn = 0;
         this.timer = 0;
 
         this.paint_history = []; //ペインターが書いている途中でゲッサーが入室した場合ゲッサーにそれまでの絵のデータをおくる
@@ -79,7 +78,9 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
                 io.to(room_name).emit("show_client_overlay_timed",{id:"roundcore",time:6});
                 this.setTimer();
             }else{ //次のターン
-                io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3})
+                var painterName = this.getPlayerById(this.getDrawerId()).name;
+                console.log("next painter is : "+painterName);
+                io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3,painterName:painterName})
                 this.setTimer();
                 this.state = "painternotice";
             }
@@ -92,17 +93,12 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         return "nil";
     }
 
-    startRound(io){
-        var secretword = "";
-        //ラウンドスタート
-            this.round++;
-            //描き手キュー
-            this.drawer_queue = [];
-            for(var i = 0;i < this.player_ids.length;i++){
-                this.drawer_queue.push({id:this.player_ids[i],drew:false});
-            }
-            secretword = this.nextTurn(io);
-        return secretword;
+    resetGame(socket){
+        this.state = "standby";
+        this.draw_start_time = 0;
+        this.round=-1;
+        this.drawer_queue = [];
+        this.timer = 0;
     }
 
     nextTurn(io){
@@ -213,10 +209,6 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     addScore(id,score){
         var index = this.getPlayerIndexById(id);
         this.player_data[index].score+=score;
-    }
-
-    getGameState(){
-        return this.turn;
     }
 
     removePlayer(player_id){

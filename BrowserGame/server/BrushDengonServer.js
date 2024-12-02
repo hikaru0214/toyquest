@@ -67,28 +67,28 @@ io.on('connection', (socket) => {
     });
 
     socket.on("client draw",(data)=>{
-        /*
-        console.log("gamestate == standby : "+(gamerooms[room].getGameState()=="standby")+
-        " gamerooms[room].isDrawing(id) : "+gamerooms[room].isDrawing(id));
-        */
         
-        if(gamerooms[room].getGameState()=="standby"||gamerooms[room].isDrawing(id)){
+        if(gamerooms[room].state=="standby"||gamerooms[room].isDrawing(id)){
             io.to(room_name).emit("draw relay",data);
             console.log("relaying drawing to clients!");
         }
     });
 
     socket.on("clear canvas",(data)=>{
-        if(gamerooms[room].getGameState()=="standby"||gamerooms[room].isDrawing(id)){
+        if(gamerooms[room].state=="standby"||gamerooms[room].isDrawing(id)){
             io.to(room_name).emit("clear canvas");
         }
     });
 
     socket.on('disconnect', () => {
       console.log('user disconnected');
-      io.to(room_name).emit("message to everyone in room",gamerooms[room].getPlayerById(id).name+"が退室しました。");
-      gamerooms[room].removePlayer(socket.id);
-      socket.broadcast.to(room_name).emit("game update",JSON.stringify(gamerooms[room]));
+      const gameroom = gamerooms[room];
+      io.to(room_name).emit("message to everyone in room",gameroom.getPlayerById(id).name+"が退室しました。");
+      gameroom.removePlayer(socket.id);
+      if(gameroom.getPlayerCount()<gameroom.minimum_players){
+        gameroom.resetGame(io);
+      }
+      socket.broadcast.to(room_name).emit("game update",JSON.stringify(gameroom));
       io.to(room_name).emit("player disconnect",id);
     });
 });
