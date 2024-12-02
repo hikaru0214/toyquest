@@ -272,11 +272,6 @@ function mouse_move(e){
 
   if(mouse_pressed&&cursor_type=="brush"){
     socket.emit("client draw",getClientData());
-    /*
-    if(clientGame.isDrawing(own_id)||clientGame.getGameState()=="standby"){
-        socket.emit("client draw",getClientData());
-    }
-    */
   }
 }
 

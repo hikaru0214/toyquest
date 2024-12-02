@@ -61,6 +61,7 @@ io.on('connection', (socket) => {
 
         io.to(room_name).emit("message to everyone in room",name+" : "+message);
         if(message===secretword[room]){
+            io.to(room_name).emit("message to everyone in room","正解は"+secretword[room]+"です");
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].addScore(id,123);
         }
@@ -109,11 +110,6 @@ function update(){
         }
     }
 }
-
-setInterval(function(){
-    var game = gamerooms[0];
-    console.log(game.state+" timer :"+game.getTimer(6));
-},1000);
 
 const updateInterval = 1000.0/30.0;
 setInterval(update,updateInterval);
