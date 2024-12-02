@@ -157,7 +157,23 @@
     $selectedGame = isset($_POST['rankingu']) ? $_POST['rankingu'] : '総合スコア';
     $showMyScore = isset($_POST['show_my_score']) ? true : false;
     $showFriendScore = isset($_POST['show_friend_score']) ? true : false;
-
+    if (isset($_POST['show_my_score'])) {
+        echo "<h2>セッションの内容:</h2>";
+        echo "<pre>";
+        print_r($_SESSION);  // セッションの内容を表示
+        echo "</pre>";
+    
+        // セッションからuser_idを取得
+        if (isset($_SESSION['user']['user_id'])) {
+            $user_id = $_SESSION['user']['user_id'];
+            echo "<p>ユーザーIDは: " . $user_id . " です。</p>";
+            
+            // ここでマイスコアを表示する処理を実行することができます
+            // 例: データベースからスコアを取得して表示する
+        } else {
+            echo "<p>ユーザーがログインしていません。ログインしてください。</p>";
+        }
+    }    
     try {
         // SQL生成
         if ($showFriendScore) {
@@ -184,7 +200,8 @@
             ";
             }
 
-        } elseif ($showMyScore) {
+        } 
+        if ($showMyScore) {
             if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
                 throw new Exception("ログインが必要です。");
             }else{
@@ -197,7 +214,8 @@
             ";
             }
            
-        } elseif ($selectedGame === '総合スコア') {
+        } 
+        if ($selectedGame === '総合スコア') {
             $sql = "
                 SELECT User.user_id, User.user_name, SUM(Score.score) AS total_score, MAX(Score.registration_date) AS last_play_date
                 FROM Score 
@@ -234,9 +252,7 @@
         echo "エラー: " . $e->getMessage();
         exit;
     }
-    echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
+    
     ?>
 
     <a href="top.php" class="back-button">戻る</a>
