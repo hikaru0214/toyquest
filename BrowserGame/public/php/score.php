@@ -200,7 +200,8 @@
             ";
             }
 
-        } elseif ($showMyScore) {
+        } 
+        if ($showMyScore) {
             if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
                 throw new Exception("ログインが必要です。");
             }else{
@@ -213,7 +214,8 @@
             ";
             }
            
-        } elseif ($selectedGame === '総合スコア') {
+        } 
+        if ($selectedGame === '総合スコア') {
             $sql = "
                 SELECT User.user_id, User.user_name, SUM(Score.score) AS total_score, MAX(Score.registration_date) AS last_play_date
                 FROM Score 
