@@ -128,6 +128,7 @@
             margin-top: 35vh;
             color: white;
             font-size:5vw;
+            display: none;
         }
 
         #painternotice {
@@ -146,6 +147,7 @@
             top: 45%;
             transform: translate(-50%,-50%);
             font-size: 5vw;
+            display: none;
         }
 
         .menu_button_horizontal {
@@ -153,6 +155,30 @@
             height: 15%;
             padding: 0px;
             margin: 0px;
+        }
+
+        .resultBox {
+            width: 40%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            border: 2px solid white;
+            border-radius: 5px;
+            color: white;
+        }
+
+        th,td {
+            border: 1px solid white;
+            border-radius: 3px;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        #gamescore {
+            display: none;
         }
 
     </style>
@@ -176,8 +202,37 @@
         </div>
 
         <div id="gamescore">
-            <div id="resultscore">
-
+            <div class="resultBox">
+                <h1 style="text-align: center;">正解は。。。</h1>
+                <h1 id="wordreveal" style="text-align: center;">ミッフィー</h1>
+                    <table id="points_earned" style="width: 90%; margin: 5%;">
+                        <tr>
+                            <th>正解順</th>
+                            <th>プレイヤー</th>
+                            <th>獲得スコア</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Dexter Morgan</td>
+                            <td>+400</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Frank Lundy</td>
+                            <td>+400</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Debra Morgan</td>
+                            <td>+300</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>James Doakes</td>
+                            <td>+100</td>
+                        </tr>
+                    </table>
+                
             </div>
         </div>
 

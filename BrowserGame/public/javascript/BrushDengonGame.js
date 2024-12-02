@@ -64,7 +64,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             io.to(room_name).emit("clear canvas");
             this.state = "drawing";
             var word = this.nextTurn(io);
-            return word;
+            return {instruction:"setword",word:word};
         }
 
         if(this.state=="drawing"&&this.getRemainingTime()<=0){
