@@ -9,7 +9,7 @@ const io = new Server(server);
 app.use(express.static('../public'));
 
 app.get('/BrushDengon',(req,res)=>{
-    res.sendFile(__dirname+'../public/html/bd_draw.html');
+    res.sendFile(__dirname+'./public/html/bd_draw.html');
 });
 
 io.on("connection",(socket)=>{
