@@ -234,9 +234,23 @@
         echo "エラー: " . $e->getMessage();
         exit;
     }
-    echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
+    if (isset($_POST['show_my_score'])) {
+        echo "<h2>セッションの内容:</h2>";
+        echo "<pre>";
+        print_r($_SESSION);  // セッションの内容を表示
+        echo "</pre>";
+    
+        // セッションからuser_idを取得
+        if (isset($_SESSION['user']['user_id'])) {
+            $user_id = $_SESSION['user']['user_id'];
+            echo "<p>ユーザーIDは: " . $user_id . " です。</p>";
+            
+            // ここでマイスコアを表示する処理を実行することができます
+            // 例: データベースからスコアを取得して表示する
+        } else {
+            echo "<p>ユーザーがログインしていません。ログインしてください。</p>";
+        }
+    }    
     ?>
 
     <a href="top.php" class="back-button">戻る</a>
