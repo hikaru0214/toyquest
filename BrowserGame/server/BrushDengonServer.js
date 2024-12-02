@@ -60,8 +60,8 @@ io.on('connection', (socket) => {
         console.log(name+" : "+message);
 
         io.to(room_name).emit("message to everyone in room",name+" : "+message);
+        io.to(room_name).emit("message to everyone in room","正解は"+secretword[room]+"です");
         if(message===secretword[room]){
-            io.to(room_name).emit("message to everyone in room","正解は"+secretword[room]+"です");
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].addScore(id,123);
         }
