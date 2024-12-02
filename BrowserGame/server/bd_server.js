@@ -6,10 +6,12 @@ const server = http.createServer(app);
 const { Server } = require('socket.io');
 const io = new Server(server);
 
+const {join} = require('node:path');
+
 app.use(express.static('../public'));
 
 app.get('/BrushDengon',(req,res)=>{
-    res.sendFile(__dirname+'./public/html/bd_draw.html');
+    res.sendFile(join(__dirname,'../public/html/bd_draw.html'));
 });
 
 io.on("connection",(socket)=>{
