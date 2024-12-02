@@ -234,6 +234,9 @@
         echo "エラー: " . $e->getMessage();
         exit;
     }
+    echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";
     ?>
 
     <a href="top.php" class="back-button">戻る</a>
