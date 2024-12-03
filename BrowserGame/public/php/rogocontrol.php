@@ -227,7 +227,7 @@
     const animateflag=true;
     // アニメーションループ
     function animate() {
-        if(animatecontrol){
+        if(animateflag){
         requestAnimationFrame(animate);
         }
         // キーが押されている場合にカメラを動かす
@@ -257,14 +257,14 @@
     function checkOrientation() {
     const isLandscape = window.innerWidth > window.innerHeight;
     if (!isLandscape) {//画面が縦の時に実行
-        animatecontrol=false;
+        animateflag=false;
         stopAnimation('rogoA');
         stopAnimation('rogoB');
         const caveat = document.getElementById("caveat");
         caveat.classList.remove("hidden");
     }
     if (isLandscape) {//画面が横の時に実行
-        animatecontrol=true;
+        animateflag=true;
         if(!animatecontrolflag){//もしアニメーションが特定のフレームを超えていなければ実行(フラグが立っていない状態)
         restartAnimation('rogoA');
         restartAnimation('rogoB');
