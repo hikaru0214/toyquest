@@ -1,3 +1,4 @@
+<?php session_start();?>
 <?php require 'dbconnect.php';?>
 <?php
 $sql=$pdo->prepare('SELECT user_id,SUM(score) AS total_score FROM Score GROUP BY user_id ORDER BY total_score ASC');

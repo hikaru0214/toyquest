@@ -112,7 +112,7 @@
         stopAnimation('rogoA');
         stopAnimation('rogoB');
         rogofadeout=true;
-        animatecontrolflag=true;
+        animatecontrolflag=true;//アニメーションが特定のフレームに到達したかのフラグ
         }
 
         
@@ -203,7 +203,7 @@
     let rogofadeout2=false;
     // カメラを移動させる関数
     function moveCamera() {
-        if (rogofadeout) {
+        if (rogofadeout) {//アニメーションが特定のフレームに到達していたらフェードアウトする
             camera.position.z -= 0.1;
             if(camera.position.z<=-1){
                 rogofadeout=false;
@@ -211,7 +211,7 @@
                 window.location.replace('top.php');
             }
         }
-        if(rogofadeout2){
+        if(rogofadeout2){//特定の位置までフェードアウトしていたら画面遷移
             camera.position.y-=0.1;
                 if(camera.position.y<=-2){
                     //rogofadeout2=false;
@@ -254,17 +254,29 @@
     
     function checkOrientation() {
     const isLandscape = window.innerWidth > window.innerHeight;
-    if (!isLandscape) {
+    if (!isLandscape) {//画面が縦の時に実行
         stopAnimation('rogoA');
         stopAnimation('rogoB');
         const caveat = document.getElementById("caveat");
         caveat.classList.remove("hidden");
     }
-    if (isLandscape) {
+    if (isLandscape) {//画面が横の時に実行
+        if(!animatecontrolflag){//もしアニメーションが特定のフレームを超えていなければ実行(フラグが立っていない状態)
         restartAnimation('rogoA');
         restartAnimation('rogoB');
+        }
         const caveat = document.getElementById("caveat");
         caveat.classList.add("hidden");
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+
+        composer.setSize(width, height);
+        dotPass.uniforms["resolution"].value.set(width, height);
     }
     }
     window.addEventListener("orientationchange", () => {

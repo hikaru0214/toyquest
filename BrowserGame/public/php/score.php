@@ -210,6 +210,7 @@
                 WHERE Score.game_id IN (1, 2, 3) 
                 GROUP BY User.user_id, User.user_name 
                 ORDER BY total_score DESC
+                LIMIT 50
             ";
         } else {
             $gameMapping = [
@@ -256,7 +257,7 @@
                         <option <?= $selectedGame === 'WANTED' ? 'selected' : '' ?>>WANTED</option>
                     </select>
                 </label>
-                <button type="submit" name="show_my_score" value="1">マイスコア</button>
+                <button type="submit" name="show_my_score">マイスコア</button>
                 <button type="submit" name="show_friend_score">フレンドスコア</button>
             </div>
         </form>
