@@ -135,7 +135,7 @@
 }
 
     function restartAnimation(name){//アニメーションを再開する
-        clip = gltf.animations.find(clip => clip.name === name);
+        const clip = gltf.animations.find(clip => clip.name === name);
     if (clip) {
         const action = mixer.clipAction(clip);
         action.paused=false;
