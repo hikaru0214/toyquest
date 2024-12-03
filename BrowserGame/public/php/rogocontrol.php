@@ -204,7 +204,7 @@
     // カメラを移動させる関数
     function moveCamera() {
         if (rogofadeout) {
-            camera.position.z -= 0.1;
+            //camera.position.z -= 0.1;
             if(camera.position.z<=-1){
                 rogofadeout=false;
                 //rogofadeout2=true;
