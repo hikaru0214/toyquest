@@ -72,6 +72,17 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             this.markDrewInQueue(this.getDrawerId());
             console.log(this.drawer_queue);
 
+            this.state = "drawend";
+
+        }
+
+        if(this.state=="drawend"){
+            this.state = "word reveal and result"
+            this.setTimer();
+            return {instruction:"reveal_and_result"};
+        }
+
+        if(this.state == "word reveal and result"&&this.getTimer(5)<=0){
             if(this.getDrawerId()=="drawer queue completed"){
                 //ラウンド終了処理
                 this.state="roundend";

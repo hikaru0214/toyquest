@@ -149,6 +149,9 @@ socket.on("show_client_overlay_timed",(data)=>{
             document.getElementById("round_count").innerHTML = "ラウンド "+(data.roundcount+1);
             document.getElementById("round").innerHTML = "ラウンド "+(data.roundcount+1);
             break;
+        case "gamescore":
+            document.getElementById("wordreveal").innerHTML = data.results.word;
+            break;
     }
     showOverlayByIdWithTimespan(data.id,data.time*1000,function(){});
 });
