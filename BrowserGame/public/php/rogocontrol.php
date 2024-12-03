@@ -254,19 +254,29 @@
     
     function checkOrientation() {
     const isLandscape = window.innerWidth > window.innerHeight;
-    if (!isLandscape) {
+    if (!isLandscape) {//画面が縦の時に実行
         stopAnimation('rogoA');
         stopAnimation('rogoB');
         const caveat = document.getElementById("caveat");
         caveat.classList.remove("hidden");
     }
-    if (isLandscape) {
+    if (isLandscape) {//画面が横の時に実行
         if(!animatecontrolflag){//もしアニメーションが特定のフレームを超えていなければ実行(フラグが立っていない状態)
         restartAnimation('rogoA');
         restartAnimation('rogoB');
         }
         const caveat = document.getElementById("caveat");
         caveat.classList.add("hidden");
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+
+        composer.setSize(width, height);
+        dotPass.uniforms["resolution"].value.set(width, height);
     }
     }
     window.addEventListener("orientationchange", () => {
