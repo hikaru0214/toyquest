@@ -224,12 +224,9 @@
 
 
     const clock = new THREE.Clock();
-    const animateflag=true;
     // アニメーションループ
     function animate() {
-        if(animateflag){
         requestAnimationFrame(animate);
-        }
         // キーが押されている場合にカメラを動かす
         moveCamera();
         
@@ -257,14 +254,12 @@
     function checkOrientation() {
     const isLandscape = window.innerWidth > window.innerHeight;
     if (!isLandscape) {//画面が縦の時に実行
-        animateflag=false;
         stopAnimation('rogoA');
         stopAnimation('rogoB');
         const caveat = document.getElementById("caveat");
         caveat.classList.remove("hidden");
     }
     if (isLandscape) {//画面が横の時に実行
-        animateflag=true;
         if(!animatecontrolflag){//もしアニメーションが特定のフレームを超えていなければ実行(フラグが立っていない状態)
         restartAnimation('rogoA');
         restartAnimation('rogoB');
