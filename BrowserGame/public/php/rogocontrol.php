@@ -102,7 +102,7 @@
     // アニメーションの更新
     function animatecontrol() {
         requestAnimationFrame(animatecontrol);
-
+        const AnimationFrameflag=true;
         const delta = clock.getDelta();
         mixer.update(delta);
 
@@ -224,6 +224,7 @@
 
 
     const clock = new THREE.Clock();
+    const AnimationFrameflag=false;
     // アニメーションループ
     function animate() {
         requestAnimationFrame(animate);
@@ -238,8 +239,9 @@
 
         // Composerを使用してレンダリング
         composer.render();
-
+        if(AnimationFrameflag){
         checkOrientation();
+        }
     }
 
     animate();
