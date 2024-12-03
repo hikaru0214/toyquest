@@ -148,6 +148,12 @@
         .selectbox-1 select:focus {
             outline: 2px solid #1192ee;
         }
+        .error-message {
+            color: red;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
@@ -237,7 +243,7 @@
         $stmt->execute();
         $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (Exception $e) {
-        echo "エラー: " . $e->getMessage();
+        '<p class="error-message">エラー: ' . $e->getMessage() . '</p>'
         exit;
     }
     
