@@ -226,8 +226,10 @@
     const clock = new THREE.Clock();
     // アニメーションループ
     function animate() {
+        const isLandscape = window.innerWidth > window.innerHeight;
+        if(isLandscape){
         requestAnimationFrame(animate);
-
+        }
         // キーが押されている場合にカメラを動かす
         moveCamera();
         
@@ -267,19 +269,9 @@
         }
         const caveat = document.getElementById("caveat");
         caveat.classList.add("hidden");
-
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-
-        renderer.setSize(width, height);
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-
-        composer.setSize(width, height);
-        dotPass.uniforms["resolution"].value.set(width, height);
     }
     }
-    //window.addEventListener("orientationchange", () => {
+    window.addEventListener("orientationchange", () => {//リサイズ処理
     const width = window.innerWidth;
     const height = window.innerHeight;
 
