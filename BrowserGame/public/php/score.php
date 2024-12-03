@@ -1,4 +1,10 @@
-<?php session_start(); ?>
+<?php session_start(); 
+    if (!isset($_SESSION['user']) || !isset($_SESSION['user_id'])) {
+        header('Location: login.php');
+        exit;
+    }
+    require '../dbConnect/dbconnect.php'; 
+?>
 <!-- DB接続 -->
 <?php require '../dbConnect/dbconnect.php'; ?>
 <!DOCTYPE html>
