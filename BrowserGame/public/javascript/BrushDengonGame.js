@@ -3,7 +3,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.room_id = room_id;
         this.player_limit = 4; //プレイヤー数制限
         this.minimum_players = 2; //最小プレイヤー数
-        this.time_limit = 60; //時間制限
+        this.time_limit = 20; //時間制限
         this.draw_start_time = 0;
         this.round = -1; //ラウンドカウンター
         this.rounds = 3; //ラウンド数
@@ -72,6 +72,17 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             this.markDrewInQueue(this.getDrawerId());
             console.log(this.drawer_queue);
 
+            this.state = "drawend";
+
+        }
+
+        if(this.state=="drawend"){
+            this.state = "word reveal and result"
+            this.setTimer();
+            return {instruction:"reveal_and_result"};
+        }
+
+        if(this.state == "word reveal and result"&&this.getTimer(5)<=0){
             if(this.getDrawerId()=="drawer queue completed"){
                 //ラウンド終了処理
                 this.state="roundend";

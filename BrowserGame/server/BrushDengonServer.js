@@ -107,6 +107,10 @@ function update(){
             case "setword":
                 secretword[i] = response.word;
                 break;
+            case "reveal_and_result":
+                var resultdata = {word:secretword[i]};
+                io.to(roomname).emit("show_client_overlay_timed",{id:"gamescore",time:5,results:resultdata});
+                break;
         }
     }
 }
