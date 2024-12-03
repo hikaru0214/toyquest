@@ -210,6 +210,7 @@
                 WHERE Score.game_id IN (1, 2, 3) 
                 GROUP BY User.user_id, User.user_name 
                 ORDER BY total_score DESC
+                LIMIT 50
             ";
         } else {
             $gameMapping = [
