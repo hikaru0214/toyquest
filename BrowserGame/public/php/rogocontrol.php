@@ -112,7 +112,7 @@
         stopAnimation('rogoA');
         stopAnimation('rogoB');
         rogofadeout=true;
-        animatecontrolflag=true;
+        animatecontrolflag=true;//アニメーションが特定のフレームに到達したかのフラグ
         }
 
         
@@ -203,15 +203,15 @@
     let rogofadeout2=false;
     // カメラを移動させる関数
     function moveCamera() {
-        if (rogofadeout) {
-            //camera.position.z -= 0.1;
+        if (rogofadeout) {//アニメーションが特定のフレームに到達していたらフェードアウトする
+            camera.position.z -= 0.1;
             if(camera.position.z<=-1){
                 rogofadeout=false;
                 //rogofadeout2=true;
                 window.location.replace('top.php');
             }
         }
-        if(rogofadeout2){
+        if(rogofadeout2){//特定の位置までフェードアウトしていたら画面遷移
             camera.position.y-=0.1;
                 if(camera.position.y<=-2){
                     //rogofadeout2=false;
@@ -261,7 +261,7 @@
         caveat.classList.remove("hidden");
     }
     if (isLandscape) {
-        if(!animatecontrolflag){
+        if(!animatecontrolflag){//もしアニメーションが特定のフレームを超えていなければ実行(フラグが立っていない状態)
         restartAnimation('rogoA');
         restartAnimation('rogoB');
         }
