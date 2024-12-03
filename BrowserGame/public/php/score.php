@@ -263,8 +263,8 @@
                         <option <?= $selectedGame === 'WANTED' ? 'selected' : '' ?>>WANTED</option>
                     </select>
                 </label>
-                <input type="submit" name="show_my_score">マイスコア</input>
-                <input type="submit" name="show_friend_score">フレンドスコア</input>
+                <button type="submit" name="show_my_score">マイスコア</button>
+                <button type="submit" name="show_friend_score">フレンドスコア</button>
             </div>
         </form>
 
