@@ -261,8 +261,10 @@
         caveat.classList.remove("hidden");
     }
     if (isLandscape) {
+        if(!animatecontrolflag){
         restartAnimation('rogoA');
         restartAnimation('rogoB');
+        }
         const caveat = document.getElementById("caveat");
         caveat.classList.add("hidden");
     }
