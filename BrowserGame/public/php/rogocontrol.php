@@ -135,7 +135,7 @@
 }
 
     function restartAnimation(name){//アニメーションを再開する
-        const clip = gltf.animations.find(clip => clip.name === name);
+        clip = gltf.animations.find(clip => clip.name === name);
     if (clip) {
         const action = mixer.clipAction(clip);
         action.paused=false;
@@ -255,14 +255,14 @@
     function checkOrientation() {
     const isLandscape = window.innerWidth > window.innerHeight;
     if (!isLandscape) {
-        //stopAnimation('rogoA');
-        //stopAnimation('rogoB');
+        stopAnimation('rogoA');
+        stopAnimation('rogoB');
         const caveat = document.getElementById("caveat");
         caveat.classList.remove("hidden");
     }
     if (isLandscape) {
-        //restartAnimation('rogoA');
-        //restartAnimation('rogoB');
+        restartAnimation('rogoA');
+        restartAnimation('rogoB');
         const caveat = document.getElementById("caveat");
         caveat.classList.add("hidden");
     }
