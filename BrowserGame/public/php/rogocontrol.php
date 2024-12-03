@@ -279,7 +279,7 @@
         dotPass.uniforms["resolution"].value.set(width, height);
     }
     }
-    window.addEventListener("orientationchange", () => {
+    //window.addEventListener("orientationchange", () => {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
