@@ -243,7 +243,7 @@
         $stmt->execute();
         $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (Exception $e) {
-        '<p class="error-message">エラー: ' . $e->getMessage() . '</p>'
+        '<p class="error-message">エラー: ' . $e->getMessage() . '</p>';
         exit;
     }
     
