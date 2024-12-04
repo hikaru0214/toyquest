@@ -76,7 +76,7 @@
             console.log(gltf.animations.map(clip => clip.name));
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
             
-            const clip1=gltf.animations.find(clip=>clip.name==='rogoA');
+            const clip1=gltf.animations.find(clip=>clip.name==='feet.run');
             controlaction=mixer.clipAction(clip1);
             controlaction.play();
 
@@ -132,10 +132,6 @@
     const clock = new THREE.Clock();
     // アニメーションループ
     function animate() {
-        requestAnimationFrame(animate);
-        // キーが押されている場合にカメラを動かす
-        moveCamera();
-        
 
         const delta = clock.getDelta(); // delta の取得
         if (mixer) {
