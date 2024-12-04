@@ -29,6 +29,8 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.timer = 0;
 
         this.paint_history = []; //ペインターが書いている途中でゲッサーが入室した場合ゲッサーにそれまでの絵のデータをおくる
+
+        this.earned_points = {};
     }
 
     gameupdate(io){ //ゲームループ
@@ -79,7 +81,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(this.state=="drawend"){
             this.state = "word reveal and result"
             this.setTimer();
-            return {instruction:"reveal_and_result"};
+            return {instruction:"reveal_and_result",data:this.player_data};
         }
 
         if(this.state == "word reveal and result"&&this.getTimer(5)<=0){
