@@ -131,6 +131,7 @@ loader.load(
         model1.position.set(0, 1, 0);
         model1.rotation.set(0, 0, 0);
         scene.add(model1);
+        console.log(gltf.animations.map(clip => clip.name));
 
         // アニメーションミキサー1
         mixer1 = new THREE.AnimationMixer(model1);
