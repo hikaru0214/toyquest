@@ -81,20 +81,23 @@ function updateScoreBoard(){ //スコアボード更新
     if(!clientGame)return;
     var scoreboard = document.getElementById("scoreboard");
     scoreboard.innerHTML = "";
-    for(var i = 0;i < clientGame.getPlayerCount();i++){
-        var player = clientGame.getPlayerByIndex(i);
+
+    const players = clientGame.getPlayers();
+
+    for(var id in players){
+        var player = players[id];
         var scoreboard_color = "white";
         var description = "";
-        if(clientGame.player_ids[i]===own_id)description+="(あなた)";
-        if(clientGame.isDrawing(clientGame.getPlayerIdByIndex(i))){
+        if(id===own_id)description+="(あなた)";
+        if(clientGame.isDrawing(id)){
             scoreboard_color="red";
             description += "(お絵描き中)";
         }
 
-        scoreboard.innerHTML += "<div style=\"background-color:"+scoreboard_color+";\">";
-        scoreboard.innerHTML += "<br>"+player.name+" "+description;
-        scoreboard.innerHTML += "<br>スコア:"+player.score+"";
-        scoreboard.innerHTML += "</div>";
+        scoreboard.innerHTML += '<div style="background-color:'+scoreboard_color+';">';
+        scoreboard.innerHTML += '<br>'+player.name+' '+description;
+        scoreboard.innerHTML += '<br>スコア:'+player.score+'';
+        scoreboard.innerHTML += '</div>';
     }
 }
 

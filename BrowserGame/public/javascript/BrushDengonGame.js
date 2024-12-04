@@ -1,3 +1,19 @@
+function delproperties(obj){
+    for(var key in obj){
+        if(obj.hasOwnProperty(key)){
+            delete obj[key];
+        }
+    }
+}
+
+function getObjSize(obj){
+    var size = 0;
+    for(var i in obj){
+        size++;
+    }
+    return size;
+}
+
 class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを用意する
     constructor(room_id){
         this.room_id = room_id;
@@ -8,7 +24,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.round = -1; //ラウンドカウンター
         this.rounds = 3; //ラウンド数
         this.hints = 2; //ヒント(文字の一つを表示する)
-        this.drawer_queue = []; //描き手キュー,IDを保存,(ラウンド開始時に居たプレイヤーのみ)
+        this.drawer_queue = {}; //描き手キュー,IDを保存,(ラウンド開始時に居たプレイヤーのみ)
         this.words = [
             "シャワー",
             "きょうしつ",
@@ -22,8 +38,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             "えんぴつ",
             "スケートボード"
         ]; //お題
-        this.player_ids = []; //プレイヤーid
-        this.player_data = []; //プレイヤー情報、名前(name),スコア (score)
+        this.players = {};
         this.access = "public"; //部屋アクセスタイプ　0(公開) 1(プライベート)
         this.state = "standby"; //部屋状態 //standby待機中 , roundstart,ラウンド中,
         this.timer = 0;
@@ -44,10 +59,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(this.state=="roundstart"){ //最初のラウンドと続くラウンドをスタートする
             this.round++;
             //描き手キュー
-            this.drawer_queue = [];
-            for(var i = 0;i < this.player_ids.length;i++){
-                this.drawer_queue.push({id:this.player_ids[i],drew:false});
-            }
+            this.setDrawerQueue();
             io.to(room_name).emit("show_client_overlay_timed",{id:"round",time:3,roundcount:this.round});
             this.setTimer();
             this.state="round";
@@ -81,7 +93,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(this.state=="drawend"){
             this.state = "word reveal and result"
             this.setTimer();
-            return {instruction:"reveal_and_result",data:this.player_data};
+            return {instruction:"reveal_and_result",data:"TODO player names and scores"}; //TODO
         }
 
         if(this.state == "word reveal and result"&&this.getTimer(5)<=0){
@@ -110,7 +122,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.state = "standby";
         this.draw_start_time = 0;
         this.round=-1;
-        this.drawer_queue = [];
+        delproperties(this.drawer_queue);
         this.timer = 0;
     }
 
@@ -151,29 +163,25 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     isFull(){ //満室か
-        return this.player_ids.length >= this.player_limit;
-    }
-
-    getPlayerCount(){ //プレイヤーカウント
-        return this.player_ids.length;
-    }
-
-    addPlayer(player_id,player_obj){ //プレイヤー追加
-        if(this.getPlayerIndexById(player_id)==-1){
-            this.player_ids.push(player_id);
-            this.player_data.push(player_obj);
-        }
+        return this.getPlayerCount() >= this.player_limit;
     }
 
     isDrawing(id){
         return this.getDrawerId()==id;
     }
 
+    setDrawerQueue(){
+        delproperties(this.drawer_queue);
+        for(var pkey in this.players){
+            this.drawer_queue[pkey] = {id:pkey,drew:false};
+        }
+    }
+
     getDrawerId(){
         var drawer = "";
-        for(var i = 0;i < this.drawer_queue.length;i++){
-            if(this.drawer_queue[i].drew==false){
-                drawer = this.drawer_queue[i].id;
+        for(var id in this.drawer_queue){
+            if(this.drawer_queue[id].drew==false){
+                drawer = this.drawer_queue[id].id;
                 return drawer;
             }
         }
@@ -181,54 +189,42 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     deleteFromDrawQueue(id){
-        for(var i = 0;i < this.drawer_queue.length;i++){
-            if(this.drawer_queue[i].id==id){
-                this.drawer_queue.splice(i,1);
-                break;
-            }
+        if(Object.hasOwn(this.drawer_queue,id)){
+        delproperties(this.drawer_queue[id]);
+        delete this.drawer_queue[id];
         }
     }
 
     markDrewInQueue(id){
-        for(var i = 0;i < this.drawer_queue.length;i++){
-            if(this.drawer_queue[i].id==id){
-                this.drawer_queue[i].drew = true;
-                break;
-            }
-        }
-    }
-
-    getPlayerIdByIndex(index){
-        return this.player_ids[index];
-    }
-
-    getPlayerByIndex(index){
-        return this.player_data[index];
+        this.drawer_queue[id].drew = true;
     }
 
     getPlayerById(id){
-        return this.player_data[this.getPlayerIndexById(id)];
-    }
-
-    getPlayerIndexById(player_id){
-        for(var i = 0;i < this.player_ids.length;i++){
-            if(this.player_ids[i]===player_id){
-                return i;
-            }
-        }
-        return -1;
+        return this.players[id];
     }
 
     addScore(id,score){
-        var index = this.getPlayerIndexById(id);
-        this.player_data[index].score+=score;
+        this.players[id].score+=score;
+    }
+
+    getPlayerCount(){ //プレイヤーカウント
+        return getObjSize(this.players);
+    }
+
+    addPlayer(player_id,player_obj){ //プレイヤー追加
+        if(Object.hasOwn(this.players,player_id))return false;
+        this.players[player_id] = {id:player_id,name:player_obj.name,score:0};
+        return true;
+    }
+
+    get getPlayers(){
+        return this.players;
     }
 
     removePlayer(player_id){
-        var index = this.getPlayerIndexById(player_id);
-        if(index!=-1){
-            this.player_ids.splice(index,1);
-            this.player_data.splice(index,1);
+        if(Object.hasOwn(this.players,player_id)){
+            delproperties(this.players[player_id]);
+            delete this.players[player_id];
             this.deleteFromDrawQueue(player_id);
         }
     }
