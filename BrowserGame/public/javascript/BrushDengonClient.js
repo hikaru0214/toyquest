@@ -82,7 +82,7 @@ function updateScoreBoard(){ //スコアボード更新
     var scoreboard = document.getElementById("scoreboard");
     scoreboard.innerHTML = "";
 
-    const players = clientGame.getPlayers();
+    const players = clientGame.getPlayers;
 
     for(var id in players){
         var player = players[id];
