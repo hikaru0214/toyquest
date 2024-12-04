@@ -136,8 +136,7 @@
         if (mixer) {
         mixer.update(delta); // アニメーションの更新
         }
-
-        // Composerを使用してレンダリング
+        renderer.render(scene, camera);
         checkOrientation();
     }
 
