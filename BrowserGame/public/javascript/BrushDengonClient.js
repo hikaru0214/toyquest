@@ -250,7 +250,7 @@ context.fillRect(0,0,canvas.width,canvas.height);
 function update(){
     if(!initialized)init();
     if(ol_timer!=-1){
-    if(Date.now()-ol_timer >= ol_timespan){
+    if(Date.now()-ol_timer >= ol_timespan&&ol_elementId!=""){
         setVisibleElementById(ol_elementId,false);
         setVisibleElementById("overlay",false);
         ol_timer_onend();

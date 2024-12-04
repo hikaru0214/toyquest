@@ -71,7 +71,6 @@ io.on('connection', (socket) => {
         
         if(gamerooms[room].state=="standby"||gamerooms[room].isDrawing(id)){
             io.to(room_name).emit("draw relay",data);
-            console.log("relaying drawing to clients!");
         }
     });
 
