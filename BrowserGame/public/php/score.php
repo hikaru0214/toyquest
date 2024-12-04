@@ -1,4 +1,57 @@
-<?php session_start(); ?>
+<?php session_start();
+    require '../dbConnect/dbconnect.php'; 
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        try {
+            $data = json_decode(file_get_contents('php://input'), true);
+            $type = $data['type'] ?? null;
+            $selectedGame = $data['selectedGame'] ?? '総合スコア';
+    
+            if (!isset($_SESSION['user_id'])) {
+                throw new Exception("ログインが必要です。");
+            }
+    
+            $response = [];
+    
+            if ($type === 'myScore') {
+                $sql = "SELECT User.user_name, Score.score, Score.registration_date 
+                        FROM Score 
+                        INNER JOIN User ON Score.user_id = User.user_id 
+                        WHERE Score.user_id = :user_id 
+                        ORDER BY Score.score DESC, Score.registration_date ASC";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+                $stmt->execute();
+                $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } elseif ($type === 'friendScore') {
+                $friendSql = "SELECT friend_id FROM Friend WHERE user_id = :user_id";
+                $friendStmt = $pdo->prepare($friendSql);
+                $friendStmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+                $friendStmt->execute();
+                $friendIds = $friendStmt->fetchAll(PDO::FETCH_COLUMN, 0);
+    
+                if (!empty($friendIds)) {
+                    $sql = "SELECT User.user_name, Score.score, Score.registration_date 
+                            FROM Score 
+                            INNER JOIN User ON Score.user_id = User.user_id 
+                            WHERE Score.user_id IN (" . implode(',', $friendIds) . ") 
+                            ORDER BY Score.score DESC, Score.registration_date ASC";
+                    $stmt = $pdo->query($sql);
+                    $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                }
+            }
+    
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            exit;
+        } catch (Exception $e) {
+            header('Content-Type: application/json', true, 400);
+            echo json_encode(['error' => $e->getMessage()]);
+            exit;
+        }
+    }
+ ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -157,85 +210,85 @@
 <body>
 <a href="top.php" class="back-button">戻る</a>
 
-<div class="container">
-    <h1>ランキング</h1>
-    <form>
-        <div class="tabs">
-            <label class="selectbox-1">
-                <select id="rankingu">
-                    <option value="総合スコア">総合スコア</option>
-                    <option value="Burush Dengon">Burush Dengon</option>
-                    <option value="チャリ走">チャリ走</option>
-                    <option value="WANTED">WANTED</option>
-                </select>
-            </label>
-            <button type="button" id="show_my_score">マイスコア</button>
-            <button type="button" id="show_friend_score">フレンドスコア</button>
+    <div class="container">
+        <h1>ランキング</h1>
+        <form>
+            <div class="tabs">
+                <label class="selectbox-1">
+                    <select id="rankingu">
+                        <option value="総合スコア">総合スコア</option>
+                        <option value="Burush Dengon">Burush Dengon</option>
+                        <option value="チャリ走">チャリ走</option>
+                        <option value="WANTED">WANTED</option>
+                    </select>
+                </label>
+                <button type="button" id="show_my_score">マイスコア</button>
+                <button type="button" id="show_friend_score">フレンドスコア</button>
+            </div>
+        </form>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>順位</th>
+                        <th>ユーザー名</th>
+                        <th>スコア</th>
+                        <th>日付</th>
+                    </tr>
+                </thead>
+                <tbody id="scoreTableBody">
+                    <tr>
+                        <td colspan="4">データがありません。</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </form>
-
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>順位</th>
-                    <th>ユーザー名</th>
-                    <th>スコア</th>
-                    <th>日付</th>
-                </tr>
-            </thead>
-            <tbody id="scoreTableBody">
-                <tr>
-                    <td colspan="4">データがありません。</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
-</div>
 
-<script>
-    document.getElementById('show_my_score').addEventListener('click', function() {
-        fetchScores('myScore');
-    });
+    <script>
+        document.getElementById('show_my_score').addEventListener('click', function() {
+            fetchScores('myScore');
+        });
 
-    document.getElementById('show_friend_score').addEventListener('click', function() {
-        fetchScores('friendScore');
-    });
+        document.getElementById('show_friend_score').addEventListener('click', function() {
+            fetchScores('friendScore');
+        });
 
-    function fetchScores(type) {
-        const selectedGame = document.getElementById('rankingu').value;
+        function fetchScores(type) {
+            const selectedGame = document.getElementById('rankingu').value;
 
-        // `getScore.php`へリクエストを送信
-        fetch('getScore.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type, selectedGame })
-        })
-            .then(response => response.json())
-            .then(data => updateTable(data))
-            .catch(error => console.error('Error:', error));
-    }
-
-    function updateTable(data) {
-        const tableBody = document.getElementById('scoreTableBody');
-        tableBody.innerHTML = ''; // 既存の行をクリア
-
-        if (data && data.length > 0) {
-            data.forEach((row, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${row.user_name}</td>
-                    <td>${row.score}</td>
-                    <td>${row.registration_date}</td>
-                `;
-                tableBody.appendChild(tr);
-            });
-        } else {
-            const tr = document.createElement('tr');
-            tr.innerHTML = '<td colspan="4">データがありません。</td>';
-            tableBody.appendChild(tr);
+            // 自分自身へAjaxリクエストを送信
+            fetch(window.location.href, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type, selectedGame })
+            })
+                .then(response => response.json())
+                .then(data => updateTable(data))
+                .catch(error => console.error('Error:', error));
         }
-    }
-</script>
+
+        function updateTable(data) {
+            const tableBody = document.getElementById('scoreTableBody');
+            tableBody.innerHTML = ''; // 既存の行をクリア
+
+            if (data && data.length > 0) {
+                data.forEach((row, index) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${row.user_name}</td>
+                        <td>${row.score}</td>
+                        <td>${row.registration_date}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            } else {
+                const tr = document.createElement('tr');
+                tr.innerHTML = '<td colspan="4">データがありません。</td>';
+                tableBody.appendChild(tr);
+            }
+        }
+    </script>
 </body>
