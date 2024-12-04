@@ -69,7 +69,6 @@
             model.position.set(0, 1, 0);
             model.rotation.set(0, 0, 0);
             model.traverse(function (node) {
-                
             });
             scene.add(model);
             camera.lookAt(model.position);//カメラがモデルに注目するようにする

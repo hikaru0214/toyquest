@@ -121,7 +121,7 @@ let model1, model2; // 2つのモデルインスタンス
 
 const loader = new GLTFLoader();
 loader.load(
-    "../models/animatetest4.glb",
+    "../models/animateblend.glb",
     function (loadedGltf) {
         gltf = loadedGltf;
 
@@ -160,7 +160,6 @@ const clock = new THREE.Clock();
 function testanimate() {
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
-
     if (mixer1) mixer1.update(delta);
     if (mixer2) mixer2.update(delta);
 
