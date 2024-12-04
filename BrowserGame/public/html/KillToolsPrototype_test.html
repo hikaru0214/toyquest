@@ -126,7 +126,7 @@ loader.load(
         gltf = loadedGltf;
 
         // モデル1の設定
-        model1 = gltf.scene.clone(); // モデルを複製
+        model1 = gltf.scene; // モデルを複製
         model1.scale.set(0.02, 0.02, 0.02);
         model1.position.set(0, 1, 0);
         model1.rotation.set(0, 0, 0);
