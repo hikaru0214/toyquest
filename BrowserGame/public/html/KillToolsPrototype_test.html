@@ -92,6 +92,7 @@ var gameheight = window.innerHeight;
 var aspectratio = 16/9;
 
 const scene = new THREE.Scene();
+scene.background = new THREE.Color("#00ffff");
 const camera = new THREE.PerspectiveCamera( fov, aspectratio, 0.1, 1000 );
 
 camera.rotation.order = "YXZ";
