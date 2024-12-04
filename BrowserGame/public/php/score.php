@@ -158,19 +158,20 @@
 </head>
 <body>
 <?php
-    $user = $_SESSION['user']; // セッションからユーザー情報を取得
-    // 初期設定
-    $selectedGame = isset($_POST['rankingu']) ? $_POST['rankingu'] : '総合スコア';
-    $showMyScore = isset($_POST['show_my_score']) ? true : false;
-    $showFriendScore = isset($_POST['show_friend_score']) ? true : false;
+    // リクエストデータを取得
+    $data = json_decode(file_get_contents('php://input'), true);
+    $type = $data['type'] ?? null;
+    $selectedGame = $data['selectedGame'] ?? '総合スコア';
     
+    $response = [];
+
     try {
-        // SQL生成
-        if ($showMyScore) {
-            if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+        if ($type === 'myScore') {
+             // 自分のスコアを取得
+            if (!isset($_SESSION['user_id'])) {
                 throw new Exception("ログインが必要です。");
             }
-            // 自分のスコア取得
+            
             $sql = "
                 SELECT User.user_id, User.user_name, Score.score, Score.registration_date 
                 FROM Score 
@@ -182,8 +183,7 @@
             $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
             $stmt->execute();
             $myScores = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-        if ($showFriendScore) {
+        } else if ($type === 'friendScore') {
             if (!isset($_SESSION['user_id'])) {
                 throw new Exception("ログインが必要です。");
             }
@@ -205,6 +205,8 @@
                 WHERE Score.user_id IN (" . implode(',', $friendIds) . ") 
                 ORDER BY Score.score DESC, Score.registration_date ASC
             ";
+            $stmt = $pdo->query($sql);
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
 
         } 
@@ -246,8 +248,11 @@
         echo '<p class="error-message">エラー: ' . $e->getMessage() . '</p>';
         exit;
     }
+        header('Content-Type: application/json');
+        echo json_encode($response);
     
     ?>
+
 
     <a href="top.php" class="back-button">戻る</a>
 
@@ -263,8 +268,8 @@
                         <option <?= $selectedGame === 'WANTED' ? 'selected' : '' ?>>WANTED</option>
                     </select>
                 </label>
-                <button type="submit" name="show_my_score">マイスコア</button>
-                <button type="submit" name="show_friend_score">フレンドスコア</button>
+                <button type="submit" id="show_my_score">マイスコア</button>
+                <button type="submit" id="show_friend_score">フレンドスコア</button>
             </div>
         </form>
 
@@ -310,3 +315,51 @@
     </div>
 </body>
 </html>
+
+
+<script>
+    document.getElementById('show_my_score').addEventListener('click', function() {
+    fetchScores('myScore');
+});
+
+document.getElementById('show_friend_score').addEventListener('click', function() {
+    fetchScores('friendScore');
+});
+
+function fetchScores(type) {
+    const selectedGame = document.getElementById('rankingu').value;
+
+    // Ajaxでリクエストを送信
+    fetch('getScores.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, selectedGame })
+    })
+        .then(response => response.json())
+        .then(data => updateTable(data))
+        .catch(error => console.error('Error:', error));
+}
+
+function updateTable(data) {
+    const tableBody = document.getElementById('scoreTableBody');
+    tableBody.innerHTML = ''; // 既存の行をクリア
+
+    if (data && data.length > 0) {
+        data.forEach((row, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${row.user_name}</td>
+                <td>${row.score}</td>
+                <td>${row.date}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    } else {
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="4">データがありません。</td>';
+        tableBody.appendChild(tr);
+    }
+}
+
+</script>
