@@ -31,7 +31,7 @@
     const scene = new THREE.Scene();
     scene.background = new THREE.Color("#00ffff");//ワールドの背景色を変更
 
-    const camera = new THREE.PerspectiveCamera(65, width / height, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(65, width / height, 0.1, 100);
     const renderer = new THREE.WebGLRenderer({
         antialias: true
     });
