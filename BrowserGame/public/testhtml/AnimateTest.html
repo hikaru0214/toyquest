@@ -40,7 +40,7 @@
 
     
     // カメラの位置設定
-    camera.position.set(3, 0, 0);
+    camera.position.set(0, 0, 5);
     
 
     // ライトの追加
@@ -65,7 +65,7 @@
         function (loadedGltf) {
             gltf = loadedGltf;
             model = gltf.scene;
-            model.scale.set(20,20,20);
+            model.scale.set(1,1,1);
             model.position.set(0, 0, 0);
             model.rotation.set(0, 0, 0);
             model.traverse(function (node) {
