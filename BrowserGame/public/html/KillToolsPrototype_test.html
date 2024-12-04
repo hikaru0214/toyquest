@@ -147,7 +147,7 @@ loader.load(
 
         // アニメーションミキサー2
         mixer2 = new THREE.AnimationMixer(model2);
-        const clip2 = THREE.AnimationClip.findByName(gltf.animations, 'feet.run'); // アニメーション名で検索
+        const clip2 = THREE.AnimationClip.findByName(gltf.animations, 'chest.run'); // アニメーション名で検索
         if (clip2) mixer2.clipAction(clip2).play();
     },
     undefined,
