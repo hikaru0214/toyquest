@@ -135,7 +135,7 @@ loader.load(
 
         // アニメーションミキサー1
         mixer1 = new THREE.AnimationMixer(model1);
-        const clip1 = THREE.AnimationClip.findByName(gltf.animations, 'stopmotion'); // アニメーション名で検索
+        const clip1 = THREE.AnimationClip.findByName(gltf.animations, 'feet.run'); // アニメーション名で検索
         if (clip1) mixer1.clipAction(clip1).play();
 
         // モデル2の設定
@@ -147,7 +147,7 @@ loader.load(
 
         // アニメーションミキサー2
         mixer2 = new THREE.AnimationMixer(model2);
-        const clip2 = THREE.AnimationClip.findByName(gltf.animations, 'Walk'); // アニメーション名で検索
+        const clip2 = THREE.AnimationClip.findByName(gltf.animations, 'feet.run'); // アニメーション名で検索
         if (clip2) mixer2.clipAction(clip2).play();
     },
     undefined,
