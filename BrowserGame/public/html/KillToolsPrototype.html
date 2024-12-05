@@ -795,23 +795,32 @@ document.addEventListener("keyup",function(e){
     document.getElementById("main_button_create").onclick = function(){showMenu("CreateGame")};
     document.getElementById("main_button_options").onclick = function(){showMenu("Options")};
     document.getElementById("main_button_about").onclick = function(){showMenu("About")};
-    document.getElementById("cancel_create_button").onclick = function(){closeAllMenuWindow()};
 
     document.getElementById("save_player_button").onclick = function(){
         setting.user_name = document.getElementById("user_name_input").value;
     };
 
     document.getElementById("create_game_button").onclick = function(){
+        document.getElementById("create_game_error").innerHTML = "";
+        elementDisplayById("create_game_error",false);
         var gamename = document.getElementById("gamename_input").value;
         socket.emit("create game",gamename);
     };
 
+    document.getElementById("cancel_create_button").onclick = function(){
+        closeAllMenuWindow();
+        elementDisplayById("create_game_error",false);
+    };
+
     socket.on("create error",function(message){
         document.getElementById("create_game_error").innerHTML = message;
+        elementDisplayById("create_game_error",true);
     });
 
     socket.on("game created",function(){
         closeAllMenuWindow();
+        document.getElementById("create_game_error").innerHTML = "";
+        elementDisplayById("create_game_error",false);
     });
 
     function animate() {
@@ -868,8 +877,7 @@ renderer.setAnimationLoop( animate );
         <div id="CreateGame">
             <div class="window" style="left: 35%; top: 10%; width: 58%; height: 80%;">
                 <div style="position:fixed; left: 40%; top: 25%; font-size: 32px;">
-                    <p style="font-size: 18px; color: red;" id="create_game_error"></p>
-                    <br>
+                    <p style="display: none; font-size: 18px; color: red;" id="create_game_error"></p>
                     game name <input id="gamename_input" type="text">
                     <br>
                     player limit <input type="text">
