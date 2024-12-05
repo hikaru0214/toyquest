@@ -75,10 +75,10 @@
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
             
             const clip1=gltf.animations.find(clip=>clip.name==='feet.run');
-            mixer.clipAction(clip1).play();
+            //mixer.clipAction(clip1).play();
 
             const clip2=gltf.animations.find(clip=>clip.name==='chest.run');
-            mixer.clipAction(clip2).play();
+            //mixer.clipAction(clip2).play();
             
         },
         undefined,
