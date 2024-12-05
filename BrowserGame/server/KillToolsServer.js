@@ -13,6 +13,7 @@ const games = {};
 io.on("connection",(socket)=>{
     console.log("user connected");
     var id = socket.id;
+    var joinedgame = "";
 
     socket.on("create game",function(gamename){
         if(games.hasOwnProperty(gamename)){
@@ -23,12 +24,23 @@ io.on("connection",(socket)=>{
             return;
         }
         console.log("game "+gamename+" created!");
-        games[gamename] = {gamename};
+        games[gamename] = {gamename:gamename};
+        joinedgame = gamename;
         socket.join(gamename);
         socket.emit("game created");
     });
 
+    socket.on("join game",function(gamename){
+        if(games.hasOwnProperty(gamename)){
+            joinedgame = gamename;
+            socket.join(gamename);
+        }else{
+
+        }
+    });
+
     socket.on("disconnect",()=>{
+        socket.leave(joinedgame);
         console.log("user disconnected");
     }); 
 });

@@ -26,6 +26,8 @@
             image-rendering: pixelated;
             width:15vw;
             height:15vw;
+            max-width: 180px;
+            max-height: 180px;
         }
 
         #player_avatar {
@@ -33,6 +35,8 @@
             width: 15vw;
             height: 15vw;
             transform: translate(-50%,-50%);
+            max-width: 180px;
+            max-height: 180px;
         }
 
         @font-face {
@@ -161,10 +165,6 @@ const setting = {
     skin_color:10,
     skin_eye:10,
     skin_mouth:10,
-};
-
-const menu_ui = {
-    gamemenu:{},
 };
 
 const scene = new THREE.Scene();
@@ -775,7 +775,7 @@ document.addEventListener("keyup",function(e){
 
     var menu_opened = false;
 
-    var menu_ids = ["CreateGame","Options","About"];
+    var menu_ids = ["CreateGame","JoinGame","Options","About"];
 
     function closeAllMenuWindow(){
         menu_opened=false;
@@ -793,6 +793,7 @@ document.addEventListener("keyup",function(e){
     }
 
     document.getElementById("main_button_create").onclick = function(){showMenu("CreateGame")};
+    document.getElementById("main_button_join").onclick = function(){showMenu("JoinGame")};
     document.getElementById("main_button_options").onclick = function(){showMenu("Options")};
     document.getElementById("main_button_about").onclick = function(){showMenu("About")};
 
@@ -803,13 +804,23 @@ document.addEventListener("keyup",function(e){
     document.getElementById("create_game_button").onclick = function(){
         document.getElementById("create_game_error").innerHTML = "";
         elementDisplayById("create_game_error",false);
-        var gamename = document.getElementById("gamename_input").value;
+        var gamename = document.getElementById("newgamename_input").value;
         socket.emit("create game",gamename);
+    };
+
+    document.getElementById("join_game_button").onclick = function(){
+        var gamename = document.getElementById("gamename_input").value;
+        socket.emit("join game",gamename);
     };
 
     document.getElementById("cancel_create_button").onclick = function(){
         closeAllMenuWindow();
         elementDisplayById("create_game_error",false);
+    };
+
+    document.getElementById("join_cancel_button").onclick = function(){
+        closeAllMenuWindow();
+        elementDisplayById("join_game_error",false);
     };
 
     socket.on("create error",function(message){
@@ -876,19 +887,29 @@ renderer.setAnimationLoop( animate );
     <div id="menu_layer1">
         <div id="CreateGame">
             <div class="window" style="left: 35%; top: 10%; width: 58%; height: 80%;">
-                <div style="position:fixed; left: 40%; top: 25%; font-size: 32px;">
-                    <p style="display: none; font-size: 18px; color: red;" id="create_game_error"></p>
-                    game name <input id="gamename_input" type="text">
+                <div style="position:fixed; left: 40%; top: 22%; font-size: 32px;">
+                    game name <input id="newgamename_input" type="text">
                     <br>
                     player limit <input type="text">
                     <br>
                     game mode <input type="text">
-                    <br>
+                    <p style="display: none; font-size: 18px; color: red;" id="create_game_error"></p>
                     <button id="cancel_create_button" style="position:fixed; font-size: 36px; left: 40%; top: 42%;">cancel</button>
                     <button id="create_game_button" style="position:fixed; font-size: 36px; left: 60%; top: 42%;">create</button>
                 </div>
             </div>
             <div class="window" style="font-size: 32px; left:50%; top: 10%; transform: translate(-50%,-50%);">Create Game</div>
+        </div>
+        <div id="JoinGame">
+            <div class="window" style="left: 35%; top: 10%; width: 58%; height: 80%;">
+                <div style="position:fixed; left: 40%; top: 22%; font-size: 32px;">
+                    game name <input id="gamename_input" type="text">
+                    <p style="display: none; font-size: 18px; color: red;" id="join_game_error"></p>
+                    <button id="join_cancel_button" style="position:fixed; font-size: 36px; left: 40%; top: 42%;">cancel</button>
+                    <button id="join_game_button" style="position:fixed; font-size: 36px; left: 60%; top: 42%;">join</button>
+                </div>
+            </div>
+            <div class="window" style="font-size: 32px; left:50%; top: 10%; transform: translate(-50%,-50%);">Join Game</div>
         </div>
         <div id="Options">
 
