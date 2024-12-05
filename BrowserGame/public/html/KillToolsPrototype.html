@@ -136,6 +136,10 @@
             text-shadow: 2px 2px #333333;
         }
 
+        #menu_layer1 {
+            display: none;
+        }
+
         input {
             width: 100px;
         }
@@ -770,6 +774,7 @@ document.addEventListener("keyup",function(e){
 
     elementDisplayById("ui_overlay",true);
     elementDisplayById("CreateGame",false);
+    elementDisplayById("JoinGame",false);
     elementDisplayById("Options",false);
     elementDisplayById("About",false);
 
@@ -790,6 +795,7 @@ document.addEventListener("keyup",function(e){
             elementDisplayById(menu_ids[i],false);
         }
         elementDisplayById(showid,true);
+        elementDisplayById("menu_layer1",true);
     }
 
     document.getElementById("main_button_create").onclick = function(){showMenu("CreateGame")};
