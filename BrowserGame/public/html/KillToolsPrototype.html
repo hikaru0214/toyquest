@@ -24,8 +24,15 @@
             padding: 0px;
             position: absolute;
             image-rendering: pixelated;
-            width: 160px;
-            height: 160px;
+            width:15vw;
+            height:15vw;
+        }
+
+        #player_avatar {
+            position: fixed;
+            width: 15vw;
+            height: 15vw;
+            transform: translate(-50%,-50%);
         }
 
         @font-face {
@@ -40,10 +47,6 @@
             position: fixed;
             color: white;
             display: none;
-        }
-        #player_avatar {
-            position: fixed;
-            bottom: 0;
         }
         #crosshair {
             position: fixed;
@@ -65,11 +68,72 @@
             padding: 0px;
             top: 50%;
             left: 50%;
-            width: 35%;
-            height: 35%;
+            width: 25%;
+            height: 25%;
             transform: translate(-50%,-50%);
             border: double white 2px;
             cursor:pointer;
+        }
+
+        #gamemenu{
+            font-family: rasterfont_us;
+            background-color: #888888bb;
+            color: white;
+            position: fixed;
+            top: 50%;
+            left: 25%;
+            width: 25%;
+            transform: translate(-75%,-50%);
+            border: double white 2px;
+        }
+
+        button {
+            font-family: rasterfont_us;
+            transform: translate(0%,0%);
+            text-align: left;
+            color: white;
+            background-color: #00000000;
+            text-shadow: 2px 2px #333333;
+            border: 1px solid white;
+        }
+
+        button:hover {
+            transform: translate(calc(0% + 2px),calc(0% + 2px));
+            text-shadow: 0px 0px #333333;
+        }
+
+        .mainmenubutton {
+            font-family: rasterfont_us;
+            font-size: 36px;
+            width: 70%;
+            transform: translate(-50%,0%);
+            margin-left: 50%;
+            margin-top: 4%;
+            margin-bottom: 4%;
+            text-align: left;
+            color: white;
+            background-color: #00000000;
+            text-shadow: 3px 3px #333333;
+            border: 1px solid white;
+        }
+        .mainmenubutton:hover {
+            transform: translate(calc(-50% + 3px),calc(0% + 3px));
+            text-shadow: 0px 0px #333333;
+        }
+
+        .window {
+            font-family: rasterfont_us;
+            background-color: #888888bb;
+            color: white;
+            position: fixed;
+            border: double white 2px;
+            font-size: 18px;
+            font-style:normal;
+            text-shadow: 2px 2px #333333;
+        }
+
+        input {
+            width: 100px;
         }
       </style>
 </head>
@@ -88,6 +152,20 @@ var fov = 90;
 var gamewidth = window.innerWidth;
 var gameheight = window.innerHeight;
 var aspectratio = 16/9;
+
+const setting = {
+    fov:fov,
+    aspectratio:aspectratio,
+    show_help:true,
+    user_name:"ゲスト",
+    skin_color:10,
+    skin_eye:10,
+    skin_mouth:10,
+};
+
+const menu_ui = {
+    gamemenu:{},
+};
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( fov, aspectratio, 0.1, 1000 );
@@ -444,10 +522,13 @@ document.addEventListener('mouseup',(e)=>{
     //e.preventDefault();
 });
 
-document.addEventListener("keydown",(e)=>{
+document.addEventListener("keydown",async function(e){
     keys[e.code]=true;
+    if(e.code=="Escape"){
+        closeAllMenuWindow();
+    }
 });
-document.addEventListener("keyup",(e)=>{
+document.addEventListener("keyup",function(e){
     keys[e.code]=false;
 });
 
@@ -484,6 +565,17 @@ document.addEventListener("keyup",(e)=>{
         }
     }
 
+    async function requestAim(){
+        await document.body.requestPointerLock({
+                unadjustedMovement:true,
+        });
+    }
+
+    function letGoAim(){
+        document.exitPointerLock();
+    }
+
+
     function elementDisplayById(id,show){
         document.getElementById(id).style.display  = show?"block":"none";
     }
@@ -503,9 +595,14 @@ document.addEventListener("keyup",(e)=>{
 
     function update(){
 
-        console.log(spectate);
-
-        if(!document.pointerLockElement)requestFocusElement.style.display="block";
+        if(!document.pointerLockElement){
+            requestFocusElement.style.display="block";
+            elementDisplayById("ui_overlay",false);
+            elementDisplayById("menu_ui",true);
+        }else{
+            elementDisplayById("ui_overlay",true);
+            elementDisplayById("menu_ui",false);
+        }
 
         if(document.pointerLockElement){
             requestFocusElement.style.display="none"
@@ -665,11 +762,57 @@ document.addEventListener("keyup",(e)=>{
                 players.splice(i,1);
             }
         }
+
+        document.getElementById("preview_player_name").innerHTML = setting.user_name;
     }
 
     setInterval(update,1000/60);
 
     elementDisplayById("ui_overlay",true);
+    elementDisplayById("CreateGame",false);
+    elementDisplayById("Options",false);
+    elementDisplayById("About",false);
+
+    var menu_opened = false;
+
+    var menu_ids = ["CreateGame","Options","About"];
+
+    function closeAllMenuWindow(){
+        menu_opened=false;
+        for(var i=0;i < menu_ids.length;i++){
+            elementDisplayById(menu_ids[i],false);
+        }
+    }
+
+    function showMenu(showid){
+        menu_opened=true;
+        for(var i=0;i < menu_ids.length;i++){
+            elementDisplayById(menu_ids[i],false);
+        }
+        elementDisplayById(showid,true);
+    }
+
+    document.getElementById("main_button_create").onclick = function(){showMenu("CreateGame")};
+    document.getElementById("main_button_options").onclick = function(){showMenu("Options")};
+    document.getElementById("main_button_about").onclick = function(){showMenu("About")};
+    document.getElementById("cancel_create_button").onclick = function(){closeAllMenuWindow()};
+
+    document.getElementById("save_player_button").onclick = function(){
+        setting.user_name = document.getElementById("user_name_input").value;
+    };
+
+    document.getElementById("create_game_button").onclick = function(){
+        var gamename = document.getElementById("gamename_input").value;
+        socket.emit("create game",gamename);
+    };
+
+    socket.on("create error",function(message){
+        document.getElementById("create_game_error").innerHTML = message;
+    });
+
+    socket.on("game created",function(){
+        closeAllMenuWindow();
+    });
 
     function animate() {
         camera.position.x = player_pos.x;
@@ -691,11 +834,13 @@ renderer.setAnimationLoop( animate );
         <br>
         ジャンプ : スペースキー
         <br>
+        <div style="display: none;">
         <button id="spectate">観戦モード</button>
         <br>
         ユーザーネーム<input type="text"><button>適用</button>
         <br>
-        <div id="player_avatar" style="width: 160px; height: 160px;margin: 5px; display: inline-block;vertical-align: top;">
+        </div>
+        <div id="player_avatar" style="left:10vw; bottom: -5vw; margin: 5px; display: inline-block;vertical-align: top;">
             <div id="skin" class="avatar" style="background-image: url('../img/color_atlas.gif');"></div>
             <div id="eye" class="avatar" style="background-image: url('../img/eyes_atlas.gif');"></div>
             <div id="mouth" class="avatar" style="background-image: url('../img/mouth_atlas.gif');"></div>
@@ -704,11 +849,97 @@ renderer.setAnimationLoop( animate );
 
     <div id="requestFocus">
         <p class="blink" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 32px; margin: 0px; padding: 0px;">
-            CLICK TO FOCUS
+            CLICK HERE TO FOCUS!
         </p>
     </div>
 
-    <script>
+    <div id="menu_ui">
+
+    <div id="gamemenu">
+        <button id="main_button_create" class="mainmenubutton">Create Game</button>
+        <button id="main_button_join" class="mainmenubutton">Join Game</button>
+        <button id="main_button_leave" class="mainmenubutton">Leave Game</button>
+        <button id="main_button_options" class="mainmenubutton">Options</button>
+        <button id="main_button_about" class="mainmenubutton">About</button>
+        <button id="main_button_quit" class="mainmenubutton">Quit</button>
+    </div>
+
+    <div id="menu_layer1">
+        <div id="CreateGame">
+            <div class="window" style="left: 35%; top: 10%; width: 58%; height: 80%;">
+                <div style="position:fixed; left: 40%; top: 25%; font-size: 32px;">
+                    <p style="font-size: 18px; color: red;" id="create_game_error"></p>
+                    <br>
+                    game name <input id="gamename_input" type="text">
+                    <br>
+                    player limit <input type="text">
+                    <br>
+                    game mode <input type="text">
+                    <br>
+                    <button id="cancel_create_button" style="position:fixed; font-size: 36px; left: 40%; top: 42%;">cancel</button>
+                    <button id="create_game_button" style="position:fixed; font-size: 36px; left: 60%; top: 42%;">create</button>
+                </div>
+            </div>
+            <div class="window" style="font-size: 32px; left:50%; top: 10%; transform: translate(-50%,-50%);">Create Game</div>
+        </div>
+        <div id="Options">
+
+            <div id="user_option" class="window" style="left: 35%; top: 10%; width: 35%; height: 34%;">
+                <div style="left: 37%; position: fixed;">
+                    <br>
+                    user options
+                    <br>
+                    <br>
+                    player name <input id="user_name_input" type="text" placeholder="guest">
+                    <br>
+                    skin color <input type="text">
+                    <br>
+                    skin eyes <input type="text">
+                    <br>
+                    skin mouth <input type="text">
+                </div>
+                <button id="save_player_button" style="position:fixed; font-size: 24px; left: 65%; top: 39%; transform: translate(-50%,0%);">save</button>
+            </div>
+
+            <div class="window" style="left: 71%; top: 10%; width: 22%; height: 34%;">
+                skin preview
+                <div id="preview_player_name" style="position:fixed; left:calc(71% + 22% / 2); transform: translate(-50%,0%);">NAME</div>
+                <div id="player_avatar" style="top:calc(10% + 34% / 2); left:calc(71% + 22% / 2); margin: 5px; display: inline-block;vertical-align: top;">
+                    <div id="skin" class="avatar" style="background-image: url('../img/color_atlas.gif');"></div>
+                    <div id="eye" class="avatar" style="background-image: url('../img/eyes_atlas.gif');"></div>
+                    <div id="mouth" class="avatar" style="background-image: url('../img/mouth_atlas.gif');"></div>
+                </div>
+
+            </div>
+
+            <div class="window" style="left: 35%; top: 45.5%; width: 58%; height: 45%;">
+                video settings
+            </div>
+
+            <div class="window" style="font-size: 32px; left:50%; top: 10%; transform: translate(-50%,-50%);">Options</div>
+        </div>
+        <div id="About">
+            <div class="window" style="left: 35%; top: 10%; width: 58%; height: 80%;">
+                <br>
+                <br>
+
+                麻生情報ビジネス専門学校 卒業年度のチーム開発演習の作成物
+                <br>
+                クラス SD3B 
+                <h3>チームメンバー</h3>
+                吉田光
+                吉田夢来
+                宇都流星
+                小関英斗
+                下田大翔
+            </div>
+            <div class="window" style="font-size: 32px; left:50%; top: 10%; transform: translate(-50%,-50%);">About</div>
+        </div>
+    </div>
+
+    </div>
+
+    <script type="text/javascript">
 
         var blink = false;
         var blinkel = document.getElementsByClassName("blink");
@@ -718,7 +949,7 @@ renderer.setAnimationLoop( animate );
                 blinkel[i].style.display = blink?"block":"none";
             }
         },500)
-
+    
         function setSpritePosition(r_skin,r_eye,r_mouth){
             r_skin = parseInt(r_skin);
             r_eye = parseInt(r_eye);
@@ -728,29 +959,35 @@ renderer.setAnimationLoop( animate );
             var skin_col = r_skin%10;
             var skin_sx = skin_col*-100;
             var skin_sy = skin_row*-100;
-
+    
             var eye_row = parseInt(r_eye/10,10);
             var eye_col = r_eye%10;
             var eye_sx = eye_col*-100;
             var eye_sy = eye_row*-100;
-
+    
             var mouth_row = parseInt(r_mouth/10,10);
             var mouth_col = r_mouth%10;
             var mouth_sx = mouth_col*-100;
             var mouth_sy = mouth_row*-100;
-
+    
             document.getElementById("skin").style.backgroundPositionX = skin_sx+"%";
             document.getElementById("skin").style.backgroundPositionY = skin_sy+"%";
-
+    
             document.getElementById("eye").style.backgroundPositionX = eye_sx+"%";
             document.getElementById("eye").style.backgroundPositionY = eye_sy+"%";
-
+    
             document.getElementById("mouth").style.backgroundPositionX = mouth_sx+"%";
             document.getElementById("mouth").style.backgroundPositionY = mouth_sy+"%";
         }
-
+    
         setSpritePosition(Math.random()*28,Math.random()*57,Math.random()*51);
-    </script>
+    
+        var ui_user_option = document.getElementById("user_option");
+    
+        var temp = ui_user_option.innerHTML;
+    
+        </script>
+
     
 </body>
 </html>
