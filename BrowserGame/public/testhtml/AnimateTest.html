@@ -134,9 +134,9 @@
         if (mixer) {
         mixer.update(delta); // アニメーションの更新
         }
-        renderer.render(scene, camera);
+        renderer.render(scene, camera);//レンダリング処理。アニメーションを再生するために実行し続ける必要がある。
         checkOrientation();
-        requestAnimationFrame(animate);
+        requestAnimationFrame(animate);//一定時間ごとにanimate()を実行する。モデルのアニメーションを実行させるにはrenderer.render(...)一定時間ごとに実行する必要がある。
     }
 
     animate();
