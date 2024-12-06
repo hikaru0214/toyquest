@@ -73,6 +73,7 @@
 
             console.log(gltf.animations.map(clip => clip.name));
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
+            model.skeleton.pose();//blender上のデフォルトのポーズを無効化
             
             const clip1=gltf.animations.find(clip=>clip.name==='feet.run');
             mixer.clipAction(clip1).play();
