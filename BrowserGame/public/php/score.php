@@ -157,6 +157,97 @@
     </style>
 </head>
 <body>
+<?php
+    $user = $_SESSION['user']; // セッションからユーザー情報を取得
+    // 初期設定
+    $selectedGame = isset($_POST['rankingu']) ? $_POST['rankingu'] : '総合スコア';
+    $showMyScore = isset($_POST['show_my_score']) ? true : false;
+    $showFriendScore = isset($_POST['show_friend_score']) ? true : false;
+    
+    try {
+        // SQL生成
+        if ($showMyScore) {
+            if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+                throw new Exception("ログインが必要です。");
+            }
+            // 自分のスコア取得
+            $sql = "
+                SELECT User.user_id, User.user_name, Score.score, Score.registration_date 
+                FROM Score 
+                INNER JOIN User ON Score.user_id = User.user_id 
+                WHERE Score.user_id = :user_id 
+                ORDER BY Score.score DESC, Score.registration_date ASC
+            ";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->execute();
+            $myScores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        if ($showFriendScore) {
+            if (!isset($_SESSION['user_id'])) {
+                throw new Exception("ログインが必要です。");
+            }
+
+            // フレンドリスト取得
+            $friendSql = "SELECT friend_id FROM Friend WHERE user_id = :user_id";
+            $friendStmt = $pdo->prepare($friendSql);
+            $friendStmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+            $friendStmt->execute();
+            $friendIds = $friendStmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+            if (empty($friendIds)) {
+                throw new Exception("フレンドがいません。");
+            }else{
+                $sql = "
+                SELECT User.user_id, User.user_name, Score.score, Score.registration_date 
+                FROM Score 
+                INNER JOIN User ON Score.user_id = User.user_id 
+                WHERE Score.user_id IN (" . implode(',', $friendIds) . ") 
+                ORDER BY Score.score DESC, Score.registration_date ASC
+            ";
+            }
+
+        } 
+        if ($selectedGame === '総合スコア') {
+            $sql = "
+                SELECT User.user_id, User.user_name, SUM(Score.score) AS total_score, MAX(Score.registration_date) AS last_play_date
+                FROM Score 
+                INNER JOIN User ON Score.user_id = User.user_id 
+                WHERE Score.game_id IN (1, 2, 3) 
+                GROUP BY User.user_id, User.user_name 
+                ORDER BY total_score DESC
+                LIMIT 50
+            ";
+        } else {
+            $gameMapping = [
+                'Burush Dengon' => 1,
+                'チャリ走' => 2,
+                'WANTED' => 3,
+            ];
+            $sql = "
+                SELECT User.user_id, User.user_name, Score.score, Score.registration_date 
+                FROM Score 
+                INNER JOIN User ON Score.user_id = User.user_id 
+                WHERE Score.game_id = :game_id 
+                ORDER BY Score.score DESC, Score.registration_date ASC
+            ";
+        }
+
+        // SQL実行
+        $stmt = $pdo->prepare($sql);
+        if ($showMyScore) {
+            $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        } elseif (isset($gameMapping[$selectedGame])) {
+            $stmt->bindValue(':game_id', $gameMapping[$selectedGame], PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        echo '<p class="error-message">エラー: ' . $e->getMessage() . '</p>';
+        exit;
+    }
+    
+    ?>
 
     <a href="top.php" class="back-button">戻る</a>
 
@@ -217,67 +308,5 @@
             </table>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        function fetchScores(action) {
-            const rankingu = $('select[name="rankingu"]').val();
-
-            $.ajax({
-                url: 'fetch_scores.php',
-                type: 'POST',
-                data: { action: action, rankingu: rankingu },
-                dataType: 'json',
-                success: function (response) {
-                    const tableBody = $('table tbody');
-                    tableBody.empty();
-
-                    if (response.error) {
-                        tableBody.append('<tr><td colspan="4">' + response.error + '</td></tr>');
-                        return;
-                    }
-
-                    if (response.length > 0) {
-                        let rank = 1;
-                        response.forEach(score => {
-                            const date = score.registration_date || score.last_play_date || '-';
-                            const scoreValue = score.total_score || score.score || '-';
-                            tableBody.append(`
-                                <tr>
-                                    <td>${rank++}</td>
-                                    <td>${score.user_name}</td>
-                                    <td>${scoreValue}</td>
-                                    <td>${date}</td>
-                                </tr>
-                            `);
-                        });
-                    } else {
-                        tableBody.append('<tr><td colspan="4">データがありません</td></tr>');
-                    }
-                },
-                error: function () {
-                    alert('データの取得に失敗しました。');
-                }
-            });
-        }
-
-        // ボタンのクリックイベント
-        $('button[name="show_my_score"]').on('click', function (e) {
-            e.preventDefault();
-            fetchScores('myScore');
-        });
-
-        $('button[name="show_friend_score"]').on('click', function (e) {
-            e.preventDefault();
-            fetchScores('friendScore');
-        });
-
-        // セレクトボックス変更時にスコア更新
-        $('select[name="rankingu"]').on('change', function () {
-            fetchScores('default');
-        });
-    });
-</script>
-
 </body>
 </html>
