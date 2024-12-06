@@ -73,7 +73,7 @@
 
             console.log(gltf.animations.map(clip => clip.name));
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
-            
+            /**
             const clip1=gltf.animations.find(clip=>clip.name==='feet.run');
             mixer.clipAction(clip1).play();
 
@@ -88,7 +88,7 @@
 
             const clip5=gltf.animations.find(clip=>clip.name==='leftarm.run');
             mixer.clipAction(clip5).play();
-            
+            */
             
             /**
             "chest.normal"
@@ -160,6 +160,9 @@
         const delta = clock.getDelta(); // delta の取得
         if (mixer) {
         mixer.update(delta); // アニメーションの更新
+        }
+        if(model){
+        model.rotation.y += 0.01;
         }
         renderer.render(scene, camera);//レンダリング処理。アニメーションを再生するために実行し続ける必要がある。
         checkOrientation();
