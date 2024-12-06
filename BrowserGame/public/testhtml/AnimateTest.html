@@ -67,13 +67,15 @@
             model.position.set(0, 0, 0);
             model.rotation.set(0, 0, 0);
             model.traverse(function (node) {
+            if (node.isSkinnedMesh) {
+                node.skeleton.pose(); //blender上のデフォルトのポーズを無効化
+            }
             });
             scene.add(model);
             camera.lookAt(model.position);//カメラがモデルに注目するようにする
 
             console.log(gltf.animations.map(clip => clip.name));
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
-            model.skeleton.pose();//blender上のデフォルトのポーズを無効化
             
             const clip1=gltf.animations.find(clip=>clip.name==='feet.run');
             mixer.clipAction(clip1).play();
