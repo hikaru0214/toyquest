@@ -155,40 +155,50 @@
             margin: 20px 0;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <?php
-    $user = $_SESSION['user']; // セッションからユーザー情報を取得
-    // 初期設定
-    $selectedGame = isset($_POST['rankingu']) ? $_POST['rankingu'] : '総合スコア';
-    $showMyScore = isset($_POST['show_my_score']) ? true : false;
-    $showFriendScore = isset($_POST['show_friend_score']) ? true : false;
-    
+   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     try {
-        // SQL生成
-        if ($showMyScore) {
+        $gameMapping = [
+            '総合スコア' => null, // 総合スコアは特別扱い
+            'Burush Dengon' => 1,
+            'チャリ走' => 2,
+            'WANTED' => 3
+        ];
+
+        $selectedGame = $_POST['game'] ?? '総合スコア'; // セレクトボックスの選択値
+        $gameId = $gameMapping[$selectedGame];
+
+        if ($_POST['action'] === 'getMyScore') {
             if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
-                throw new Exception("ログインが必要です。");
+                echo json_encode(['error' => 'ログインが必要です。']);
+                exit;
             }
-            // 自分のスコア取得
             $sql = "
-                SELECT User.user_id, User.user_name, Score.score, Score.registration_date 
+                SELECT User.user_name, Score.score, Score.registration_date 
                 FROM Score 
                 INNER JOIN User ON Score.user_id = User.user_id 
-                WHERE Score.user_id = :user_id 
+                WHERE Score.user_id = :user_id
+                " . ($gameId !== null ? "AND Score.game_id = :game_id" : "") . "
                 ORDER BY Score.score DESC, Score.registration_date ASC
             ";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-            $stmt->execute();
-            $myScores = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-        if ($showFriendScore) {
-            if (!isset($_SESSION['user_id'])) {
-                throw new Exception("ログインが必要です。");
+            if ($gameId !== null) {
+                $stmt->bindValue(':game_id', $gameId, PDO::PARAM_INT);
             }
+            $stmt->execute();
+            echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            exit;
+        }
 
-            // フレンドリスト取得
+        if ($_POST['action'] === 'getFriendScore') {
+            if (!isset($_SESSION['user_id'])) {
+                echo json_encode(['error' => 'ログインが必要です。']);
+                exit;
+            }
             $friendSql = "SELECT friend_id FROM Friend WHERE user_id = :user_id";
             $friendStmt = $pdo->prepare($friendSql);
             $friendStmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
@@ -196,57 +206,32 @@
             $friendIds = $friendStmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
             if (empty($friendIds)) {
-                throw new Exception("フレンドがいません。");
-            }else{
-                $sql = "
-                SELECT User.user_id, User.user_name, Score.score, Score.registration_date 
-                FROM Score 
-                INNER JOIN User ON Score.user_id = User.user_id 
-                WHERE Score.user_id IN (" . implode(',', $friendIds) . ") 
-                ORDER BY Score.score DESC, Score.registration_date ASC
-            ";
+                echo json_encode(['error' => 'フレンドがいません。']);
+                exit;
             }
 
-        } 
-        if ($selectedGame === '総合スコア') {
             $sql = "
-                SELECT User.user_id, User.user_name, SUM(Score.score) AS total_score, MAX(Score.registration_date) AS last_play_date
+                SELECT User.user_name, Score.score, Score.registration_date 
                 FROM Score 
                 INNER JOIN User ON Score.user_id = User.user_id 
-                WHERE Score.game_id IN (1, 2, 3) 
-                GROUP BY User.user_id, User.user_name 
-                ORDER BY total_score DESC
-                LIMIT 50
-            ";
-        } else {
-            $gameMapping = [
-                'Burush Dengon' => 1,
-                'チャリ走' => 2,
-                'WANTED' => 3,
-            ];
-            $sql = "
-                SELECT User.user_id, User.user_name, Score.score, Score.registration_date 
-                FROM Score 
-                INNER JOIN User ON Score.user_id = User.user_id 
-                WHERE Score.game_id = :game_id 
+                WHERE Score.user_id IN (" . implode(',', $friendIds) . ")
+                " . ($gameId !== null ? "AND Score.game_id = :game_id" : "") . "
                 ORDER BY Score.score DESC, Score.registration_date ASC
             ";
+            $stmt = $pdo->prepare($sql);
+            if ($gameId !== null) {
+                $stmt->bindValue(':game_id', $gameId, PDO::PARAM_INT);
+            }
+            $stmt->execute();
+            echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            exit;
         }
-
-        // SQL実行
-        $stmt = $pdo->prepare($sql);
-        if ($showMyScore) {
-            $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-        } elseif (isset($gameMapping[$selectedGame])) {
-            $stmt->bindValue(':game_id', $gameMapping[$selectedGame], PDO::PARAM_INT);
-        }
-        $stmt->execute();
-        $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (Exception $e) {
-        echo '<p class="error-message">エラー: ' . $e->getMessage() . '</p>';
+        echo json_encode(['error' => 'データ取得に失敗しました。']);
         exit;
     }
-    
+}
+
     ?>
 
     <a href="top.php" class="back-button">戻る</a>
@@ -256,15 +241,15 @@
         <form method="POST" action="">
             <div class="tabs">
                 <label class="selectbox-1">
-                    <select name="rankingu" onchange="this.form.submit()">
-                        <option <?= $selectedGame === '総合スコア' ? 'selected' : '' ?>>総合スコア</option>
-                        <option <?= $selectedGame === 'Burush Dengon' ? 'selected' : '' ?>>Burush Dengon</option>
-                        <option <?= $selectedGame === 'チャリ走' ? 'selected' : '' ?>>チャリ走</option>
-                        <option <?= $selectedGame === 'WANTED' ? 'selected' : '' ?>>WANTED</option>
-                    </select>
+                <select id="game-select">
+                    <option value="総合スコア">総合スコア</option>
+                    <option value="Burush Dengon">Burush Dengon</option>
+                    <option value="チャリ走">チャリ走</option>
+                    <option value="WANTED">WANTED</option>
+                </select>
                 </label>
-                <button type="submit" name="show_my_score">マイスコア</button>
-                <button type="submit" name="show_friend_score">フレンドスコア</button>
+                <button type="submit" id="show_my_score">マイスコア</button>
+                <button type="submit" id="show_friend_score">フレンドスコア</button>
             </div>
         </form>
 
@@ -279,34 +264,70 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($scores)): ?>
-                        <?php 
-                        $rank = 1; 
-                        foreach ($scores as $score): 
-                            $displayDate = isset($score['last_play_date']) 
-                                ? htmlspecialchars($score['last_play_date'], ENT_QUOTES, 'UTF-8') 
-                                : (isset($score['registration_date']) 
-                                    ? htmlspecialchars($score['registration_date'], ENT_QUOTES, 'UTF-8') 
-                                    : '-'); 
-                        ?>
-                        <tr>
-                            <td><?= $rank ?></td>
-                            <td><?= htmlspecialchars($score['user_name'], ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= htmlspecialchars($score['score'] ?? $score['total_score'], ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= $displayDate ?></td>
-                        </tr>
-                        <?php 
-                        $rank++;
-                        endforeach; 
-                        ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="4">データがありません</td>
-                        </tr>
-                    <?php endif; ?>
+                <tbody id="score-table-body">
+                    <tr>
+                        <td colspan="4">データがありません</td>
+                    </tr>
+                </tbody>
                 </tbody>
             </table>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            // ボタンイベント設定
+            $('#show-my-score').on('click', function () {
+                fetchData('getMyScore');
+            });
+            $('#show-friend-score').on('click', function () {
+                fetchData('getFriendScore');
+            });
+
+            // データ取得関数
+            function fetchData(action) {
+                const selectedGame = $('#game-select').val();
+                $.ajax({
+                    url: '', // 現在のページにリクエストを送信
+                    type: 'POST',
+                    data: { 
+                        action: action, 
+                        game: selectedGame 
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.error) {
+                            alert(response.error);
+                        } else {
+                            updateTable(response);
+                        }
+                    },
+                    error: function () {
+                        alert('データ取得に失敗しました。');
+                    }
+                });
+            }
+
+            // テーブルを更新する関数
+            function updateTable(scores) {
+                const tableBody = $('#score-table-body');
+                tableBody.empty();
+
+                if (scores.length > 0) {
+                    scores.forEach((score, index) => {
+                        tableBody.append(`
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${score.user_name}</td>
+                                <td>${score.score}</td>
+                                <td>${score.registration_date || '-'}</td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    tableBody.append('<tr><td colspan="4">データがありません</td></tr>');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
