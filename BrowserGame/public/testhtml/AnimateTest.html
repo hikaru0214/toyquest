@@ -67,11 +67,7 @@
             model.position.set(0, 0, 0);
             model.rotation.set(0, 0, 0);
             model.traverse(function (node) {
-            if (node.isSkinnedMesh) {
-                node.skeleton.pose(); //blender上のデフォルトのポーズを無効化
-                console.log('無効化');
-            }
-            });
+            
             scene.add(model);
             camera.lookAt(model.position);//カメラがモデルに注目するようにする
 
