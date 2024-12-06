@@ -1,6 +1,4 @@
-<?php session_start(); ?>
-<!-- DB接続 -->
-<?php require '../dbConnect/dbconnect.php'; ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -188,96 +186,69 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($scores)): ?>
-                        <?php 
-                        $rank = 1; 
-                        foreach ($scores as $score): 
-                            $displayDate = isset($score['last_play_date']) 
-                                ? htmlspecialchars($score['last_play_date'], ENT_QUOTES, 'UTF-8') 
-                                : (isset($score['registration_date']) 
-                                    ? htmlspecialchars($score['registration_date'], ENT_QUOTES, 'UTF-8') 
-                                    : '-'); 
-                        ?>
-                        <tr>
-                            <td><?= $rank ?></td>
-                            <td><?= htmlspecialchars($score['user_name'], ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= htmlspecialchars($score['score'] ?? $score['total_score'], ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= $displayDate ?></td>
-                        </tr>
-                        <?php 
-                        $rank++;
-                        endforeach; 
-                        ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="4">データがありません</td>
-                        </tr>
-                    <?php endif; ?>
+                    
                 </tbody>
             </table>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        function fetchScores(action) {
-            const rankingu = $('select[name="rankingu"]').val();
-
-            $.ajax({
-                url: 'fetch_scores.php',
-                type: 'POST',
-                data: { action: action, rankingu: rankingu },
-                dataType: 'json',
-                success: function (response) {
-                    const tableBody = $('table tbody');
-                    tableBody.empty();
-
-                    if (response.error) {
-                        tableBody.append('<tr><td colspan="4">' + response.error + '</td></tr>');
-                        return;
-                    }
-
-                    if (response.length > 0) {
-                        let rank = 1;
-                        response.forEach(score => {
-                            const date = score.registration_date || score.last_play_date || '-';
-                            const scoreValue = score.total_score || score.score || '-';
-                            tableBody.append(`
-                                <tr>
-                                    <td>${rank++}</td>
-                                    <td>${score.user_name}</td>
-                                    <td>${scoreValue}</td>
-                                    <td>${date}</td>
-                                </tr>
-                            `);
-                        });
-                    } else {
-                        tableBody.append('<tr><td colspan="4">データがありません</td></tr>');
-                    }
-                },
-                error: function () {
-                    alert('データの取得に失敗しました。');
-                }
-            });
-        }
-
-        // ボタンのクリックイベント
-        $('button[name="show_my_score"]').on('click', function (e) {
-            e.preventDefault();
-            fetchScores('myScore');
-        });
-
-        $('button[name="show_friend_score"]').on('click', function (e) {
-            e.preventDefault();
-            fetchScores('friendScore');
-        });
-
-        // セレクトボックス変更時にスコア更新
-        $('select[name="rankingu"]').on('change', function () {
-            fetchScores('default');
-        });
-    });
-</script>
-
 </body>
 </html>
+<script>
+$(document).ready(function () {
+    function fetchScores(action) {
+        const rankingu = $('select[name="rankingu"]').val();
+
+        $.ajax({
+            url: 'fetch_scores.php',  // PHPファイルのURLを指定
+            type: 'POST',
+            data: { action: action, rankingu: rankingu },
+            dataType: 'json',
+            success: function (response) {
+                const tableBody = $('table tbody');
+                tableBody.empty();
+
+                if (response.error) {
+                    tableBody.append('<tr><td colspan="4">' + response.error + '</td></tr>');
+                    return;
+                }
+
+                if (response.length > 0) {
+                    let rank = 1;
+                    response.forEach(score => {
+                        const date = score.registration_date || '-';
+                        const scoreValue = score.total_score || score.score || '-';
+                        tableBody.append(`
+                            <tr>
+                                <td>${rank++}</td>
+                                <td>${score.user_name}</td>
+                                <td>${scoreValue}</td>
+                                <td>${date}</td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    tableBody.append('<tr><td colspan="4">データがありません</td></tr>');
+                }
+            },
+            error: function () {
+                alert('データの取得に失敗しました。');
+            }
+        });
+    }
+
+    $('button[name="show_my_score"]').on('click', function (e) {
+        e.preventDefault();
+        fetchScores('myScore');
+    });
+
+    $('button[name="show_friend_score"]').on('click', function (e) {
+        e.preventDefault();
+        fetchScores('friendScore');
+    });
+
+    $('select[name="rankingu"]').on('change', function () {
+        fetchScores('default');
+    });
+});
+</script>
