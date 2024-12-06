@@ -82,8 +82,8 @@ document.querySelector('form').addEventListener('submit', function(e) {
     const confirmPassword = document.getElementById('confirm-password').value;
 
     // 英数字8文字以上のチェック
-    if (!/^[a-zA-Z0-9]{8,}$/.test(password)) {
-        alert("パスワードは英数字8文字以上で入力してください。");
+    if (!/^[a-zA-Z0-9]{4,8}$/.test(password)) {
+        alert("パスワードは英数字4文字以上8文字以下で入力してください。");
         e.preventDefault(); // フォーム送信をキャンセル
         return;
     }
