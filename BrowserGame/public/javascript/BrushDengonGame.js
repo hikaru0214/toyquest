@@ -45,7 +45,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
 
         this.paint_history = []; //ペインターが書いている途中でゲッサーが入室した場合ゲッサーにそれまでの絵のデータをおくる
 
-        this.earned_points = {};
+        this.scores_at_start = {};
     }
 
     gameupdate(io){ //ゲームループ
@@ -93,7 +93,18 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(this.state=="drawend"){
             this.state = "word reveal and result"
             this.setTimer();
-            return {instruction:"reveal_and_result",data:"TODO player names and scores"}; //TODO
+
+            var results = {};
+            for(var id in this.players){
+                var p = this.players[id];
+                var earned_score = p.score;
+                if(this.scores_at_start.hasOwnProperty(id)){
+                    earned_score-=this.scores_at_start[id].score;
+                }
+                results[id] = {name:p.name,score:earned_score};
+            }
+
+            return {instruction:"reveal_and_result",data:results};
         }
 
         if(this.state == "word reveal and result"&&this.getTimer(5)<=0){
@@ -127,6 +138,14 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     nextTurn(io){
+        delproperties(this.scores_at_start);
+
+        for(var id in this.players){
+            this.players[id].guessed = false;
+            var current_score = this.players[id].score;
+            this.scores_at_start[id] = {id:id,score:current_score};
+        }
+
         var room_name = "room_"+this.room_id;
         var secretword = "";
         secretword = this.words[parseInt((Math.random()*this.words.length),10)];
@@ -204,7 +223,9 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     addScore(id,score){
+        if(this.players[id].guessed)return;
         this.players[id].score+=score;
+        this.players[id].guessed=true;
     }
 
     getPlayerCount(){ //プレイヤーカウント
@@ -213,7 +234,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
 
     addPlayer(player_id,player_obj){ //プレイヤー追加
         if(Object.hasOwn(this.players,player_id))return false;
-        this.players[player_id] = {id:player_id,name:player_obj.name,score:0};
+        this.players[player_id] = {id:player_id,name:player_obj.name,score:0,guessed:false};
         return true;
     }
 

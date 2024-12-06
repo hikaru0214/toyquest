@@ -71,11 +71,32 @@
             height: calc(60% - 10px);
         }
 
+        #chatbox {
+            margin: 0px;
+            border: 1px solid black;
+            background-color: white;
+            height: calc(100% - 28px);
+            overflow: auto;
+        }
+
         #chat {
             margin: 5px;
             border: 1px solid black;
             background-color: white;
             height: calc(40% - 10px);
+        }
+
+        #chatparagraph {
+            width: calc(100%);
+            margin: 0px;
+        }
+        
+        #textchat {
+            width: 100%;
+            margin-left: 0px;
+            margin-top: 3px;
+            padding: 0px;
+            height: 18px;
         }
 
         #log {
@@ -291,8 +312,8 @@
         </div>
 
         <div id="chat">
-            <ul id="log" style="list-style-type: none; margin: 0; padding: 0;"></ul>
-            <input id="textchat" type="text" autocomplete="off" style="width:90%; height: 18px; margin: 0px;">
+            <div id="chatbox"></div>
+            <input id="textchat" type="text" autocomplete="off">
         </div>
 
 

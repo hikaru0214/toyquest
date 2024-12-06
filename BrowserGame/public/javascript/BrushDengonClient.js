@@ -154,6 +154,7 @@ socket.on("show_client_overlay_timed",(data)=>{
             break;
         case "gamescore":
             document.getElementById("wordreveal").innerHTML = data.results.word;
+            //data.results.scores;
             break;
     }
     showOverlayByIdWithTimespan(data.id,data.time*1000,function(){});
@@ -167,13 +168,19 @@ socket.on("hide_client_overlay",(data)=>{
     setVisibleElementById(data.id,false);
 });
 
-var chatlog = document.getElementById("log");
+var chatbox = document.getElementById("chatbox");
+var chatrows = 0;
+
 
 socket.on('message to everyone in room',message=>{
-    var item = document.createElement('li');
-    item.textContent = message;
-    chatlog.appendChild(item);
-    chatlog.scrollTop = chatlog.scrollHeight;
+    
+    var scrolledup = (chatbox.scrollHeight-chatbox.clientHeight)-chatbox.scrollTop;
+
+    var row_color = (chatrows%2==0)?"#cccccc":"white";
+    chatbox.innerHTML += '<p id="chatparagraph" style="background-color: '+row_color+';">'+message+'</p>';
+    chatrows++;
+
+    if(Math.abs(scrolledup)<24)chatbox.scrollTop = chatbox.scrollHeight;
 });
 
 function getClientData(){
@@ -306,13 +313,16 @@ document.addEventListener('mousedown',function(e){
 });
 
 document.addEventListener('mouseup',function(e){mouse_pressed=false;});
-document.getElementById('textchat').onkeydown = function(event){
-    if(event.key === "Enter"&&this.value!=""){
-        event.preventDefault();
+
+const chat_input = document.getElementById('textchat');
+
+chat_input.addEventListener('keydown',function(e){
+    if(!e.isComposing&&e.key==="Enter"&&this.value!=""){
+        e.preventDefault();
         socket.emit("textchat",this.value);
         this.value = "";
     }
-};
+});
 
 var updateInterval = 1000.0/60.0;
 setInterval(update,updateInterval);

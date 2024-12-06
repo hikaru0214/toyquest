@@ -60,7 +60,6 @@ io.on('connection', (socket) => {
         console.log(name+" : "+message);
 
         io.to(room_name).emit("message to everyone in room",name+" : "+message);
-        io.to(room_name).emit("message to everyone in room","正解は"+secretword[room]+"です");
         if(message===secretword[room]){
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].addScore(id,123);
@@ -107,7 +106,7 @@ function update(){
                 secretword[i] = response.word;
                 break;
             case "reveal_and_result":
-                var resultdata = {word:secretword[i]};
+                var resultdata = {word:secretword[i],scores:response.data};
                 io.to(roomname).emit("show_client_overlay_timed",{id:"gamescore",time:5,results:resultdata});
                 break;
         }
