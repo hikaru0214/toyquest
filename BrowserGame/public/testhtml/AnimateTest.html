@@ -69,6 +69,7 @@
             model.traverse(function (node) {
             if (node.isSkinnedMesh) {
                 node.skeleton.pose(); //blender上のデフォルトのポーズを無効化
+                console.log('無効化');
             }
             });
             scene.add(model);
