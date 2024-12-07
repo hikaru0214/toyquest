@@ -113,5 +113,5 @@ function update(){
     }
 }
 
-const updateInterval = 1000.0/30.0;
+const updateInterval = 1000.0/15.0;
 setInterval(update,updateInterval);

@@ -9,6 +9,7 @@ var ol_timespan = 0;
 var ol_elementId = "";
 var ol_timer_onend = function(){};
 
+const canvas_area = document.getElementById("drawing_canvas");
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 context.imageSmoothingEnabled=false;
@@ -80,9 +81,10 @@ function showPalette(toggle){
 function updateScoreBoard(){ //スコアボード更新
     if(!clientGame)return;
     var scoreboard = document.getElementById("scoreboard");
-    scoreboard.innerHTML = "";
 
     const players = clientGame.getPlayers;
+
+    var temp = "";
 
     for(var id in players){
         var player = players[id];
@@ -90,15 +92,17 @@ function updateScoreBoard(){ //スコアボード更新
         var description = "";
         if(id===own_id)description+="(あなた)";
         if(clientGame.isDrawing(id)){
-            scoreboard_color="red";
+            scoreboard_color="#88ff88";
             description += "(お絵描き中)";
         }
 
-        scoreboard.innerHTML += '<div style="background-color:'+scoreboard_color+';">';
-        scoreboard.innerHTML += '<br>'+player.name+' '+description;
-        scoreboard.innerHTML += '<br>スコア:'+player.score+'';
-        scoreboard.innerHTML += '</div>';
+        temp += '<div style=\"background-color:'+scoreboard_color+'\;">';
+        temp += '<br>'+player.name+' '+description;
+        temp += '<br>スコア:'+player.score+'';
+        temp += '</div>';
     }
+
+    scoreboard.innerHTML = temp;
 }
 
 socket.on('connection established',(data)=>{
@@ -133,6 +137,7 @@ socket.on('game update',(game)=>{
 });
 
 socket.on('update timer',(time)=>{
+    if(time<0)time=0;
     document.getElementById("timer").innerHTML = time;
     updateScoreBoard();
 });
@@ -277,11 +282,17 @@ function draw(time){
 }
 
 function mouse_move(e){
-    let rect = canvas.getBoundingClientRect();
+    let rect = canvas_area.getBoundingClientRect();
     last_mouse_x = current_mouse_x;
     last_mouse_y = current_mouse_y;
     current_mouse_x = e.clientX-rect.x;
     current_mouse_y = e.clientY-rect.y;
+
+    var xd = canvas_area.clientWidth/640;
+    var yd = canvas_area.clientHeight/480;
+
+    current_mouse_x/=xd;
+    current_mouse_y/=yd;
 
   if(mouse_pressed&&cursor_type=="brush"){
     socket.emit("client draw",getClientData());
@@ -324,6 +335,6 @@ chat_input.addEventListener('keydown',function(e){
     }
 });
 
-var updateInterval = 1000.0/60.0;
+var updateInterval = 1000.0/30.0;
 setInterval(update,updateInterval);
 requestAnimationFrame(draw);

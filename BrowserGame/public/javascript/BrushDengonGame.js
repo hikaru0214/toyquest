@@ -165,7 +165,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     getRemainingTime(){
-        if(this.draw_start_time==0)return 1;
+        if(this.draw_start_time==0)return -1;
         return this.time_limit-(Date.now()-this.draw_start_time)/1000;
     }
 
