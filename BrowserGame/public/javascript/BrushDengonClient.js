@@ -163,7 +163,7 @@ socket.on("show_client_overlay_timed",(data)=>{
             document.getElementById("wordreveal").innerHTML = data.results.word;
             points_earned_table.innerHTML = "";
 
-            var head = points_earned_table.insertRow(rank);
+            var head = points_earned_table.insertRow(0);
             var head_rank = head.insertCell(0);
             var head_name = head.insertCell(1);
             var head_score = head.insertCell(2);
@@ -188,10 +188,14 @@ socket.on("show_client_overlay_timed",(data)=>{
 
             console.log(result);
 
-            var rank = 1;
-            for(var i in result){
-                var name = i.name;
-                var score = i.score;
+            var rank = 0;
+            var last_score = -5;
+            for(var r of result){
+
+                var name = r.name;
+                var score = r.score;
+
+                if(score>last_score)rank++;
 
                 var row = points_earned_table.insertRow(rank);
                 var row_rank = row.insertCell(0);
@@ -201,7 +205,7 @@ socket.on("show_client_overlay_timed",(data)=>{
                 row_name.innerHTML = ""+name;
                 row_score.innerHTML = ""+score;
 
-                rank++;
+                last_score = score;
             }
             break;
     }
