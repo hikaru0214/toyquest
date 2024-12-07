@@ -19,7 +19,7 @@ unset($_SESSION['err'],$_SESSION['input']);
     <title>ログイン</title>
     <style>
        body {
-        background-image:url(../img/wanted_top.jpg);
+        background-image:url(../img/login.jpg);
         background-size:cover;/*全画面*/
         background-attachment: fixed;         /* 固定 */
         background-position: center center;   /* 縦横中央 */
