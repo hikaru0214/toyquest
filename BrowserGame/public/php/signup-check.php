@@ -23,7 +23,7 @@ if (!isset($_SESSION['username'], $_SESSION['mailaddress'], $_SESSION['password'
     <title>登録確認画面</title>
     <style>
             body {
-            background-image:url(../img/wanted_top.jpg);
+            background-image:url(../img/login.jpg);
             background-size:cover;/*全画面*/
             background-attachment: fixed;         /* 固定 */
             background-position: center center;   /* 縦横中央 */
