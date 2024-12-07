@@ -38,6 +38,8 @@ function waitTime(){
         // ゲーム開始
         animationId = requestAnimationFrame(gameLoop);
     }else {
+        console.log("game:"+ game);
+        // console.log("game:"+ game);
         // 待つ
         setTimeout(waitTime, 10);
     }

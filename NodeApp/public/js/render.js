@@ -8,9 +8,7 @@ class Render{
 
     // 描画する時にキャラクター以外のオブジェクトをその差分分動かす
     setOffset(){
-        console.log(OwnID)
         let OwnInstance = game.player.find(player => player.socketID == OwnID);
-        console.log(OwnInstance)
         this.xOffset = OwnInstance.x - 40;
         // Yだけカメラの速度を変える
         let desiredY = OwnInstance.y;

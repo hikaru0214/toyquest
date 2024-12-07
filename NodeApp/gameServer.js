@@ -32,9 +32,14 @@ app.get('/single', (req, res) => {
     res.sendFile(join(__dirname, './public/SinglebicycleRunning.html'));
 });
 // マルチ用画面
-app.get('/:entry_member', (req, res) => {
+app.get('/createRoom', (req, res) => {
+    res.sendFile(join(__dirname, './public/chariso_createroom.html'));
+});
+// URLからアクセスする人もentryパラメタを設定する
+app.get('/rooms', (req, res) => {
     // 参加人数を取得
-    entry_member = req.params.entry_member;
+    entry_member = req.query.entry;
+    // roomName = req.query.roomName;
     res.sendFile(join(__dirname, './public/MultibicycleRunning.html'));
 });
 
@@ -72,6 +77,9 @@ io.on('connection', (socket) => {
         // Gameインスタンスを送信
         // 新しく参加者が追加されたGameインスタンスを再度送信
         io.to(roomId).emit("Init-Entity", gameInstance);
+        console.log("----入室処理----");
+        console.log("参加者:"+numClients);
+        console.log("Playerインスタンス"+gameInstance.player.length);
         console.log(socket.id+"が"+roomId+"に入室しました")
     });    
 
@@ -90,13 +98,18 @@ io.on('connection', (socket) => {
         // ルームを取得
         const room = io.sockets.adapter.rooms.get(disconnectId);
         const numClients = room === undefined ? 1 : room.size;
-        // ルーム内の参加者の数
-        if(numClients === 1){
-            // 最後の一人だったら部屋を削除
-            gameRoom.removeGameRoom(disconnectId);
-        }
         // 退出プレイヤーインスタンス削除
         GameInstance.removePlayer(socket.id);
+        console.log("----退出処理----");
+        console.log("Playerインスタンス"+GameInstance.player.length);
+        console.log(numClients);
+        // ルーム内の参加者の数
+        if(GameInstance.player.length === 0){
+            // 最後の一人だったら部屋を削除
+            gameRoom.removeGameRoom(disconnectId);
+            console.log("thorw");
+            console.log(gameRoom.rooms);
+        }
         // ルーム退出処理
         socket.leave(disconnectId);
     });
