@@ -184,20 +184,23 @@ socket.on("show_client_overlay_timed",(data)=>{
 
             console.log(result);
 
-            result.sort(function(a,b){return b.score - a.score});
+            result = result.sort(function(a,b){
+                return b.score - a.score;
+            });
 
             console.log(result);
 
-            var rank = 0;
-            var last_score = -5;
+            var index = 1;
+            var rank = 1;
+            var last_score = 0;
             for(var r of result){
 
                 var name = r.name;
                 var score = r.score;
 
-                if(score>last_score)rank++;
+                if(score<last_score)rank++;
 
-                var row = points_earned_table.insertRow(rank);
+                var row = points_earned_table.insertRow(index);
                 var row_rank = row.insertCell(0);
                 var row_name = row.insertCell(1);
                 var row_score = row.insertCell(2);
@@ -206,6 +209,8 @@ socket.on("show_client_overlay_timed",(data)=>{
                 row_score.innerHTML = ""+score;
 
                 last_score = score;
+
+                index++;
             }
             break;
     }
