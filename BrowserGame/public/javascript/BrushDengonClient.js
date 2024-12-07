@@ -175,7 +175,7 @@ socket.on("show_client_overlay_timed",(data)=>{
             result.sort(function(a,b){return a.score - b.score});
             var rank = 1;
             for(var id in result){
-                var i = result[i];
+                var i = result[id];
                 var name = i.name;
                 var score = i.score;
 
