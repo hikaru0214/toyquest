@@ -146,6 +146,8 @@ socket.on("get word",(word)=>{
     document.getElementById("word").innerHTML = word;
 });
 
+const points_earned_table = document.getElementById("points_earned");
+
 socket.on("show_client_overlay_timed",(data)=>{
     hideAllOverlay();
 
@@ -159,7 +161,34 @@ socket.on("show_client_overlay_timed",(data)=>{
             break;
         case "gamescore":
             document.getElementById("wordreveal").innerHTML = data.results.word;
-            //data.results.scores;
+            points_earned_table.innerHTML = "";
+
+            var head = table.insertRow(rank);
+            var head_rank = head.insertCell(0);
+            var head_name = head.insertCell(1);
+            var head_score = head.insertCell(2);
+            head_rank.innerHTML = "順位";
+            head_name.innerHTML = "プレイヤー";
+            head_score.innerHTML = "スコア";
+
+            var result = data.results.scores;
+            result.sort(function(a,b){return a.score - b.score});
+            var rank = 1;
+            for(var id in result){
+                var i = result[i];
+                var name = i.name;
+                var score = i.score;
+
+                var row = table.insertRow(rank);
+                var row_rank = row.insertCell(0);
+                var row_name = row.insertCell(1);
+                var row_score = row.insertCell(2);
+                row_rank.innerHTML = rank;
+                row_name.innerHTML = name;
+                row_score.innerHTML = score;
+
+                rank++;
+            }
             break;
     }
     showOverlayByIdWithTimespan(data.id,data.time*1000,function(){});

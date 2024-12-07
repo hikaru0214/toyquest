@@ -215,7 +215,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     markDrewInQueue(id){
-        this.drawer_queue[id].drew = true;
+        if(this.drawer_queue.hasOwnProperty("drew"))this.drawer_queue[id].drew = true;
     }
 
     getPlayerById(id){
