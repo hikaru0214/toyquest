@@ -163,7 +163,7 @@ socket.on("show_client_overlay_timed",(data)=>{
             document.getElementById("wordreveal").innerHTML = data.results.word;
             points_earned_table.innerHTML = "";
 
-            var head = table.insertRow(rank);
+            var head = points_earned_table.insertRow(rank);
             var head_rank = head.insertCell(0);
             var head_name = head.insertCell(1);
             var head_score = head.insertCell(2);
@@ -171,21 +171,35 @@ socket.on("show_client_overlay_timed",(data)=>{
             head_name.innerHTML = "プレイヤー";
             head_score.innerHTML = "スコア";
 
-            var result = data.results.scores;
-            result.sort(function(a,b){return a.score - b.score});
+            var scores = data.results.scores;
+
+            console.log(scores);
+
+            var result = [];
+
+            for(var id in scores){
+                var s = scores[id];
+                result.push({name:s.name,score:s.score});
+            }
+
+            console.log(result);
+
+            result.sort(function(a,b){return b.score - a.score});
+
+            console.log(result);
+
             var rank = 1;
-            for(var id in result){
-                var i = result[id];
+            for(var i in result){
                 var name = i.name;
                 var score = i.score;
 
-                var row = table.insertRow(rank);
+                var row = points_earned_table.insertRow(rank);
                 var row_rank = row.insertCell(0);
                 var row_name = row.insertCell(1);
                 var row_score = row.insertCell(2);
-                row_rank.innerHTML = rank;
-                row_name.innerHTML = name;
-                row_score.innerHTML = score;
+                row_rank.innerHTML = ""+rank;
+                row_name.innerHTML = ""+name;
+                row_score.innerHTML = ""+score;
 
                 rank++;
             }
