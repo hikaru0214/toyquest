@@ -162,13 +162,16 @@ socket.on("show_client_overlay_timed",function(data){
             document.getElementById("round").innerHTML = "ラウンド "+(data.roundcount+1);
             break;
         case "finalscore":
+            
             const result_table = document.getElementById("final_result");
             const podium1 = document.getElementById("podium1");
             const podium2 = document.getElementById("podium2");
             const podium3 = document.getElementById("podium3");
+            result_table.innerHTML = "";
             podium1.innerHTML = "#1 ";
             podium2.innerHTML = "#2 ";
             podium3.innerHTML = "#3 ";
+
 
             var scores = data.result;
 
@@ -179,20 +182,23 @@ socket.on("show_client_overlay_timed",function(data){
             var index = 0;
             var rank = 1;
             var last_score = 0;
-            for(var data of scores){
-                if(data.score < last_score)rank++;
-                if(rank==1)podium1.innerHTML+=(" "+data.name);
-                if(rank==2)podium2.innerHTML+=(" "+data.name);
-                if(rank==3)podium3.innerHTML+=(" "+data.name);
+            for(var i of scores){
+                
+                if(i.score < last_score)rank++;
+
+                if(rank==1)podium1.innerHTML+=(" "+i.name);
+                if(rank==2)podium2.innerHTML+=(" "+i.name);
+                if(rank==3)podium3.innerHTML+=(" "+i.name);
                 var row = result_table.insertRow(index);
                 var row_rank = row.insertCell(0);
                 var row_name = row.insertCell(1);
                 var row_score = row.insertCell(2);
                 row_rank.innerHTML = rank;
-                row_name.innerHTML = data.name;
-                row_score.innerHTML = data.score;
+                row_name.innerHTML = i.name;
+                row_score.innerHTML = i.score;
+                
 
-                last_score = data.score;
+                last_score = i.score;
                 index++;
             }
 
@@ -252,6 +258,7 @@ socket.on("show_client_overlay_timed",function(data){
             }
             break;
     }
+
     showOverlayByIdWithTimespan(data.id,data.time*1000,function(){});
 });
 
