@@ -121,7 +121,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         }
 
         if(this.state=="roundend"){
-            if(this.round >= this.rounds){
+            if(this.round+1 >= this.rounds){
                 this.state = "game end notice";
                 io.to(room_name).emit("show_client_overlay_timed",{id:"end_notice",time:3});
                 this.setTimer();

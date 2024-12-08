@@ -148,9 +148,8 @@ socket.on("get word",(word)=>{
 
 const points_earned_table = document.getElementById("points_earned");
 
-socket.on("show_client_overlay_timed",(data)=>{
+socket.on("show_client_overlay_timed",function(data){
     hideAllOverlay();
-
     switch(data.id){
         case "painternotice":
             document.getElementById("painter_name").innerHTML = data.painterName;
