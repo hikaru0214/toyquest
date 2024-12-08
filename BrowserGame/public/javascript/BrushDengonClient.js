@@ -46,12 +46,15 @@ function hideAllOverlay(){
 
 function setVisibleElementById(id,visible){
     document.getElementById(id).style.display =  visible?"block":"none";
+    console.log(document.getElementById(id));
 }
 
-//setVisibleElementById("overlay",false);
+setVisibleElementById("overlay",false);
 setVisibleElementById("round",false);
 setVisibleElementById("selectword",false);
 setVisibleElementById("painternotice",false);
+setVisibleElementById("finalscore",true);
+console.log("HUH");
 
 function showOverlayByIdWithTimespan(id,timespan,onend){
     ol_timer = Date.now();
