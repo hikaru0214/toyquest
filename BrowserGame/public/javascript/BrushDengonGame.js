@@ -22,7 +22,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.time_limit = 20; //時間制限
         this.draw_start_time = 0;
         this.round = -1; //ラウンドカウンター
-        this.rounds = 3; //ラウンド数
+        this.rounds = 2; //ラウンド数
         this.hints = 2; //ヒント(文字の一つを表示する)
         this.drawer_queue = {}; //描き手キュー,IDを保存,(ラウンド開始時に居たプレイヤーのみ)
         this.words = [
@@ -137,7 +137,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
                 var p = this.players[id];
                 var name = p.name;
                 var score = p.score;
-                results = {name:name,score:score};
+                results.push({name:name,score:score});
             }
             io.to(room_name).emit("show_client_overlay_timed",{id:"finalscore",time:5,result:results});
             this.setTimer();

@@ -156,7 +156,7 @@ socket.on("show_client_overlay_timed",(data)=>{
             document.getElementById("painter_name").innerHTML = data.painterName;
             break;
         case "round":
-            document.getElementById("round_count").innerHTML = "ラウンド "+(data.roundcount+1)+"/"+(data.totalrounds+1);
+            document.getElementById("round_count").innerHTML = "ラウンド "+(data.roundcount+1)+"/"+(data.totalrounds);
             document.getElementById("round").innerHTML = "ラウンド "+(data.roundcount+1);
             break;
         case "finalscore":
@@ -170,12 +170,14 @@ socket.on("show_client_overlay_timed",(data)=>{
 
             var scores = data.result;
 
-            scores = scores.sort(function(a,b){return b.score-a.score;});
+            scores = scores.sort(function(a,b){
+                return b.score - a.score;
+            });
 
             var index = 0;
             var rank = 1;
             var last_score = 0;
-            for(var data of score){
+            for(var data of scores){
                 if(data.score < last_score)rank++;
                 if(rank==1)podium1.innerHTML+=(" "+data.name);
                 if(rank==2)podium2.innerHTML+=(" "+data.name);
