@@ -48,7 +48,7 @@ function setVisibleElementById(id,visible){
     document.getElementById(id).style.display =  visible?"block":"none";
 }
 
-setVisibleElementById("overlay",false);
+//setVisibleElementById("overlay",false);
 setVisibleElementById("round",false);
 setVisibleElementById("selectword",false);
 setVisibleElementById("painternotice",false);
@@ -158,6 +158,40 @@ socket.on("show_client_overlay_timed",(data)=>{
         case "round":
             document.getElementById("round_count").innerHTML = "ラウンド "+(data.roundcount+1)+"/"+(data.totalrounds+1);
             document.getElementById("round").innerHTML = "ラウンド "+(data.roundcount+1);
+            break;
+        case "finalscore":
+            const result_table = document.getElementById("final_result");
+            const podium1 = document.getElementById("podium1");
+            const podium2 = document.getElementById("podium2");
+            const podium3 = document.getElementById("podium3");
+            podium1.innerHTML = "#1 ";
+            podium2.innerHTML = "#2 ";
+            podium3.innerHTML = "#3 ";
+
+            var scores = data.result;
+
+            scores = scores.sort(function(a,b){return b.score-a.score;});
+
+            var index = 0;
+            var rank = 1;
+            var last_score = 0;
+            for(var data of score){
+                if(data.score < last_score)rank++;
+                if(rank==1)podium1.innerHTML+=(" "+data.name);
+                if(rank==2)podium2.innerHTML+=(" "+data.name);
+                if(rank==3)podium3.innerHTML+=(" "+data.name);
+                var row = result_table.insertRow(index);
+                var row_rank = row.insertCell(0);
+                var row_name = row.insertCell(1);
+                var row_score = row.insertCell(2);
+                row_rank.innerHTML = rank;
+                row_name.innerHTML = data.name;
+                row_score.innerHTML = data.score;
+
+                last_score = data.score;
+                index++;
+            }
+
             break;
         case "gamescore":
             document.getElementById("wordreveal").innerHTML = data.results.word;

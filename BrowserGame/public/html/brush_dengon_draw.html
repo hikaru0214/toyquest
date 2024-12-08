@@ -164,7 +164,7 @@
             z-index: 10;
             position: fixed;
             background-color: #555555bb;
-            display: none;
+            display: block;
         }
 
         #round {
@@ -224,6 +224,9 @@
         #gamescore {
             display: none;
         }
+        #finalscore {
+            display: block;
+        }
 
         #gameui{
             position: fixed;
@@ -240,6 +243,19 @@
             top: 5%;
             transform: translate(-50%,0%);
 
+        }
+
+        #end_notice {
+            display: none;
+        }
+
+        #podium_bar {
+            width: calc(-5px + 100% / 3);
+            height: 100px;
+            display: inline-block;
+            vertical-align: bottom;
+            margin: 0px;
+            padding: 0px;
         }
 
     </style>
@@ -297,19 +313,58 @@
             </div>
         </div>
 
+        <div id="end_notice">
+            <p style="position: fixed; font-size: 10vw; color: white; top: 50%; left: 50%; transform: translate(-50%,-100%); white-space: nowrap;">ゲーム終了！</p>
+        </div>
+
         <div id="roundscore">
             <div id="resultscore">
                 ラウンドスコア
             </div>
         </div>
 
-        <div id="finalscore">
-            <div id="podium">
-
+        <div id="finalscore" class="resultBox" style="background-color: #444444aa;">
+            <h1 style="text-align: center;">ファイナルスコア</h1>
+            <div id="podium" style="display: inline-block; vertical-align: bottom; width: 50%; left: 50%; position: relative; transform: translate(-50%,0%);">
+                <div id="podium_bar" style="background-color: coral; height: 100px;">
+                    <p id="podium2" style="white-space: nowrap; position: relative; left: 50%; transform: translate(-60%,-2em);">#2 Frank Lundy</p>
+                </div>
+                <div id="podium_bar" style="background-color: #efef00; height: 150px;">
+                    <p id="podium1" style="white-space: nowrap; position: relative; left: 50%; transform: translate(-50%,-2em);">#1 Dexter Morgan</p>
+                </div>
+                <div id="podium_bar" style="background-color: darkcyan; height: 50px;">
+                    <p id="podium3" style="white-space: nowrap; position: relative; left: 50%; transform: translate(-50%,-2em);">#3 Debra Morgan</p>
+                </div>
             </div>
-            <div id="resultscore">
 
-            </div>
+                <table id="final_result" style="width: 90%; margin: 5%;">
+                    <tr>
+                        <th>正解順</th>
+                        <th>プレイヤー</th>
+                        <th>獲得スコア</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Dexter Morgan</td>
+                        <td>+400</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Frank Lundy</td>
+                        <td>+400</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Debra Morgan</td>
+                        <td>+300</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>James Doakes</td>
+                        <td>+100</td>
+                    </tr>
+                </table>
+
         </div>
     </div>
 

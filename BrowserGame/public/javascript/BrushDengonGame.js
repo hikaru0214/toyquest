@@ -111,8 +111,6 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             if(this.getDrawerId()=="drawer queue completed"){
                 //ラウンド終了処理
                 this.state="roundend";
-                io.to(room_name).emit("show_client_overlay_timed",{id:"roundcore",time:6});
-                this.setTimer();
             }else{ //次のターン
                 var painterName = this.getPlayerById(this.getDrawerId()).name;
                 console.log("next painter is : "+painterName);
@@ -122,8 +120,31 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             }
         }
 
-        if(this.state=="roundend"&&this.getTimer(6)<=0){
+        if(this.state=="roundend"){
+            if(this.round >= this.rounds){
+                this.state = "game end notice";
+                io.to(room_name).emit("show_client_overlay_timed",{id:"end_notice",time:3});
+                this.setTimer();
+            }else{
             this.state="roundstart";
+            }
+        }
+
+        if(this.state=="game end notice"&&this.getTimer(3)<=0){
+            this.state = "game result";
+            var results = [];
+            for(var id in this.players){
+                var p = this.players[id];
+                var name = p.name;
+                var score = p.score;
+                results = {name:name,score:score};
+            }
+            io.to(room_name).emit("show_client_overlay_timed",{id:"finalscore",time:5,result:results});
+            this.setTimer();
+        }
+
+        if(this.state=="game result"&&this.getTimer(5)<=0){
+            this.resetGame(io);
         }
 
         return "nil";
