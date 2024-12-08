@@ -60,7 +60,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             this.round++;
             //描き手キュー
             this.setDrawerQueue();
-            io.to(room_name).emit("show_client_overlay_timed",{id:"round",time:3,roundcount:this.round});
+            io.to(room_name).emit("show_client_overlay_timed",{id:"round",time:3,roundcount:this.round,totalrounds:this.rounds});
             this.setTimer();
             this.state="round";
         }
