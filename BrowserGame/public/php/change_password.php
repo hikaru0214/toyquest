@@ -72,7 +72,6 @@
         <a href="login.php"></a>
         <div class="container">
             <h1>パスワード再設定</h1>
-        </div>
         <form action="change_password_complete.php" method="post">
             <div class="form-group">
                 <label for="mailaddress">メールアドレス</label>
@@ -89,6 +88,7 @@
             <button type="submit" class="login-btn">登録</button>
             <div class="links">
             <a href="login.php">戻る</a>
+            </div>
         </div>
         </form>  
 </body>
