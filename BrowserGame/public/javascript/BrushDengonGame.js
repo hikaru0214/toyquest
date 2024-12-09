@@ -19,7 +19,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.room_id = room_id;
         this.player_limit = 4; //プレイヤー数制限
         this.minimum_players = 2; //最小プレイヤー数
-        this.time_limit = 80; //時間制限
+        this.time_limit = 60; //時間制限
         this.draw_start_time = 0;
         this.round = -1; //ラウンドカウンター
         this.rounds = 3; //ラウンド数
@@ -46,6 +46,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.paint_history = []; //ペインターが書いている途中でゲッサーが入室した場合ゲッサーにそれまでの絵のデータをおくる
 
         this.scores_at_start = {};
+        this.score_on_guess = 400;
     }
 
     gameupdate(io){ //ゲームループ
@@ -159,8 +160,8 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     nextTurn(io){
+        this.score_on_guess = 400;
         delproperties(this.scores_at_start);
-
         for(var id in this.players){
             this.players[id].guessed = false;
             var current_score = this.players[id].score;
@@ -172,6 +173,8 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         secretword = this.words[parseInt((Math.random()*this.words.length),10)];
         console.log("next word for room "+this.room_id+" is : "+secretword);
         var painter = this.getPlayerById(this.getDrawerId());
+        
+        painter.guessed = true;
 
         io.to(room_name).emit("notify in chat",{message:painter.name+"が筆を手にした！",color:"#00FF00"});
         io.to(room_name).emit("get word",this.hiddenWord(secretword));
@@ -243,10 +246,24 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         return this.players[id];
     }
 
-    addScore(id,score){
+    addScore(id){
         if(this.players[id].guessed)return;
-        this.players[id].score+=score;
+        this.players[id].score+=this.score_on_guess;
         this.players[id].guessed=true;
+        if(this.score_on_guess>=100)this.score_on_guess-=75;
+    }
+    
+    Guessed(id){
+        return this.players[id].guessed;
+    }
+
+    AllIdOfGuessed(){
+        var ids = [];
+        for(var id in this.players){
+            var p = this.players[id];
+            if(p.guessed)ids.push(id);
+        }
+        return ids;
     }
 
     getPlayerCount(){ //プレイヤーカウント

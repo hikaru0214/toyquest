@@ -59,11 +59,17 @@ io.on('connection', (socket) => {
         const game = gamerooms[room];
         var name = game.getPlayerById(id).name;
         console.log(name+" : "+message);
-        if(game.isDrawing(id))return;
+        if(game.Guessed(id)){
+            var allguessed = game.AllIdOfGuessed();
+            for(var id of allguessed){
+                io.to(id).emit("chat message guessed",{name:name,message:message});
+            }
+            return;
+        }
         if(message===secretword[room]){
             //socket.emit(); 正解通知をチャットに送る
-            gamerooms[room].addScore(id,123);
-            io.to(room_name).emit("notify in chat",{message:(name+"が正解しました!"),color:"#3ae53a"});
+            gamerooms[room].addScore(id);
+            io.to(room_name).emit("notify in chat",{message:(name+"が正解しました!"),color:"#3abe3a",background:"#3abe3a"});
             socket.emit("confetti");
         }else{
             io.to(room_name).emit("chat message",{name:name,message:message});

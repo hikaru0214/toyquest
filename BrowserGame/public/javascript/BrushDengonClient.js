@@ -279,23 +279,47 @@ socket.on("hide_client_overlay",(data)=>{
 var chatbox = document.getElementById("chatbox");
 var chatrows = 0;
 
-function chat(text,chat_color){
+function mixStyleColor(c1,c2,ratio){
+    var c1r = Number("0x"+c1.substr(1,2));
+    var c1g = Number("0x"+c1.substr(3,2));
+    var c1b = Number("0x"+c1.substr(5,2));
+
+    var c2r = Number("0x"+c2.substr(1,2));
+    var c2g = Number("0x"+c2.substr(3,2));
+    var c2b = Number("0x"+c2.substr(5,2));
+
+    var ratio2 = 1-ratio;
+
+    var r = (c1r*ratio)+(c2r*ratio2);
+    var g = (c1g*ratio)+(c2g*ratio2);
+    var b = (c1b*ratio)+(c2b*ratio2);
+
+    return "rgb("+[r,g,b].join(",")+")";
+}
+
+function chat(text,chat_color,background){
     var scrolledup = (chatbox.scrollHeight-chatbox.clientHeight)-chatbox.scrollTop;
     var row_color = (chatrows%2==0)?"#cccccc":"white";
-    chatbox.innerHTML += '<p id="chatparagraph" style="color: '+chat_color+'; background-color: '+row_color+';">'+text+'</p>';
+    chatbox.innerHTML += '<p id="chatparagraph" style="color: '+chat_color+'; background-color: '+mixStyleColor(background,row_color,0.5)+';">'+text+'</p>';
     chatrows++;
     if(Math.abs(scrolledup)<24)chatbox.scrollTop = chatbox.scrollHeight;
 }
 
 
 socket.on('chat message',message=>{
-    chat(message.name+':'+message.message,"#000000");
+    chat(message.name+':'+message.message,"#000000","#FFFFFF");
+    console.log(message.message);
+    if(message.message=="confetti")addConfetti(100);
+});
+
+socket.on('chat message guessed',message=>{
+    chat(message.name+':'+message.message,"#000000","#3abe3a");
     console.log(message.message);
     if(message.message=="confetti")addConfetti(100);
 });
 
 socket.on('notify in chat',message=>{
-    chat(message.message,message.color);
+    chat(message.message,message.color,message.background);
 });
 
 socket.on('confetti',function(){
