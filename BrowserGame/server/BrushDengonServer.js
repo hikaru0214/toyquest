@@ -55,14 +55,18 @@ io.on('connection', (socket) => {
         console.log("player "+data.name+" joined in the room "+room);
     });
 
-    socket.on('textchat',(message)=>{
-        var name = gamerooms[room].getPlayerById(id).name;
+    socket.on('textchat',function(message){
+        const game = gamerooms[room];
+        var name = game.getPlayerById(id).name;
         console.log(name+" : "+message);
-
-        io.to(room_name).emit("message to everyone in room",name+" : "+message);
+        if(game.isDrawing(id))return;
         if(message===secretword[room]){
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].addScore(id,123);
+            io.to(room_name).emit("notify in chat",{message:(name+"が正解しました!"),color:"#00ff00"});
+            socket.emit("confetti");
+        }else{
+            io.to(room_name).emit("message to everyone in room",{name:name,message:message});
         }
     });
 

@@ -259,9 +259,20 @@
             padding: 0px;
         }
 
+        #overlay_canvas {
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            pointer-events: none;
+            display: block;
+            z-index: 1;
+        }
+
     </style>
 </head>
-<body>
+<body onload="resizeFunc()">
 
     <div id="overlay">
         <div id="round">
@@ -389,6 +400,8 @@
         <canvas id="canvas" class="gamecanvas" width="640" height="480"></canvas>
     </div>
 
+    <canvas id="overlay_canvas"></canvas>
+
     <div id="right-bar">
 
         <div id="palette">
@@ -420,6 +433,8 @@
     </div>
 
     </div>
+
+
 
     <script type="text/javascript" src="../javascript/gameUtils.js"></script>
     <script type="text/javascript" src="../javascript/BrushDengonGame.js"></script>

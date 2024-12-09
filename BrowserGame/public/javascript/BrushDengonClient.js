@@ -12,8 +12,12 @@ var ol_timer_onend = function(){};
 const canvas_area = document.getElementById("drawing_canvas");
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
-context.imageSmoothingEnabled=false;
+const overlay_canvas = document.getElementById("overlay_canvas");
+const overlay_context = overlay_canvas.getContext("2d");
+context.imageSmoothingEnabled = false;
 context.antiAlias = false;
+overlay_context.imageSmoothingEnabled = false;
+overlay_context.antiAlias = false;
 
 var current_mouse_x = 0;
 var current_mouse_y = 0;
@@ -273,16 +277,27 @@ socket.on("hide_client_overlay",(data)=>{
 var chatbox = document.getElementById("chatbox");
 var chatrows = 0;
 
+function chat(text,chat_color){
+    var scrolledup = (chatbox.scrollHeight-chatbox.clientHeight)-chatbox.scrollTop;
+    var row_color = (chatrows%2==0)?"#cccccc":"white";
+    chatbox.innerHTML += '<p id="chatparagraph" style="color: '+chat_color+'; background-color: '+row_color+';">'+text+'</p>';
+    chatrows++;
+    if(Math.abs(scrolledup)<24)chatbox.scrollTop = chatbox.scrollHeight;
+}
+
 
 socket.on('message to everyone in room',message=>{
-    
-    var scrolledup = (chatbox.scrollHeight-chatbox.clientHeight)-chatbox.scrollTop;
+    chat(message.name+':'+message.message,"#000000");
+    console.log(message.message);
+    if(message.message=="confetti")addConfetti(100);
+});
 
-    var row_color = (chatrows%2==0)?"#cccccc":"white";
-    chatbox.innerHTML += '<p id="chatparagraph" style="background-color: '+row_color+';">'+message+'</p>';
-    chatrows++;
+socket.on('notify in chat',message=>{
+    chat(message.message,message.color);
+});
 
-    if(Math.abs(scrolledup)<24)chatbox.scrollTop = chatbox.scrollHeight;
+socket.on('confetti',function(){
+    addConfetti(100);
 });
 
 function getClientData(){
@@ -356,6 +371,83 @@ context.fillRect(0,0,canvas.width,canvas.height);
         initialized = true;
     }
 
+
+    function getRandomColor(){
+        var r = parseInt(Math.random()*255);
+        var g = parseInt(Math.random()*255);
+        var b = parseInt(Math.random()*255);
+        return "rgb("+[r,g,b].join(",")+")";
+    }
+
+    function magnitude(x,y){
+        return Math.sqrt(x*x+y*y);
+    }
+
+    function getUnitVector(x1,y1,x2,y2){
+        var dx = x1-x2;
+        var dy = y1-y2;
+        var mag = magnitude(dx,dy);
+        return {x:(dx/mag),y:(dy/mag)};
+    }
+
+    class confetti {
+        constructor(){
+            this.x = (overlay_canvas.width/2)+((Math.random()*100)-50);
+            this.y = (overlay_canvas.height/3)+((Math.random()*100)-50);
+            var vec = getUnitVector(this.x,this.y,overlay_canvas.width/2,overlay_canvas.height/3);
+            this.vel = 1+Math.random()*15;
+            this.vx = vec.x*this.vel;
+            this.vy = vec.y*this.vel;
+            this.rotation = Math.random()*(Math.PI*2);
+            this.color = getRandomColor();
+            this.grav = 0;
+            this.life = 60*5;
+
+            this.friction = 0.95+Math.random()*0.05;
+            var r = Math.PI/10;
+            this.rotate_inc = (Math.random()*r)-r/2;
+
+            this.size = 10+Math.random()*20;
+        }
+
+        render(c){
+            if(this.isDead())return;
+
+            this.x+=this.vx;
+            this.y+=this.vy;
+            //this.y+=this.grav;
+
+            this.vy+=0.2;
+            this.vx*=this.friction;
+            this.vy*=this.friction;
+
+            this.rotate_inc*=0.98;
+
+            this.rotation+=this.rotate_inc;
+
+            this.life--;
+            c.save();
+            c.translate(this.x,this.y);
+            c.rotate(this.rotation);
+            c.fillStyle = this.color;
+            c.fillRect(-this.size/2,-this.size/2,this.size,this.size);
+            c.restore();
+        }
+
+        isDead(){
+            return this.life<0
+        }
+    }
+
+    var confettis = [];
+
+    function addConfetti(amount){
+        if(amount > 1000)return;
+        for(var i = 0;i < amount;i++){
+            confettis.push(new confetti());
+        }
+    }
+
 function update(){
     if(!initialized)init();
     if(ol_timer!=-1){
@@ -366,16 +458,22 @@ function update(){
         ol_timer = -1;
     }
     }
+
+    overlay_context.clearRect(0,0,overlay_canvas.width,overlay_canvas.height);
+
+    for(var i = 0;i < confettis.length;i++){
+        var c = confettis[i];
+        c.render(overlay_context);
+        if(c.isDead())confettis.splice(i,1);
+    }
+    console.log(confettis.length);
 }
 
-let start;
-let lasttime = 0;
+window.addEventListener('resize',resizeFunc,false);
 
-function draw(time){
-    if(!start)start=time;
-    const elapsed = time-start;
-
-    requestAnimationFrame(draw);
+function resizeFunc(){
+    overlay_canvas.width = window.innerWidth;
+    overlay_canvas.height = window.innerHeight;
 }
 
 function mouse_move(e){
@@ -432,6 +530,5 @@ chat_input.addEventListener('keydown',function(e){
     }
 });
 
-var updateInterval = 1000.0/30.0;
+var updateInterval = 1000.0/60.0;
 setInterval(update,updateInterval);
-requestAnimationFrame(draw);
