@@ -69,7 +69,7 @@
     </style>
 </head>
 <body>      
-        <a href="login.php"><span class="back-arrow">&larr;</span></a>
+        <a href="login.php"></a>
         <div class="container">
             <h1>パスワード再設定</h1>
         </div>
