@@ -61,8 +61,8 @@ io.on('connection', (socket) => {
         console.log(name+" : "+message);
         if(game.Guessed(id)){
             var allguessed = game.AllIdOfGuessed();
-            for(var id of allguessed){
-                io.to(id).emit("chat message guessed",{name:name,message:message});
+            for(var i of allguessed){
+                io.to(i).emit("chat message guessed",{name:name,message:message});
             }
             return;
         }
