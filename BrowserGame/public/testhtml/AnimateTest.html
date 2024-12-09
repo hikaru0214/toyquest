@@ -72,6 +72,11 @@
             camera.lookAt(model.position);//カメラがモデルに注目するようにする
 
             console.log(gltf.animations.map(clip => clip.name));
+
+            if (clip) {
+            clip.tracks.reverse(); // トラックの順番を反転
+            }
+            
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
 
             const clip0=gltf.animations.find(clip=>clip.name==='chest.normal');
