@@ -248,9 +248,10 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
 
     addScore(id){
         if(this.players[id].guessed)return;
-        this.players[id].score+=this.score_on_guess;
+        this.players[id].score+=this.score_on_guess; //回答者にポイント付与
         this.players[id].guessed=true;
         if(this.score_on_guess>=100)this.score_on_guess-=75;
+        this.players[this.getDrawerId()].score+=100; //描き手にポイント付与
     }
     
     Guessed(id){
