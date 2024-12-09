@@ -496,14 +496,14 @@ function resizeFunc(){
 }
 
 function mouse_move(e){
-    let rect = canvas_area.getBoundingClientRect();
+    let rect = canvas.getBoundingClientRect();
     last_mouse_x = current_mouse_x;
     last_mouse_y = current_mouse_y;
     current_mouse_x = e.clientX-rect.x;
     current_mouse_y = e.clientY-rect.y;
 
-    var xd = canvas_area.clientWidth/640;
-    var yd = canvas_area.clientHeight/480;
+    var xd = canvas.clientWidth/640;
+    var yd = canvas.clientHeight/480;
 
     current_mouse_x/=xd;
     current_mouse_y/=yd;
