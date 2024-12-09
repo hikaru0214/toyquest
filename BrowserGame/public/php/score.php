@@ -148,17 +148,41 @@
         .selectbox-1 select:focus {
             outline: 2px solid #1192ee;
         }
+        .error-message {
+            color: red;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
 <?php
+    $user = $_SESSION['user']; // セッションからユーザー情報を取得
     // 初期設定
     $selectedGame = isset($_POST['rankingu']) ? $_POST['rankingu'] : '総合スコア';
     $showMyScore = isset($_POST['show_my_score']) ? true : false;
     $showFriendScore = isset($_POST['show_friend_score']) ? true : false;
-
+    
     try {
         // SQL生成
+        if ($showMyScore) {
+            if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+                throw new Exception("ログインが必要です。");
+            }
+            // 自分のスコア取得
+            $sql = "
+                SELECT User.user_id, User.user_name, Score.score, Score.registration_date 
+                FROM Score 
+                INNER JOIN User ON Score.user_id = User.user_id 
+                WHERE Score.user_id = :user_id 
+                ORDER BY Score.score DESC, Score.registration_date ASC
+            ";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->execute();
+            $myScores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
         if ($showFriendScore) {
             if (!isset($_SESSION['user_id'])) {
                 throw new Exception("ログインが必要です。");
@@ -183,20 +207,8 @@
             ";
             }
 
-        } elseif ($showMyScore && (!isset($_SESSION['user_id']) || empty($_SESSION['user_id']))) {
-            if (!isset($_SESSION['user_id'])) {
-                throw new Exception("ログインが必要です。");
-            }else{
-                $sql = "
-                SELECT User.user_id, User.user_name, Score.score, Score.registration_date 
-                FROM Score 
-                INNER JOIN User ON Score.user_id = User.user_id 
-                WHERE Score.user_id = :user_id 
-                ORDER BY Score.score DESC, Score.registration_date ASC
-            ";
-            }
-           
-        } elseif ($selectedGame === '総合スコア') {
+        } 
+        if ($selectedGame === '総合スコア') {
             $sql = "
                 SELECT User.user_id, User.user_name, SUM(Score.score) AS total_score, MAX(Score.registration_date) AS last_play_date
                 FROM Score 
@@ -204,6 +216,7 @@
                 WHERE Score.game_id IN (1, 2, 3) 
                 GROUP BY User.user_id, User.user_name 
                 ORDER BY total_score DESC
+                LIMIT 50
             ";
         } else {
             $gameMapping = [
@@ -230,9 +243,10 @@
         $stmt->execute();
         $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (Exception $e) {
-        echo "エラー: " . $e->getMessage();
+        echo '<p class="error-message">エラー: ' . $e->getMessage() . '</p>';
         exit;
     }
+    
     ?>
 
     <a href="top.php" class="back-button">戻る</a>

@@ -36,7 +36,7 @@ session_destroy();
     <title>ログアウト完了</title>
     <style>
         body {
-            background-image:url(../img/wanted_top.jpg);
+            background-image:url(../img/login.jpg);
             background-size:cover;
             background-attachment: fixed;
             background-position: center center;

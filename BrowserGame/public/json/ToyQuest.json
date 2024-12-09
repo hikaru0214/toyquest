@@ -1,6 +1,6 @@
 {
-    "name": "Your App Name",
-    "short_name": "testapp",
+    "name": "ToyQuest",
+    "short_name": "ToyQuest",
     "description": "Your app description",
     "start_url": "../php/rogocontrol.php",
     "background_color": "#ffffff",
@@ -9,7 +9,7 @@
     "orientation": "landscape",
     "icons": [
       {
-        "src": "../img/ToyQuest2.png",
+        "src": "../img/ToyQuest3.png",
         "sizes": "192x192",
         "type": "image/png"
       }

@@ -20,12 +20,12 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
-const gamerooms = [];
-const secretword = [];
-const wordhint = [];
+const gamerooms = {}; //game objects, secret words, room_id
+const secretword = []; //dont use
 
 for(var i = 0;i < 5;i++){
-    gamerooms.push(new Game(i));
+    var room_id = "public"+i;
+    gamerooms[room_id] = {gameobj:new Game(room_id),secretword:""};
     secretword.push("");
 }
 
@@ -60,6 +60,7 @@ io.on('connection', (socket) => {
         console.log(name+" : "+message);
 
         io.to(room_name).emit("message to everyone in room",name+" : "+message);
+        io.to(room_name).emit("message to everyone in room","正解は"+secretword[room]+"です");
         if(message===secretword[room]){
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].addScore(id,123);
@@ -70,6 +71,7 @@ io.on('connection', (socket) => {
         
         if(gamerooms[room].state=="standby"||gamerooms[room].isDrawing(id)){
             io.to(room_name).emit("draw relay",data);
+            console.log("relaying drawing to clients!");
         }
     });
 
@@ -106,12 +108,12 @@ function update(){
                 secretword[i] = response.word;
                 break;
             case "reveal_and_result":
-                var resultdata = {word:secretword[i],scores:response.data};
+                var resultdata = {word:secretword[i]};
                 io.to(roomname).emit("show_client_overlay_timed",{id:"gamescore",time:5,results:resultdata});
                 break;
         }
     }
 }
 
-const updateInterval = 1000.0/15.0;
+const updateInterval = 1000.0/30.0;
 setInterval(update,updateInterval);

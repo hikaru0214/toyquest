@@ -82,9 +82,9 @@
         import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
         /*const socket = parent.getSocket(); //you cant do that */
-        const socket = io.connect('http://52.68.111.88:6060');
+        //const socket = io.connect('http://52.68.111.88:6060');
 
-        console.log((socket)?"server responded!":"cannot connect to server ;-;");
+        //console.log((socket)?"server responded!":"cannot connect to server ;-;");
 
 var fov = 90;
 var gamewidth = window.innerWidth;
@@ -92,6 +92,7 @@ var gameheight = window.innerHeight;
 var aspectratio = 16/9;
 
 const scene = new THREE.Scene();
+scene.background = new THREE.Color("#00ffff");
 const camera = new THREE.PerspectiveCamera( fov, aspectratio, 0.1, 1000 );
 
 camera.rotation.order = "YXZ";
@@ -120,20 +121,21 @@ let model1, model2; // 2つのモデルインスタンス
 
 const loader = new GLTFLoader();
 loader.load(
-    "../models/animatetest4.glb",
+    "../models/animateblend.glb",
     function (loadedGltf) {
         gltf = loadedGltf;
 
         // モデル1の設定
-        model1 = gltf.scene.clone(); // モデルを複製
+        model1 = gltf.scene; // モデルを複製
         model1.scale.set(0.02, 0.02, 0.02);
         model1.position.set(0, 1, 0);
         model1.rotation.set(0, 0, 0);
         scene.add(model1);
+        console.log(gltf.animations.map(clip => clip.name));
 
         // アニメーションミキサー1
         mixer1 = new THREE.AnimationMixer(model1);
-        const clip1 = THREE.AnimationClip.findByName(gltf.animations, 'stopmotion'); // アニメーション名で検索
+        const clip1 = THREE.AnimationClip.findByName(gltf.animations, 'feet.run'); // アニメーション名で検索
         if (clip1) mixer1.clipAction(clip1).play();
 
         // モデル2の設定
@@ -145,7 +147,7 @@ loader.load(
 
         // アニメーションミキサー2
         mixer2 = new THREE.AnimationMixer(model2);
-        const clip2 = THREE.AnimationClip.findByName(gltf.animations, 'Walk'); // アニメーション名で検索
+        const clip2 = THREE.AnimationClip.findByName(gltf.animations, 'chest.run'); // アニメーション名で検索
         if (clip2) mixer2.clipAction(clip2).play();
     },
     undefined,
@@ -159,7 +161,6 @@ const clock = new THREE.Clock();
 function testanimate() {
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
-
     if (mixer1) mixer1.update(delta);
     if (mixer2) mixer2.update(delta);
 

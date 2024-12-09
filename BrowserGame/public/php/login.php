@@ -5,8 +5,10 @@ $_SESSION['access_token'] = bin2hex(random_bytes(32));
 
 // エラー取得
 $err = $_SESSION['err'] ?? [];
-// セッションのエラー情報をクリア
-unset($_SESSION['err']);
+// 入力内容取得
+$mailaddress=$_SESSION['input']['mailaddress'] ?? '';
+// セッションのエラー情報と入力データをクリア
+unset($_SESSION['err'],$_SESSION['input']);
 ?>
 
 <!DOCTYPE html>
@@ -17,7 +19,7 @@ unset($_SESSION['err']);
     <title>ログイン</title>
     <style>
        body {
-        background-image:url(../img/wanted_top.jpg);
+        background-image:url(../img/login.jpg);
         background-size:cover;/*全画面*/
         background-attachment: fixed;         /* 固定 */
         background-position: center center;   /* 縦横中央 */
@@ -94,7 +96,7 @@ unset($_SESSION['err']);
 
             <div class="form-group">
                 <label for="mailaddress">メールアドレス</label>
-                <input type="email" name="mailaddress">
+                <input type="email" name="mailaddress" value="<?php echo htmlspecialchars($mailaddress, ENT_QUOTES, 'UTF-8'); ?>">
             </div>
             <div class="form-group">
                 <label for="password">パスワード</label>

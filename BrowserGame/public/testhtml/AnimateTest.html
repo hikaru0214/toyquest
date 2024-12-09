@@ -40,7 +40,7 @@
 
     
     // カメラの位置設定
-    camera.position.set(0, 1, 3);
+    camera.position.set(0, 0, 5);
     
 
     // ライトの追加
@@ -52,8 +52,6 @@
     scene.add(directionalLight);
 
 
-
-    let rogofadeout=false;
     // GLTFモデルの読み込み。GLTFLoaderのインポートが必要
     
     let gltf; // GLTFオブジェクトを格納する変数
@@ -61,12 +59,12 @@
     var model = null;
     const loader = new GLTFLoader();
     loader.load(
-        "../models/rogo.glb",
+        "../models/animateblend2.glb",
         function (loadedGltf) {
             gltf = loadedGltf;
             model = gltf.scene;
-            model.scale.set(1,1,1);
-            model.position.set(0, 1, 0);
+            model.scale.set(0.1,0.1,0.1);
+            model.position.set(0, 0, 0);
             model.rotation.set(0, 0, 0);
             model.traverse(function (node) {
             });
@@ -75,16 +73,38 @@
 
             console.log(gltf.animations.map(clip => clip.name));
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
-            
-            const clip1=gltf.animations.find(clip=>clip.name==='rogoA');
-            controlaction=mixer.clipAction(clip1);
-            controlaction.play();
+            const clip1=gltf.animations.find(clip=>clip.name==='feet.run');
+            mixer.clipAction(clip1).play();
 
-            const clip2=gltf.animations.find(clip=>clip.name==='rogoB');
+            const clip2=gltf.animations.find(clip=>clip.name==='chest.run');
             mixer.clipAction(clip2).play();
 
-            animatecontrol();
+            const clip3=gltf.animations.find(clip=>clip.name==='waist.run');
+            mixer.clipAction(clip3).play();
+
+            const clip4=gltf.animations.find(clip=>clip.name==='rightarm.greet');
+            mixer.clipAction(clip4).play();
+
+            const clip5=gltf.animations.find(clip=>clip.name==='leftarm.run');
+            mixer.clipAction(clip5).play();
             
+            /**
+            "chest.normal"
+            "chest.run" 
+            "chest.walk"
+            "feet.normal"
+            "feet.run"
+            "leftarm.normal"
+            "leftarm.run"
+            "leftarm.walk"
+            "rightarm.greet"
+            "rightarm.normal"
+            "rightarm.run"
+            "rightarm.walk"
+            "waist.normal"
+            "waist.run"
+            "feet.walk"
+            */
         },
         undefined,
         function (error) {
@@ -93,39 +113,13 @@
     );
 
     
-    let controlaction;
-    let animatecontrolflag=false;
 
-    const targetFrameTime = 4.7; // 秒
-
-    // アニメーションの更新
-    function animatecontrol() {
-        requestAnimationFrame(animatecontrol);
-        const delta = clock.getDelta();
-        mixer.update(delta);
-
-        // アニメーションが特定のフレーム時間に近いかをチェック
-        if (!animatecontrolflag&&Math.abs(controlaction.time - targetFrameTime) < 0.1) { // 0.1秒の範囲でチェック
-            console.log("特定のフレームに到達しました");
-        stopAnimation('rogoA');
-        stopAnimation('rogoB');
-        rogofadeout=true;
-        animatecontrolflag=true;//アニメーションが特定のフレームに到達したかのフラグ
-        }
-
-        
-    }
-
-    
-    
 
     //アニメーションの名前を指定して停止する関数
     function stopAnimation(name) {
     const clip = gltf.animations.find(clip => clip.name === name);
     if (clip) {
         const action = mixer.clipAction(clip);
-        //action.stop();  // 特定のアニメーションを停止
-        //mixer.update(5);
         action.paused=true;
     } else {
         console.error(`アニメーション "${name}" が見つかりません`);
@@ -143,45 +137,6 @@
     }
 
 
-    // カスタムドットシェーダーの定義
-    const DotShader = {
-      uniforms: {
-        "tDiffuse": { value: null },
-        "resolution": { value: new THREE.Vector2(width, height) },
-        "pixelSize": { value: 50 }//初期値。Composerですぐに変更されるのでここでのvalueの値の初期化
-      },
-      vertexShader: `
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform sampler2D tDiffuse;
-        uniform vec2 resolution;
-        uniform float pixelSize;
-        varying vec2 vUv;
-
-        void main() {
-          vec2 dxy = pixelSize / resolution;
-          vec2 coord = dxy * floor(vUv / dxy);
-          gl_FragColor = texture2D(tDiffuse, coord);
-        }
-      `
-    };
-
-    // Composerの設定
-    const renderPass = new RenderPass(scene, camera);
-    const dotPass = new ShaderPass(DotShader);
-    dotPass.uniforms["resolution"].value = new THREE.Vector2(width, height);
-    dotPass.uniforms["pixelSize"].value = 3;//ピクセルサイズ変更
-
-    const composer = new EffectComposer(renderer);
-    composer.addPass(renderPass);
-    composer.addPass(dotPass);
-
-
     // キーの押下状態を管理するフラグ
     let isMovingLeft = false;
     
@@ -196,47 +151,20 @@
 
 
 
-    let posix=0;
-    let posiz=0;
-    let rogofadeout2=false;
-    // カメラを移動させる関数
-    function moveCamera() {
-        if (rogofadeout) {//アニメーションが特定のフレームに到達していたらフェードアウトする
-            camera.position.z -= 0.1;
-            if(camera.position.z<=-1){
-                rogofadeout=false;
-                //rogofadeout2=true;
-                window.location.replace('top.php');
-            }
-        }
-        if(rogofadeout2){//特定の位置までフェードアウトしていたら画面遷移
-            camera.position.y-=0.1;
-                if(camera.position.y<=-2){
-                    //rogofadeout2=false;
-                    window.location.replace('top.php');
-                }
-        }
-        //if(model)camera.lookAt(model.position);
-    }
-
-
-
     const clock = new THREE.Clock();
     // アニメーションループ
     function animate() {
-        requestAnimationFrame(animate);
-        // キーが押されている場合にカメラを動かす
-        moveCamera();
-        
 
         const delta = clock.getDelta(); // delta の取得
         if (mixer) {
         mixer.update(delta); // アニメーションの更新
         }
-
-        // Composerを使用してレンダリング
-        composer.render();
+        if(model){
+        model.rotation.y += 0.01;
+        }
+        renderer.render(scene, camera);//レンダリング処理。アニメーションを再生するために実行し続ける必要がある。
         checkOrientation();
+        requestAnimationFrame(animate);//一定時間ごとにanimate()を実行する。モデルのアニメーションを実行させるにはrenderer.render(...)一定時間ごとに実行する必要がある。
     }
 
     animate();
@@ -251,16 +179,10 @@
     function checkOrientation() {
     const isLandscape = window.innerWidth > window.innerHeight;
     if (!isLandscape) {//画面が縦の時に実行
-        stopAnimation('rogoA');
-        stopAnimation('rogoB');
         const caveat = document.getElementById("caveat");
         caveat.classList.remove("hidden");
     }
     if (isLandscape) {//画面が横の時に実行
-        if(!animatecontrolflag){//もしアニメーションが特定のフレームを超えていなければ実行(フラグが立っていない状態)
-        restartAnimation('rogoA');
-        restartAnimation('rogoB');
-        }
         const caveat = document.getElementById("caveat");
         caveat.classList.add("hidden");
     }
@@ -273,8 +195,6 @@
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
 
-    composer.setSize(width, height);
-    dotPass.uniforms["resolution"].value.set(width, height);
     });
 
     

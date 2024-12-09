@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 // トークン確認
 if (!isset($_SESSION['access_token'])) {
     echo '<h1>エラー</h1>';
@@ -8,13 +7,15 @@ if (!isset($_SESSION['access_token'])) {
     echo '<a href="login.php">ログインページへ</a>';
     exit;
 }
-
 // DB接続
 require '../dbConnect/dbconnect.php';
-
 // エラーメッセージ
 $err = [];
-
+// 入力内容保存用
+$input = [
+    'username' => $_POST['username'] ?? '',
+    'mailaddress' => $_POST['mailaddress'] ?? '',
+];
 // POSTデータの取得
 $username = $_POST['username'] ?? '';
 $mailaddress = $_POST['mailaddress'] ?? '';
@@ -71,9 +72,9 @@ if (count($err) === 0) {
     header('Location: signup-check.php');
     exit;
 } else {
-    // エラー情報をセッションに保存
+    // セッションに保存
     $_SESSION['err'] = $err;
-
+    $_SESSION['input'] = $input;
     // 入力ページに戻る
     header('Location: signup.php');
     exit;

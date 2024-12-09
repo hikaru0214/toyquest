@@ -1,6 +1,30 @@
 var socket = io.connect('http://52.68.111.88:7000');
 let own_id = "";
 
+let client_name = getCookie('username');
+let clientGame = null;
+
+var ol_timer = 0;
+var ol_timespan = 0;
+var ol_elementId = "";
+var ol_timer_onend = function(){};
+
+const canvas_area = document.getElementById("drawing_canvas");
+const canvas = document.getElementById("canvas");
+const context = canvas.getContext("2d");
+context.imageSmoothingEnabled=false;
+context.antiAlias = false;
+
+var current_mouse_x = 0;
+var current_mouse_y = 0;
+var last_mouse_x = 0;
+var last_mouse_y = 0;
+var mouse_pressed = false;
+
+var paint_color = "black";
+var brush_thickness = 8;
+var cursor_type = "brush"; //brush か bucket か spray ブラシ、　バケツ、スプレー
+
 const characters = "abcdefghijklmnopqrstuvwxy0123456789";
 function getRandomString(length){ //ランダム文字列
     var x = "";
@@ -22,17 +46,15 @@ function hideAllOverlay(){
 
 function setVisibleElementById(id,visible){
     document.getElementById(id).style.display =  visible?"block":"none";
+    console.log(document.getElementById(id));
 }
 
 setVisibleElementById("overlay",false);
 setVisibleElementById("round",false);
 setVisibleElementById("selectword",false);
 setVisibleElementById("painternotice",false);
-
-var ol_timer = 0;
-var ol_timespan = 0;
-var ol_elementId = "";
-var ol_timer_onend = function(){};
+setVisibleElementById("finalscore",true);
+console.log("HUH");
 
 function showOverlayByIdWithTimespan(id,timespan,onend){
     ol_timer = Date.now();
@@ -62,26 +84,29 @@ function showPalette(toggle){
 function updateScoreBoard(){ //スコアボード更新
     if(!clientGame)return;
     var scoreboard = document.getElementById("scoreboard");
-    scoreboard.innerHTML = "";
-    for(var i = 0;i < clientGame.getPlayerCount();i++){
-        var player = clientGame.getPlayerByIndex(i);
+
+    const players = clientGame.getPlayers;
+
+    var temp = "";
+
+    for(var id in players){
+        var player = players[id];
         var scoreboard_color = "white";
         var description = "";
-        if(clientGame.player_ids[i]===own_id)description+="(あなた)";
-        if(clientGame.isDrawing(clientGame.getPlayerIdByIndex(i))){
-            scoreboard_color="red";
+        if(id===own_id)description+="(あなた)";
+        if(clientGame.isDrawing(id)){
+            scoreboard_color="#88ff88";
             description += "(お絵描き中)";
         }
 
-        scoreboard.innerHTML += "<div style=\"background-color:"+scoreboard_color+";\">";
-        scoreboard.innerHTML += "<br>"+player.name+" "+description;
-        scoreboard.innerHTML += "<br>スコア:"+player.score+"";
-        scoreboard.innerHTML += "</div>";
+        temp += '<div style=\"background-color:'+scoreboard_color+'\;">';
+        temp += '<br>'+player.name+' '+description;
+        temp += '<br>スコア:'+player.score+'';
+        temp += '</div>';
     }
-}
 
-let client_name = getCookie('username');
-let clientGame = null;
+    scoreboard.innerHTML = temp;
+}
 
 socket.on('connection established',(data)=>{
     console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
@@ -103,7 +128,6 @@ socket.on('game update',(game)=>{
     clientGame = receiveObject(game,Game);
     updateScoreBoard();
     showPalette(clientGame.isDrawing(own_id));
-    document.getElementById("round_count").innerHTML = clientGame.round;
     switch(clientGame.state){
         case "standby":
             showPalette(true);
@@ -116,6 +140,7 @@ socket.on('game update',(game)=>{
 });
 
 socket.on('update timer',(time)=>{
+    if(time<0)time=0;
     document.getElementById("timer").innerHTML = time;
     updateScoreBoard();
 });
@@ -124,8 +149,116 @@ socket.on("get word",(word)=>{
     document.getElementById("word").innerHTML = word;
 });
 
-socket.on("show_client_overlay_timed",(data)=>{
+const points_earned_table = document.getElementById("points_earned");
+
+socket.on("show_client_overlay_timed",function(data){
     hideAllOverlay();
+    switch(data.id){
+        case "painternotice":
+            document.getElementById("painter_name").innerHTML = data.painterName;
+            break;
+        case "round":
+            document.getElementById("round_count").innerHTML = "ラウンド "+(data.roundcount+1)+"/"+(data.totalrounds);
+            document.getElementById("round").innerHTML = "ラウンド "+(data.roundcount+1);
+            break;
+        case "finalscore":
+            
+            const result_table = document.getElementById("final_result");
+            const podium1 = document.getElementById("podium1");
+            const podium2 = document.getElementById("podium2");
+            const podium3 = document.getElementById("podium3");
+            result_table.innerHTML = "";
+            podium1.innerHTML = "#1 ";
+            podium2.innerHTML = "#2 ";
+            podium3.innerHTML = "#3 ";
+
+
+            var scores = data.result;
+
+            scores = scores.sort(function(a,b){
+                return b.score - a.score;
+            });
+
+            var index = 0;
+            var rank = 1;
+            var last_score = 0;
+            for(var i of scores){
+                
+                if(i.score < last_score)rank++;
+
+                if(rank==1)podium1.innerHTML+=(" "+i.name);
+                if(rank==2)podium2.innerHTML+=(" "+i.name);
+                if(rank==3)podium3.innerHTML+=(" "+i.name);
+                var row = result_table.insertRow(index);
+                var row_rank = row.insertCell(0);
+                var row_name = row.insertCell(1);
+                var row_score = row.insertCell(2);
+                row_rank.innerHTML = rank;
+                row_name.innerHTML = i.name;
+                row_score.innerHTML = i.score;
+                
+
+                last_score = i.score;
+                index++;
+            }
+
+            break;
+        case "gamescore":
+            document.getElementById("wordreveal").innerHTML = data.results.word;
+            points_earned_table.innerHTML = "";
+
+            var head = points_earned_table.insertRow(0);
+            var head_rank = head.insertCell(0);
+            var head_name = head.insertCell(1);
+            var head_score = head.insertCell(2);
+            head_rank.innerHTML = "順位";
+            head_name.innerHTML = "プレイヤー";
+            head_score.innerHTML = "スコア";
+
+            var scores = data.results.scores;
+
+            console.log(scores);
+
+            var result = [];
+
+            for(var id in scores){
+                var s = scores[id];
+                result.push({name:s.name,score:s.score});
+            }
+
+            console.log(result);
+
+            result = result.sort(function(a,b){
+                return b.score - a.score;
+            });
+
+            console.log(result);
+
+            var index = 1;
+            var rank = 1;
+            var last_score = 0;
+            for(var r of result){
+
+                var name = r.name;
+                var score = r.score;
+
+                if(score<last_score)rank++;
+
+                var row = points_earned_table.insertRow(index);
+                var row_rank = row.insertCell(0);
+                var row_name = row.insertCell(1);
+                var row_score = row.insertCell(2);
+                row_rank.innerHTML = ""+rank;
+                row_name.innerHTML = ""+name;
+                row_score.innerHTML = ""+score;
+
+                last_score = score;
+
+                index++;
+            }
+            break;
+    }
+
     showOverlayByIdWithTimespan(data.id,data.time*1000,function(){});
 });
 
@@ -137,29 +270,20 @@ socket.on("hide_client_overlay",(data)=>{
     setVisibleElementById(data.id,false);
 });
 
-var chatlog = document.getElementById("log");
+var chatbox = document.getElementById("chatbox");
+var chatrows = 0;
+
 
 socket.on('message to everyone in room',message=>{
-    var item = document.createElement('li');
-    item.textContent = message;
-    chatlog.appendChild(item);
-    chatlog.scrollTop = chatlog.scrollHeight;
+    
+    var scrolledup = (chatbox.scrollHeight-chatbox.clientHeight)-chatbox.scrollTop;
+
+    var row_color = (chatrows%2==0)?"#cccccc":"white";
+    chatbox.innerHTML += '<p id="chatparagraph" style="background-color: '+row_color+';">'+message+'</p>';
+    chatrows++;
+
+    if(Math.abs(scrolledup)<24)chatbox.scrollTop = chatbox.scrollHeight;
 });
-
-const canvas = document.getElementById("canvas");
-const context = canvas.getContext("2d");
-context.imageSmoothingEnabled=false;
-context.antiAlias = false;
-
-var current_mouse_x = 0;
-var current_mouse_y = 0;
-var last_mouse_x = 0;
-var last_mouse_y = 0;
-var mouse_pressed = false;
-
-var paint_color = "black";
-var brush_thickness = 8;
-var cursor_type = "brush"; //brush か bucket か spray ブラシ、　バケツ、スプレー
 
 function getClientData(){
     var cx = current_mouse_x;
@@ -235,7 +359,7 @@ context.fillRect(0,0,canvas.width,canvas.height);
 function update(){
     if(!initialized)init();
     if(ol_timer!=-1){
-    if(Date.now()-ol_timer >= ol_timespan){
+    if(Date.now()-ol_timer >= ol_timespan&&ol_elementId!=""){
         setVisibleElementById(ol_elementId,false);
         setVisibleElementById("overlay",false);
         ol_timer_onend();
@@ -255,19 +379,20 @@ function draw(time){
 }
 
 function mouse_move(e){
-    let rect = canvas.getBoundingClientRect();
+    let rect = canvas_area.getBoundingClientRect();
     last_mouse_x = current_mouse_x;
     last_mouse_y = current_mouse_y;
     current_mouse_x = e.clientX-rect.x;
     current_mouse_y = e.clientY-rect.y;
 
+    var xd = canvas_area.clientWidth/640;
+    var yd = canvas_area.clientHeight/480;
+
+    current_mouse_x/=xd;
+    current_mouse_y/=yd;
+
   if(mouse_pressed&&cursor_type=="brush"){
     socket.emit("client draw",getClientData());
-    /*
-    if(clientGame.isDrawing(own_id)||clientGame.getGameState()=="standby"){
-        socket.emit("client draw",getClientData());
-    }
-    */
   }
 }
 
@@ -296,14 +421,17 @@ document.addEventListener('mousedown',function(e){
 });
 
 document.addEventListener('mouseup',function(e){mouse_pressed=false;});
-document.getElementById('textchat').onkeydown = function(event){
-    if(event.key === "Enter"&&this.value!=""){
-        event.preventDefault();
+
+const chat_input = document.getElementById('textchat');
+
+chat_input.addEventListener('keydown',function(e){
+    if(!e.isComposing&&e.key==="Enter"&&this.value!=""){
+        e.preventDefault();
         socket.emit("textchat",this.value);
         this.value = "";
     }
-};
+});
 
-var updateInterval = 1000.0/60.0;
+var updateInterval = 1000.0/30.0;
 setInterval(update,updateInterval);
 requestAnimationFrame(draw);
