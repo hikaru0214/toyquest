@@ -88,6 +88,7 @@ function showPalette(toggle){
 function updateScoreBoard(){ //スコアボード更新
     if(!clientGame)return;
     var scoreboard = document.getElementById("scoreboard");
+    var scoreboard_small = document.getElementById("scoreboard_small");
 
     const players = clientGame.getPlayers;
 
@@ -103,13 +104,14 @@ function updateScoreBoard(){ //スコアボード更新
             description += "(お絵描き中)";
         }
 
-        temp += '<div style=\"background-color:'+scoreboard_color+'\;">';
+        temp += '<div class="scoreboard_indiv" style=\"background-color:'+scoreboard_color+'\;">';
         temp += '<br>'+player.name+' '+description;
         temp += '<br>スコア:'+player.score+'';
         temp += '</div>';
     }
 
     scoreboard.innerHTML = temp;
+    scoreboard_small.innerHTML = temp;
 }
 
 socket.on('connection established',(data)=>{
@@ -470,9 +472,27 @@ function update(){
 
 window.addEventListener('resize',resizeFunc,false);
 
+const gameui = document.getElementById("gameui");
+
 function resizeFunc(){
     overlay_canvas.width = window.innerWidth;
     overlay_canvas.height = window.innerHeight;
+
+    var leftbar = document.getElementById("left-bar");
+    var scoreboard = document.getElementById("scoreboard");
+    var scoreboard_small = document.getElementById("scoreboard_small");
+
+    if(gameui.clientWidth<900){
+        scoreboard_small.style.display = "block";
+        scoreboard.style.display = "none";
+        leftbar.style.width = "0px";
+        canvas_area.style.width = "calc(100% - 295px)";
+    }else{
+        scoreboard_small.style.display = "none";
+        scoreboard.style.display = "block";
+        leftbar.style.width = "250px";
+        canvas_area.style.width = "calc(100% - 545px)";
+    }
 }
 
 function mouse_move(e){
