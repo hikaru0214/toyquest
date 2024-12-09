@@ -300,7 +300,7 @@ function mixStyleColor(c1,c2,ratio){
 function chat(text,chat_color,background){
     var scrolledup = (chatbox.scrollHeight-chatbox.clientHeight)-chatbox.scrollTop;
     var row_color = (chatrows%2==0)?"#cccccc":"white";
-    chatbox.innerHTML += '<p id="chatparagraph" style="color: '+chat_color+'; background-color: '+mixStyleColor(background,row_color,0.5)+';">'+text+'</p>';
+    chatbox.innerHTML += '<p id="chatparagraph" style="color: '+chat_color+'; background-color: '+mixStyleColor(background,row_color,0.2)+';">'+text+'</p>';
     chatrows++;
     if(Math.abs(scrolledup)<24)chatbox.scrollTop = chatbox.scrollHeight;
 }

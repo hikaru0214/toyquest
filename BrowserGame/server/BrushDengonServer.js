@@ -92,7 +92,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
       console.log('user disconnected');
       const gameroom = gamerooms[room];
-      io.to(room_name).emit("notify in chat",{message:(gameroom.getPlayerById(id).name+"が退室しました。"),color:"#ff0000",background:"#3abe3a"});
+      io.to(room_name).emit("notify in chat",{message:(gameroom.getPlayerById(id).name+"が退室しました。"),color:"#ff0000",background:"#be3a00"});
       gameroom.removePlayer(socket.id);
       if(gameroom.getPlayerCount()<gameroom.minimum_players){
         gameroom.resetGame(io);
