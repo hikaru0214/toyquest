@@ -76,8 +76,8 @@
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
 
 
-            const clip1=gltf.animations.find(clip=>clip.name==='feet.walk');
-            //mixer.clipAction(clip1).play();
+            const clip1=gltf.animations.find(clip=>clip.name==='feet.normal');
+            mixer.clipAction(clip1).play();
 
             const clip2=gltf.animations.find(clip=>clip.name==='chest.walk');
             //mixer.clipAction(clip2).play();
