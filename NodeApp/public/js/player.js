@@ -1,4 +1,4 @@
-const DBservice = require('./DBservice');
+// const DBservice = require('DBservice.js');
 class Player{
     constructor(socketID,x,y,width,height,velocityY,jumpStrength){
         this.socketID = socketID;

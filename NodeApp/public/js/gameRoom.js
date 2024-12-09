@@ -23,7 +23,6 @@ class GameRoom{
 
     // 特定のroom配列の要素を削除
     removeGameRoom(roomId){
-        console.log(this.getGameInstanceIndex(roomId))
         this.rooms.splice(this.getGameInstanceIndex(roomId),1);
     }
 

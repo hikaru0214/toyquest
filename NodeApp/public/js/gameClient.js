@@ -8,8 +8,8 @@ const render = new Render(canvas);
 let OwnID = null;
 let game = null;
 
-let roomId = generateRandomString(16);
-console.log(roomId);
+let roomId = localStorage.getItem("roomName");
+
 // ルームに参加する
 socket.emit('joinRoom', roomId);
 
@@ -49,6 +49,7 @@ socket.on("Update-Entity", (entity) => {
 });
 
 window.addEventListener("beforeunload", function() {
+    console.log(JSON.stringify(this.sessionStorage));
     // セッションストレージにフラグがセットされているか確認
     if (sessionStorage.getItem("reloaded")) {
         console.log("ページが再読み込みされました！");

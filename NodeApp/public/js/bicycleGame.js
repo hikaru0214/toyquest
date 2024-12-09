@@ -30,7 +30,6 @@ class Game{
         for(var i = 0;i<this.player.length;i++){
             if(this.player[i].socketID === socketID) this.player.splice(i, 1);
         }
-        console.log("playerインスタンス: "+this.player)
     }
 
     // 1フレームごとに行う処理

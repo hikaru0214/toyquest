@@ -68,7 +68,7 @@
     <div class="container">
         <a href="./chariso.html" class="back-button">← BACK</a>
         <h2>ゲームルーム作成</h2>
-        <form action="https://special-spork-695g9qg957935954-3000.app.github.dev/rooms?roomName=" method="get">
+        <form action="/rooms?entry=2&roomName=" method="get">
             <label for="participants">参加人数</label>
             <select id="participants" name="entry">
                 <option value="2">2人</option>
@@ -84,8 +84,8 @@
 
             <div class="checkbox-group">
                 <label>
-                    <input type="checkbox" name="room-type" id="checkbox" value="private" onchange="togglePasswordForm()"> 鍵部屋を作る
-                    <input type="password" name="password" id="password" style="display: none;">
+                    <!-- <input type="checkbox" name="room-type" id="checkbox" value="private" onchange="togglePasswordForm()"> 鍵部屋を作る -->
+                    <!-- <input type="password" name="password" id="password" style="display: none;"> -->
                 </label>
             </div>
 
@@ -96,19 +96,19 @@
         </form>
     </div>
     <script>
+        let roomName = "";
         // ルーム名生成
         window.load = generateRoom();
-
-        function togglePasswordForm(){
-            let checkbox = document.getElementById("checkbox").checked;
-            let input = document.getElementById("password");
-            if(checkbox == true){
-                input.style.display = "inline";
-            }else {
-                input.style.display = "none";
-                input.value = "";              
-            }
-        }
+        // function togglePasswordForm(){
+        //     let checkbox = document.getElementById("checkbox").checked;
+        //     let input = document.getElementById("password");
+        //     if(checkbox == true){
+        //         input.style.display = "inline";
+        //     }else {
+        //         input.style.display = "none";
+        //         input.value = "";              
+        //     }
+        // }
 
         function generateRandomString(length) {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -120,14 +120,23 @@
         }
 
         function generateRoom(){
-            let result = generateRandomString(16);
+            roomName = generateRandomString(16);
             let room = document.getElementById("roomName");
-            room.value += result;
+            room.value += roomName;
+            localStorage["roomName"] = roomName;
             let form = document.querySelector("form");
             let url = document.getElementById("url");
-            form.action += result;
+            console.log(form.action);
+            form.action += roomName;
             url.value = form.action;
         }
+
+        document.getElementById("participants").addEventListener("change", function(e){
+            console.log(e.target.value);
+            let url = document.getElementById("url");
+            url.value = `https://special-spork-695g9qg957935954-3000.app.github.dev/rooms?entry=${e.target.value}&roomName=${roomName}`;
+        });
+
     </script>
 </body>
 </html>
