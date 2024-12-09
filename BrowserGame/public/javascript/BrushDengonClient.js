@@ -280,13 +280,13 @@ var chatbox = document.getElementById("chatbox");
 var chatrows = 0;
 
 function mixStyleColor(c1,c2,ratio){
-    var c1r = Number("0x"+c1.substr(1,2));
-    var c1g = Number("0x"+c1.substr(3,2));
-    var c1b = Number("0x"+c1.substr(5,2));
+    var c1r = Number("0x"+c1.substring(1,2));
+    var c1g = Number("0x"+c1.substring(3,2));
+    var c1b = Number("0x"+c1.substring(5,2));
 
-    var c2r = Number("0x"+c2.substr(1,2));
-    var c2g = Number("0x"+c2.substr(3,2));
-    var c2b = Number("0x"+c2.substr(5,2));
+    var c2r = Number("0x"+c2.substring(1,2));
+    var c2g = Number("0x"+c2.substring(3,2));
+    var c2b = Number("0x"+c2.substring(5,2));
 
     var ratio2 = 1-ratio;
 
