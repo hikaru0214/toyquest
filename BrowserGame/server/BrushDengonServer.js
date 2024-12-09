@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
         socket.broadcast.to(room_name).emit("player join",data.name);
         socket.emit('game init',JSON.stringify(gamerooms[room]));
         socket.broadcast.to(room_name).emit("game update",JSON.stringify(gamerooms[room]));
-        io.to(room_name).emit("notify in chat",{message:(data.name+"が入室しました!"),color:"#00ff00"});
+        io.to(room_name).emit("notify in chat",{message:(data.name+"が入室しました!"),color:"#00ff00",background:"#ffffff"});
         console.log("player "+data.name+" joined in the room "+room);
     });
 
@@ -92,7 +92,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
       console.log('user disconnected');
       const gameroom = gamerooms[room];
-      io.to(room_name).emit("notify in chat",{message:(gameroom.getPlayerById(id).name+"が退室しました。"),color:"#ff0000"});
+      io.to(room_name).emit("notify in chat",{message:(gameroom.getPlayerById(id).name+"が退室しました。"),color:"#ff0000",background:"#3abe3a"});
       gameroom.removePlayer(socket.id);
       if(gameroom.getPlayerCount()<gameroom.minimum_players){
         gameroom.resetGame(io);
