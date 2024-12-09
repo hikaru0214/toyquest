@@ -466,7 +466,6 @@ function update(){
         c.render(overlay_context);
         if(c.isDead())confettis.splice(i,1);
     }
-    console.log(confettis.length);
 }
 
 window.addEventListener('resize',resizeFunc,false);
