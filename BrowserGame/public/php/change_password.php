@@ -91,8 +91,6 @@
             <a href="login.php">戻る</a>
         </div>
         </form>  
-        
-    
 </body>
 </html>
 <script>
