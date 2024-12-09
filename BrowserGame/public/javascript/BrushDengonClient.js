@@ -286,7 +286,7 @@ function chat(text,chat_color){
 }
 
 
-socket.on('message to everyone in room',message=>{
+socket.on('chat message',message=>{
     chat(message.name+':'+message.message,"#000000");
     console.log(message.message);
     if(message.message=="confetti")addConfetti(100);

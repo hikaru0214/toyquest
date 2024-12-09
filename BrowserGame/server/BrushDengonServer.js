@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
         if(message===secretword[room]){
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].addScore(id,123);
-            io.to(room_name).emit("notify in chat",{message:(name+"が正解しました!"),color:"#00ff00"});
+            io.to(room_name).emit("notify in chat",{message:(name+"が正解しました!"),color:"#3ae53a"});
             socket.emit("confetti");
         }else{
             io.to(room_name).emit("chat message",{name:name,message:message});
