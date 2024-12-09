@@ -5,73 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>パスワード再設定</title>
     <style>
-        body {
-        background-image:url(../img/login.jpg);
-        background-size:cover;/*全画面*/
-        background-attachment: fixed;         /* 固定 */
-        background-position: center center;   /* 縦横中央 */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-        }
-        .container {
+        .container{
             text-align: center;
-            width: 46%;
-        }
-        h1 {
-            position: relative;
-            font-size: 40px;
-            top:70px;
-            margin-bottom: 100px;
         }
         .form-group {
-            margin-top: 30px;
-            text-align: left;
-            position: relative;
+            margin-bottom: 15px;
+            text-align: center;
         }
         .form-group label {
-            font-size: 20px;
-            display: inline-block;
-            /*margin-right: 10px;*/
+            display: block;
+            margin-bottom: 5px;
+            text-align: center;
         }
         .form-group input {
-            width: 100%;
-            height: 30px;
-            font-size: 18px;
-            padding: 15px;
+            width: 80%;
+            padding: 8px;
             box-sizing: border-box;
         }
-        .login-btn {
+        .back-arrow {
+            display: inline-block;
+            cursor: pointer;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .submit-btn {
             display: block;
-            width: 100%;
-            height: 40px;
-            margin-top: 50px;
-            font-size: 16px;
-            background-color: #000;
-            color: #fff;
+            width: 80%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
             border: none;
             cursor: pointer;
+            margin: 0 auto;
         }
-        .links {
-            margin-top: 18px;
-            font-size: 18px;
-            text-align: right;
+        .submit-btn:hover {
+            background-color: #45a049;
+            
         }
-        .links a {
-            text-decoration: none;
-            color: #000;
-            margin-left: 15px;
+        
+        /* エラーメッセージ用のスタイル */
+        .error {
+            color: red; /* 赤色 */
+            margin-top: 10px;
+            text-align: center;
         }
-        .links a:hover {
-            text-decoration: underline;
-        } 
     </style>
 </head>
-<body>      
-        <a href="login.php"></a>
+<body>
+        
+        <a href="login.php"><span class="back-arrow">&larr;</span></a>
         <div class="container">
-            <h1>パスワード再設定</h1>
+            <h2>パスワード再設定</h2>
         </div>
         <form action="change_password_complete.php" method="post">
             <div class="form-group">
@@ -86,11 +70,10 @@
                 <label for="confirm-password">パスワード (確認用)</label>
                 <input type="password" id="confirm-password" name="confirm-password" required>
             </div>
-            <button type="submit" class="login-btn">登録</button>
-            <div class="links">
-            <a href="login.php">戻る</a>
-        </div>
+            <button type="submit" class="submit-btn">登録</button>
         </form>  
+        
+    
 </body>
 </html>
 <script>
