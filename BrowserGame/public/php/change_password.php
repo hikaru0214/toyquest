@@ -43,7 +43,7 @@
             padding: 15px;
             box-sizing: border-box;
         }
-        .login-btn {
+        .submit-btn {
             display: block;
             width: 100%;
             height: 40px;
@@ -80,6 +80,7 @@
         <div class="container">
             <h2>パスワード再設定</h2>
         </div>
+        <div class="form-group">
         <form action="change_password_complete.php" method="post">
             <div class="form-group">
                 <label for="mailaddress">メールアドレス</label>
@@ -98,7 +99,7 @@
         <div class="links">
             <a href="login.php">戻る</a>
         </div>
-        
+    </div>
     
 </body>
 </html>
