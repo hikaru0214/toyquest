@@ -108,7 +108,7 @@ function update(){
         var roomname = "room_"+i;
         var game = gamerooms[i];
         var remainingtime = parseInt(game.getRemainingTime(), 10);
-        io.to(roomname).emit("update timer",remainingtime);
+        if(game.getRemainingTime()>=0&&!game.allguessed)io.to(roomname).emit("update timer",remainingtime);
         io.to(roomname).emit("game update",JSON.stringify(game));
         var response = game.gameupdate(io);
         switch(response.instruction){
