@@ -251,10 +251,12 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
 
     Guess(id){
         if(this.players[id].guessed)return;
-        this.players[id].score+=this.score_on_guess; //回答者にポイント付与
+        var score_gain = this.score_on_guess-((this.time_limit-this.getRemainingTime())/10)*25; //回答時間に10秒かかると25点ずつ減っていく
+        if(score_gain<=100)score_gain=100;
+        this.players[id].score+=score_gain; //回答者にポイント付与
         this.players[id].guessed=true;
         if(this.score_on_guess>=100)this.score_on_guess-=75;
-        this.players[this.getDrawerId()].score+=100; //描き手にポイント付与
+        this.players[this.getDrawerId()].score+=score_gain*0.25; //描き手にポイント付与
         if(this.AllIdOfGuessed().length == this.getPlayerCount())this.allguessed=true;
     }
     
