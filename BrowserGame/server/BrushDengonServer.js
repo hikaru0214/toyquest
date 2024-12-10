@@ -221,12 +221,12 @@ function update(){
         var response = game.gameupdate(io);
         switch(response.instruction){
             case "setword":
-                var secretword = "";
-                secretword = themes[parseInt((Math.random()*themes.length),10)];
-                console.log("next word for room "+roomname+" is : "+secretword);
-                io.to(roomname).emit("get word",game.hiddenWord(secretword));
-                io.to(game.getDrawerId()).emit("get word",secretword);
-                secretword[i] = secretword;
+                var sw = "";
+                sw = themes[parseInt((Math.random()*themes.length),10)];
+                console.log("next word for room "+roomname+" is : "+sw);
+                io.to(roomname).emit("get word",game.hiddenWord(sw));
+                io.to(game.getDrawerId()).emit("get word",sw);
+                secretword[i] = sw;
                 break;
             case "reveal_and_result":
                 var resultdata = {word:secretword[i],scores:response.data};
