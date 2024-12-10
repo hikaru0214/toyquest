@@ -47,6 +47,8 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
 
         this.scores_at_start = {};
         this.score_on_guess = 400;
+
+        this.allguessed = false;
     }
 
     gameupdate(io){ //ゲームループ
@@ -82,7 +84,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             return {instruction:"setword",word:word};
         }
 
-        if(this.state=="drawing"&&this.getRemainingTime()<=0){
+        if(this.state=="drawing"&&(this.getRemainingTime()<=0||this.allguessed)){
 
             this.markDrewInQueue(this.getDrawerId());
             console.log(this.drawer_queue);
@@ -161,6 +163,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
 
     nextTurn(io){
         this.score_on_guess = 400;
+        this.allguessed=false;
         delproperties(this.scores_at_start);
         for(var id in this.players){
             this.players[id].guessed = false;
@@ -246,12 +249,13 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         return this.players[id];
     }
 
-    addScore(id){
+    Guess(id){
         if(this.players[id].guessed)return;
         this.players[id].score+=this.score_on_guess; //回答者にポイント付与
         this.players[id].guessed=true;
         if(this.score_on_guess>=100)this.score_on_guess-=75;
         this.players[this.getDrawerId()].score+=100; //描き手にポイント付与
+        if(this.AllIdOfGuessed().length == this.getPlayerCount())this.allguessed=true;
     }
     
     Guessed(id){
