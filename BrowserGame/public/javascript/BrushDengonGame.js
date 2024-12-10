@@ -17,7 +17,7 @@ function getObjSize(obj){
 class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを用意する
     constructor(room_id){
         this.room_id = room_id;
-        this.player_limit = 4; //プレイヤー数制限
+        this.player_limit = 7; //プレイヤー数制限
         this.minimum_players = 2; //最小プレイヤー数
         this.time_limit = 60; //時間制限
         this.draw_start_time = 0;

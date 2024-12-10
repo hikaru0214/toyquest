@@ -399,6 +399,9 @@ context.fillRect(0,0,canvas.width,canvas.height);
         document.getElementById("brush").onclick = function(){
             cursor_type = "brush";
         }
+        document.getElementById("eraser").onclick = function(){
+            cursor_type = "eraser";
+        }
         document.getElementById("clear").onclick = function(){
             socket.emit("clear canvas");
         }
@@ -540,9 +543,25 @@ function mouse_move(e){
     current_mouse_x/=xd;
     current_mouse_y/=yd;
 
-  if(mouse_pressed&&cursor_type=="brush"){
+  if(mouse_pressed&&cursor_type!="bucket"){
     socket.emit("client draw",getClientData());
   }
+}
+
+function mouse_clicked(e){
+    let rect = canvas.getBoundingClientRect();
+    last_mouse_x = current_mouse_x;
+    last_mouse_y = current_mouse_y;
+    current_mouse_x = e.clientX-rect.x;
+    current_mouse_y = e.clientY-rect.y;
+
+    var xd = canvas.clientWidth/640;
+    var yd = canvas.clientHeight/480;
+
+    current_mouse_x/=xd;
+    current_mouse_y/=yd;
+
+    socket.emit("client draw",getClientData());
 }
 
 socket.on("draw relay",function(data){
@@ -551,10 +570,24 @@ socket.on("draw relay",function(data){
     context.strokeStyle = data.paint_color;
     context.lineWidth = data.brush_thickness;
 
+    if(data.cursor_type=="bucket"){
+
+    }
+
+    if(data.cursor_type=="brush"){
     context.beginPath();
     context.moveTo(data.lx,data.ly);
     context.lineTo(data.cx,data.cy);
     context.stroke();
+    }
+
+    if(data.cursor_type=="eraser"){
+        context.strokeStyle = "white";
+        context.beginPath();
+        context.moveTo(data.lx,data.ly);
+        context.lineTo(data.cx,data.cy);
+        context.stroke();
+    }
 
 });
 
@@ -562,14 +595,11 @@ socket.on("clear canvas",function(){
     clear();
 });
 
+//Canvasでいいのでは
 document.addEventListener('mousemove',mouse_move);
-document.addEventListener('mousedown',function(e){
-    mouse_pressed=true;
-    if(cursor_type=="bucket"){
-    }
-});
-
+document.addEventListener('mousedown',function(e){mouse_pressed=true;});
 document.addEventListener('mouseup',function(e){mouse_pressed=false;});
+document.addEventListener('click',mouse_clicked);
 
 const chat_input = document.getElementById('textchat');
 

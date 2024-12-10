@@ -188,7 +188,7 @@ io.on('connection', (socket) => {
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].Guess(id);
             io.to(room_name).emit("notify in chat",{message:(name+"が正解しました!"),color:"#3abe3a",background:"#3abe3a"});
-            socket.emit("get word",secretword[i]);
+            socket.emit("get word",secretword[room]);
             socket.emit("confetti");
         }else{
             io.to(room_name).emit("chat message",{name:name,message:message});
