@@ -52,6 +52,8 @@
         .button.green {
             background-color: #2E8B57;
         }
+
+
         /* モーダルボタン*/
         .button.blue {
             background-color: #0000FF;
@@ -62,6 +64,66 @@
             border-radius: 50px;
             cursor: pointer;
         }
+        /* モーダル背景 */
+.modalBg {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, .8);
+    padding: 40px 0;
+}
+/* モーダル内コンテンツ */
+.modalArea {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    width: 80%;
+}
+.modalContent p {
+    font-size: 16px;
+    color: #222;
+    line-height: 1.5;
+    letter-spacing: .06em;
+}
+/* 閉じるボタン */
+.modalClose {
+    position: relative;
+    background-color: #222;
+    border-radius: 50px;
+    width: 40px;
+    height: 40px;
+    margin: 0 0 40px auto;
+    cursor: pointer;
+}
+.modalClose::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%) rotate(45deg);
+    background-color: #fff;
+    border-radius: 50px;
+    width: 2px;
+    height: 20px;
+}
+.modalClose::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%) rotate(-45deg);
+    background-color: #fff;
+    border-radius: 50px;
+    width: 2px;
+    height: 20px;
+}
     </style>
 </head>
 <body>
@@ -93,6 +155,7 @@
     </div>
 
     <script>
+
 
         function getCookie(cname) {
             let name = cname + "=";
@@ -128,6 +191,17 @@
             console.log(document.cookie);
         }
 
+        //モーダル
+        $(function () {
+        // ボタンをクリックしたらモーダル表示
+        $(".modalBtn").on("click", function () {
+            $(".modalBg").fadeIn();
+        });
+        // ×ボタンクリックでモーダル閉じる
+        $(".modalClose").on("click", function () {
+            $(".modalBg").fadeOut();
+        });
+        });
     </script>
 
 </body>
