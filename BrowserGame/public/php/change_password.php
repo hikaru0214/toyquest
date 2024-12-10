@@ -77,9 +77,9 @@
 </head>
 <body>
         
-        <div class="container">
+    <div class="container">
             <h2>パスワード再設定</h2>
-        </div>
+        
         <div class="form-group">
         <form action="change_password_complete.php" method="post">
             <div class="form-group">
@@ -100,7 +100,7 @@
             <a href="login.php">戻る</a>
         </div>
     </div>
-    
+    </div>
 </body>
 </html>
 <script>
