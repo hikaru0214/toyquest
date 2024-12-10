@@ -32,8 +32,8 @@ try {
     $stmt->execute();
 
     // セッションのクリア
-    session_unset();
-    session_destroy();
+    //session_unset();
+    //session_destroy();
 
     // 登録完了画面にリダイレクト
     header('Location: signup-complete.php');
