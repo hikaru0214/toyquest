@@ -148,7 +148,6 @@ socket.on('game update',(game)=>{
 socket.on('update timer',(time)=>{
     if(time<0)time=0;
     document.getElementById("timer").innerHTML = time;
-    updateScoreBoard();
 });
 
 socket.on("get word",(word)=>{
