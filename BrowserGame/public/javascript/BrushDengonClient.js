@@ -150,8 +150,17 @@ socket.on('update timer',(time)=>{
     document.getElementById("timer").innerHTML = time;
 });
 
+function putGap(str){
+    var x = "";
+    var arr = Array.from(str);
+    for(var i = 0;i < str.length;i++){
+        x+=" "+arr[i];
+    }
+    return x;
+}
+
 socket.on("get word",(word)=>{
-    document.getElementById("word").innerHTML = word;
+    document.getElementById("word").innerHTML = putGap(word);
 });
 
 const points_earned_table = document.getElementById("points_earned");

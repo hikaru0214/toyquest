@@ -25,19 +25,6 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.rounds = 3; //ラウンド数
         this.hints = 2; //ヒント(文字の一つを表示する)
         this.drawer_queue = {}; //描き手キュー,IDを保存,(ラウンド開始時に居たプレイヤーのみ)
-        this.words = [
-            "シャワー",
-            "きょうしつ",
-            "せんせい",
-            "だつぜい",
-            "シャンプー",
-            "マシュマロ",
-            "バーベキュー",
-            "マクドナルド",
-            "パソコン",
-            "えんぴつ",
-            "スケートボード"
-        ]; //お題
         this.players = {};
         this.access = "public"; //部屋アクセスタイプ　0(公開) 1(プライベート)
         this.state = "standby"; //部屋状態 //standby待機中 , roundstart,ラウンド中,
@@ -81,6 +68,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             io.to(room_name).emit("clear canvas");
             this.state = "drawing";
             var word = this.nextTurn(io);
+            this.setTimer(); //ヒントのタイマー
             return {instruction:"setword",word:word};
         }
 
@@ -92,6 +80,15 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             this.state = "drawend";
 
         }
+
+        /*
+
+        if(this.state=="drawing"&&this.getTimer(this.time_limit/3)<=0){
+            this.setTimer();
+            
+        }
+
+        */
 
         if(this.state=="drawend"){
             this.state = "word reveal and result"
@@ -257,10 +254,10 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(this.players[id].guessed)return;
         var score_gain = this.score_on_guess-((this.time_limit-this.getRemainingTime())/10)*25; //回答時間に10秒かかると25点ずつ減っていく
         if(score_gain<=100)score_gain=100;
-        this.players[id].score+=score_gain; //回答者にポイント付与
+        this.players[id].score+=parseInt(score_gain); //回答者にポイント付与
         this.players[id].guessed=true;
         if(this.score_on_guess>=100)this.score_on_guess-=75;
-        this.players[this.getDrawerId()].score+=score_gain*0.25; //描き手にポイント付与
+        this.players[this.getDrawerId()].score+=parseInt(score_gain*0.25); //描き手にポイント付与
         if(this.AllIdOfGuessed().length == this.getPlayerCount())this.allguessed=true;
     }
     
@@ -303,7 +300,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         var x = "";
         var arr = Array.from(str);
         for(var i = 0;i < str.length;i++){
-            x+=(arr[i]!=" ")?"_":" ";
+            x+=((arr[i]!=" ")?"_":" ");
         }
         return x;
     }
