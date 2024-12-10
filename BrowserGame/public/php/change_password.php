@@ -78,7 +78,7 @@
 <body>
         
     <div class="container">
-            <h2>パスワード再設定</h2>
+            <h1>パスワード再設定</h1>
         
         <div class="form-group">
         <form action="change_password_complete.php" method="post">
