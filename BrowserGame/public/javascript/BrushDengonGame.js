@@ -172,19 +172,23 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         }
 
         var room_name = "room_"+this.room_id;
+        /*
         var secretword = "";
         secretword = this.words[parseInt((Math.random()*this.words.length),10)];
         console.log("next word for room "+this.room_id+" is : "+secretword);
+        */
         var painter = this.getPlayerById(this.getDrawerId());
         
         painter.guessed = true;
 
         io.to(room_name).emit("notify in chat",{message:painter.name+"が筆を手にした！",color:"#00FF00"});
+        /*
         io.to(room_name).emit("get word",this.hiddenWord(secretword));
         io.to(this.getDrawerId()).emit("get word",secretword);
+        */
         this.setStartTime();
         io.to(room_name).emit("game update",JSON.stringify(this));
-        return secretword;
+        return "";
     }
 
     setStartTime(){

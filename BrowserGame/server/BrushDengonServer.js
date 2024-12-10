@@ -20,6 +20,114 @@ function getRandomString(length){ //ランダム文字列
     return x;
 }
 
+function toHira(str){
+    return str.replace(/[\u30a1-\u30f6]/g,function(match){
+        var chr = match.charCodeAt(0) - 0x60;
+        return String.fromCharCode(chr);
+    });
+}
+
+function toKana(str){
+    return str.replace(/[\u3041-\u3096]/g,function(match){
+        var chr = match.charCodeAt(0) + 0x60;
+        return String.fromCharCode(chr);
+    });
+}
+
+function isCorrect(word,guess){
+    var hira = toHira(guess);
+    var kata = toKana(guess);
+    return (word==hira)||(word==kata);
+}
+
+const themes = [
+    "イヌ",
+    "ウシ",
+    "ウマ",
+    "オス",
+    "カバ",
+    "クマ",
+    "サイ",
+    "サル",
+    "シカ",
+    "ゾウ",
+    "トド",
+    "トラ",
+    "ヌー",
+    "ネコ",
+    "バク",
+    "ヒト",
+    "ヒヒ",
+    "ブタ",
+    "ホモ",
+    "メス",
+    "ヤギ",
+    "ラバ",
+    "ラマ",
+    "リス",
+    "ロバ",
+    "ハンバーグ",
+    "ハンバーガー",
+    "オムライス",
+    "カレーライス",
+    "パスタ",
+    "からあげ",
+    "おにぎり",
+    "ききゅう",
+    "きゅうきゅうしゃ",
+    "くるま",
+    "じてんしゅ",
+    "しょうぼうしゃ",
+    "しんかんせん",
+    "タクシー",
+    "せんすいかん",
+    "ちかてつ",
+    "でんしゃ",
+    "ふね",
+    "ヘリコプター",
+    "ヨット",
+    "サッカー",
+    "フットサル",
+    "やきゅう",
+    "バスケットボール",
+    "バレーボール",
+    "ラグビー",
+    "バドミントン",
+    "たっきゅう",
+    "テニス",
+    "ゴルフ",
+    "ボクシング",
+    "プロレス",
+    "ソフトボール",
+    "ハンドボール",
+    "ソフトテニス",
+    "ビーチバレー",
+    "りくじょう",
+    "マラソン",
+    "すいえい",
+    "けんどう",
+    "じゅうどう",
+    "きゅうどう",
+    "じょうば",
+    "トランポリン",
+    "ダンス",
+    "バレエ",
+    "ヨガ",
+    "スポーツクライミング",
+    "ボディビル",
+    "ビーチサッカー",
+    "スケートボード",
+    "ダーツ",
+    "ビリヤード",
+    "ボウリング",
+    "ドッジボール",
+    "サーフィン",
+    "スキー",
+    "スノーボード",
+    "フィギュアスケート",
+    "アイスホッケー",
+    "eスポーツ"];
+
 const gamerooms = [];
 const secretword = [];
 const wordhint = [];
@@ -66,7 +174,7 @@ io.on('connection', (socket) => {
             }
             return;
         }
-        if(message===secretword[room]){
+        if(isCorrect(secretword[room],message)){
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].Guess(id);
             io.to(room_name).emit("notify in chat",{message:(name+"が正解しました!"),color:"#3abe3a",background:"#3abe3a"});
@@ -113,7 +221,12 @@ function update(){
         var response = game.gameupdate(io);
         switch(response.instruction){
             case "setword":
-                secretword[i] = response.word;
+                var secretword = "";
+                secretword = themes[parseInt((Math.random()*themes.length),10)];
+                console.log("next word for room "+roomname+" is : "+secretword);
+                io.to(roomname).emit("get word",game.hiddenWord(secretword));
+                io.to(game.getDrawerId()).emit("get word",secretword);
+                secretword[i] = secretword;
                 break;
             case "reveal_and_result":
                 var resultdata = {word:secretword[i],scores:response.data};
