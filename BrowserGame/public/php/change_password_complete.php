@@ -9,22 +9,66 @@
     <title>パスワード設定完了</title>
     <style>
         body {
-            margin-top: 50px;
+        background-image:url(../img/login.jpg);
+        background-size:cover;/*全画面*/
+        background-attachment: fixed;         /* 固定 */
+        background-position: center center;   /* 縦横中央 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
         }
-
         .container {
             text-align: center;
+            width: 46%;
         }
-        .container h2 {
-            margin-bottom: 20px;
+        h1 {
+            position: relative;
+            font-size: 40px;
+            top:70px;
+            margin-bottom: 100px;
         }
-        .container a {
-            color: blue;
-            font-weight: bold;
+        .form-group {
+            margin-top: 30px;
+            text-align: left;
+            position: relative;
         }
-        .container a:hover {
+        .form-group label {
+            font-size: 20px;
+            display: inline-block;
+            /*margin-right: 10px;*/
+        }
+        .form-group input {
+            width: 100%;
+            height: 30px;
+            font-size: 18px;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        .login-btn {
+            display: block;
+            width: 100%;
+            height: 40px;
+            margin-top: 50px;
+            font-size: 16px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .links {
+            margin-top: 18px;
+            font-size: 18px;
+            text-align: right;
+        }
+        .links a {
+            text-decoration: none;
+            color: #000;
+            margin-left: 15px;
+        }
+        .links a:hover {
             text-decoration: underline;
-        }
+        } 
         /* エラーメッセージ用のスタイル */
         .error {
             color: red; /* 赤色 */
@@ -86,13 +130,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 ?>
 
     <div class="container">
-    <h2>パスワード再設定</h2>
+    <h1>パスワード再設定完了</h1>
     <?php if (!empty($success_message)): ?>
         <p class="message"><?php echo htmlspecialchars($success_message, ENT_QUOTES, 'UTF-8'); ?></p>
         <a href="login.php">ログイン画面へ</a>
     <?php else: ?>
         <p class="error"><?php echo htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8'); ?></p>
-        <a href="change_password.php">戻る</a>
+        <div class="links">
+            <a href="change_password.php">戻る</a>
+        </div>
     <?php endif; ?>
     </div>
 
