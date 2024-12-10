@@ -128,6 +128,15 @@ const themes = [
     "アイスホッケー",
     "eスポーツ"];
 
+    function escapeHtml(unsafe){
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+    }
+
 const gamerooms = [];
 const secretword = [];
 const wordhint = [];
@@ -166,6 +175,7 @@ io.on('connection', (socket) => {
     socket.on('textchat',function(message){
         const game = gamerooms[room];
         var name = game.getPlayerById(id).name;
+        message = escapeHtml(message);
         console.log(name+" : "+message);
         if(game.Guessed(id)){
             var allguessed = game.AllIdOfGuessed();
@@ -178,6 +188,7 @@ io.on('connection', (socket) => {
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].Guess(id);
             io.to(room_name).emit("notify in chat",{message:(name+"が正解しました!"),color:"#3abe3a",background:"#3abe3a"});
+            socket.emit("get word",secretword[i]);
             socket.emit("confetti");
         }else{
             io.to(room_name).emit("chat message",{name:name,message:message});
@@ -226,8 +237,8 @@ function update(){
         if(!game.allguessed)io.to(roomname).emit("update timer",remainingtime);
         io.to(roomname).emit("game update",JSON.stringify(game));
         var response = game.gameupdate(io);
-
-        if(game.state=="drawing"&&game.getTimer(game.time_limit/5)<=0){
+        var swlength = this.secretword[i].length;
+        if(game.state=="drawing"&&game.getTimer((game.time_limit/swlength)*1.3)<=0){
             game.setTimer();
             wordhint[i] = revealAndMerge(wordhint[i],secretword[i]);
             io.to(roomname).emit("get word",wordhint[i]);
