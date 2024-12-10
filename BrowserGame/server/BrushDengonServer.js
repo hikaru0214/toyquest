@@ -237,9 +237,9 @@ function update(){
         if(!game.allguessed)io.to(roomname).emit("update timer",remainingtime);
         io.to(roomname).emit("game update",JSON.stringify(game));
         var response = game.gameupdate(io);
-        
+
         var swlength = 5;
-        if(game.state=="drawing")swlength = this.secretword[i].length;
+        if(game.state=="drawing")swlength = secretword[i].length;
         if(game.state=="drawing"&&game.getTimer((game.time_limit/swlength)*1.3)<=0){
             game.setTimer();
             wordhint[i] = revealAndMerge(wordhint[i],secretword[i]);
