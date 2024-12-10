@@ -45,7 +45,7 @@ if (!isset($_SESSION['access_token'])) {
 </head>
 <body>
     <div class="container">
-        <h1>ユーザー登録が完了しました。</hi>
+        <h1>ユーザー登録が完了しました。</h1>
     <div class="links">
         <a href="login.php">ログインページへ</a>
     </div>
