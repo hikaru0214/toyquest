@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>あいつを探せ</title>
     <style>
         /* Background pattern styling */
@@ -54,76 +55,79 @@
         }
 
 
+        
+        /* リセットCSS */
+        body,div,p {
+            margin: 0;
+        }
+        .modal {
+            position: relative;
+            padding: 50px 0;
+        }
         /* モーダルボタン*/
         .button.blue {
             background-color: #0000FF;
-            width: 300px;
-            margin: 0 auto;
-            height: 50px;
-            line-height: 50px;
-            border-radius: 50px;
-            cursor: pointer;
         }
         /* モーダル背景 */
-.modalBg {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, .8);
-    padding: 40px 0;
-}
-/* モーダル内コンテンツ */
-.modalArea {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 20px;
-    width: 80%;
-}
-.modalContent p {
-    font-size: 16px;
-    color: #222;
-    line-height: 1.5;
-    letter-spacing: .06em;
-}
-/* 閉じるボタン */
-.modalClose {
-    position: relative;
-    background-color: #222;
-    border-radius: 50px;
-    width: 40px;
-    height: 40px;
-    margin: 0 0 40px auto;
-    cursor: pointer;
-}
-.modalClose::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%) rotate(45deg);
-    background-color: #fff;
-    border-radius: 50px;
-    width: 2px;
-    height: 20px;
-}
-.modalClose::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%) rotate(-45deg);
-    background-color: #fff;
-    border-radius: 50px;
-    width: 2px;
-    height: 20px;
-}
+        .modalBg {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, .8);
+            padding: 40px 0;
+        }
+        /* モーダル内コンテンツ */
+        .modalArea {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            width: 80%;
+        }
+        .modalContent p {
+            font-size: 16px;
+            color: #222;
+            line-height: 1.5;
+            letter-spacing: .06em;
+        }
+        /* 閉じるボタン */
+        .modalClose {
+            position: relative;
+            background-color: #222;
+            border-radius: 50px;
+            width: 40px;
+            height: 40px;
+            margin: 0 0 40px auto;
+            cursor: pointer;
+        }
+        .modalClose::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%) rotate(45deg);
+            background-color: #fff;
+            border-radius: 50px;
+            width: 2px;
+            height: 20px;
+        }
+        .modalClose::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%) rotate(-45deg);
+            background-color: #fff;
+            border-radius: 50px;
+            width: 2px;
+            height: 20px;
+        }
     </style>
 </head>
 <body>
