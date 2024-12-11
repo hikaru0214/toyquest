@@ -211,6 +211,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
       console.log('user disconnected');
       const gameroom = gamerooms[room];
+      if(gameroom.isDrawing(id))gameroom.painter_left=true;
       io.to(room_name).emit("notify in chat",{message:(gameroom.getPlayerById(id).name+"が退室しました。"),color:"#ff0000",background:"#be3a00"});
       gameroom.removePlayer(socket.id);
       if(gameroom.getPlayerCount()<gameroom.minimum_players){
