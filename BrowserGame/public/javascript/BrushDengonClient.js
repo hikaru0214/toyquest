@@ -37,7 +37,7 @@ sfx["drawend"] = new Audio("../sfx/drawend.wav");
 
 for(var i in sfx){
     var sound = sfx[i];
-    sound.volume = 1;
+    sound.volume = 0.5;
     sound.load();
 }
 
