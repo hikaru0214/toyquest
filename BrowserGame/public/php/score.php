@@ -248,6 +248,7 @@
         exit;
     }
     
+    error_log("User ID: " . ($_SESSION['user_id'] ?? '未設定'));
     ?>
 
     <a href="top.php" class="back-button">戻る</a>
