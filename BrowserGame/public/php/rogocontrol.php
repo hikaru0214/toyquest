@@ -1,4 +1,6 @@
-
+<?php session_start(); ?>
+<!-- DB接続 -->
+<?php require '../dbConnect/dbconnect.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
