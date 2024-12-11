@@ -182,6 +182,7 @@
             $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
             $stmt->execute();
             $myScores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $scores = $myScores; // テーブルに表示するデータをマイスコアに変更
         }
         if ($showFriendScore) {
             if (!isset($_SESSION['user_id'])) {
@@ -216,7 +217,7 @@
                 WHERE Score.game_id IN (1, 2, 3) 
                 GROUP BY User.user_id, User.user_name 
                 ORDER BY total_score DESC
-                LIMIT 50
+                
             ";
         } else {
             $gameMapping = [
