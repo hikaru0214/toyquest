@@ -158,7 +158,7 @@
 </head>
 <body>
 <?php
-    $user = $_SESSION['user']; // セッションからユーザー情報を取得
+    $user = $_SESSION['user']['user_id']; // セッションからユーザー情報を取得
     // 初期設定
     $selectedGame = isset($_POST['rankingu']) ? $_POST['rankingu'] : '総合スコア';
     $showMyScore = isset($_POST['show_my_score']) ? true : false;
@@ -167,7 +167,7 @@
     try {
         // SQL生成
         if ($showMyScore) {
-            if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+            if (!isset($_SESSION['user_id'])) {
                 throw new Exception("ログインが必要です。");
             }
             // 自分のスコア取得
