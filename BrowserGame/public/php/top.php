@@ -1,13 +1,4 @@
-<?php session_start();
-    if (!isset($_SESSION['user'])) {
-        // セッションがない場合の処理
-        header('Location: login.php');
-        exit;
-    }
-    
-    // セッションがある場合の処理
-    echo "ようこそ、" . htmlspecialchars($_SESSION['user']['user_name'], ENT_QUOTES, 'UTF-8') . " さん！";
-?>
+<?php session_start();?>
 <?php require '../dbConnect/dbconnect.php';?>
 <!DOCTYPE html>
 <html>
