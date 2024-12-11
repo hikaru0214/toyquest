@@ -29,6 +29,22 @@ var paint_color = "black";
 var brush_thickness = 8;
 var cursor_type = "brush"; //brush か bucket か spray ブラシ、　バケツ、スプレー
 
+const sfx = {};
+
+sfx["drawstart"] = new Audio("../sfx/drawstart.wav");
+sfx["guess"] = new Audio("../sfx/guess.wav");
+sfx["drawend"] = new Audio("../sfx/drawend.wav");
+
+for(var i in sfx){
+    var sound = sfx[i];
+    sound.volume = 1;
+    sound.load();
+}
+
+function playsound(sfxname){
+    sfx[sfxname].cloneNode(true).play();
+}
+
 const characters = "abcdefghijklmnopqrstuvwxy0123456789";
 function getRandomString(length){ //ランダム文字列
     var x = "";
@@ -599,6 +615,8 @@ socket.on("draw relay",function(data){
 socket.on("clear canvas",function(){
     clear();
 });
+
+socket.on("play sound",playsound);
 
 //Canvasでいいのでは
 document.addEventListener('mousemove',mouse_move);

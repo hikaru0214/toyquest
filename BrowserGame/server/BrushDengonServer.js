@@ -188,6 +188,7 @@ io.on('connection', (socket) => {
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].Guess(id);
             io.to(room_name).emit("notify in chat",{message:(name+"が正解しました!"),color:"#3abe3a",background:"#3abe3a"});
+            io.to(room_name).emit("play sound","guess");
             socket.emit("get word",secretword[room]);
             socket.emit("confetti");
         }else{
@@ -235,7 +236,7 @@ function update(){
         var roomname = "room_"+i;
         var game = gamerooms[i];
         var remainingtime = parseInt(game.getRemainingTime(), 10);
-        if(!game.allguessed)io.to(roomname).emit("update timer",remainingtime);
+        if(!game.allguessed&&!game.painter_left)io.to(roomname).emit("update timer",remainingtime);
         io.to(roomname).emit("game update",JSON.stringify(game));
         var response = game.gameupdate(io);
 

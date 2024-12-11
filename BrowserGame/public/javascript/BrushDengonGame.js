@@ -60,7 +60,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             io.to(room_name).emit("clear canvas");
             var painterName = this.getPlayerById(this.getDrawerId()).name;
             console.log("next painter is : "+painterName);
-            io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3,painterName:painterName})
+            io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3,painterName:painterName});
             this.setTimer();
             this.state = "painternotice";
         }
@@ -70,6 +70,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             this.state = "drawing";
             var word = this.nextTurn(io);
             this.setTimer(); //ヒントのタイマー
+            io.to(room_name).emit("play sound","drawstart");
             return {instruction:"setword",word:word};
         }
 
@@ -94,7 +95,6 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(this.state=="drawend"){
             this.state = "word reveal and result"
             this.setTimer();
-
             var results = {};
             for(var id in this.players){
                 var p = this.players[id];
@@ -104,6 +104,8 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
                 }
                 results[id] = {name:p.name,score:earned_score};
             }
+
+            io.to(room_name).emit("play sound","drawend");
 
             return {instruction:"reveal_and_result",data:results};
         }
@@ -264,7 +266,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.players[id].score+=parseInt(score_gain); //回答者にポイント付与
         this.players[id].guessed=true;
         if(this.score_on_guess>=100)this.score_on_guess-=75;
-        this.players[this.getDrawerId()].score+=parseInt(score_gain*0.25); //描き手にポイント付与
+        this.players[this.getDrawerId()].score+=parseInt(score_gain*0.5); //描き手にポイント付与
         if(this.AllIdOfGuessed().length == this.getPlayerCount())this.allguessed=true;
     }
     
