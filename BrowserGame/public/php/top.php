@@ -1,4 +1,10 @@
-<?php session_start();?>
+<?php session_start();
+    if (!isset($_SESSION['user'])) {
+        // セッション情報がない場合の処理
+        echo "ログインが必要です。";
+        exit;
+    }
+?>
 <?php require '../dbConnect/dbconnect.php';?>
 <!DOCTYPE html>
 <html>
