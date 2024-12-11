@@ -99,13 +99,18 @@ function updateScoreBoard(){ //スコアボード更新
         var scoreboard_color = "white";
         var description = "";
         if(id===own_id)description+="(あなた)";
-        if(clientGame.isDrawing(id)){
-            scoreboard_color="#88ff88";
-            description += "(お絵描き中)";
+        if(players[id].guessed)scoreboard_color="#88ff88";
+        if(clientGame.state=="drawing"&&clientGame.isDrawing(id)){
+            scoreboard_color="#eeeeee";
+            //description += "(お絵描き中)";
         }
 
         temp += '<div class="scoreboard_indiv" style=\"background-color:'+scoreboard_color+'\;">';
         temp += '<br>'+player.name+' '+description;
+        if(clientGame.state=="drawing"&&clientGame.isDrawing(id)){
+            //temp += '<div style=\"background-image: url(\"../img/brush.png\"); display: block; margin: 0px; padding: 0px; width:64px; height:64; \"></div>';
+            temp += '<img src="../img/brush.png" class="icon1">';
+        }
         temp += '<br>スコア:'+player.score+'';
         temp += '</div>';
     }

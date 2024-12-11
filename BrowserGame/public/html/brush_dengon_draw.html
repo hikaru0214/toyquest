@@ -138,10 +138,12 @@
             vertical-align: top;
             border-radius: 5px;
             background-color: white;
+            pointer-events: none;
         }
 
         .scoreboard_indiv{
             border-radius: 5px;
+            white-space: nowrap;
         }
 
         .palette_color {
@@ -278,6 +280,24 @@
             z-index: 1;
         }
 
+        .icon1 {
+            position:relative;
+            margin:0px;
+            padding:0px;
+            image-rendering: pixelated;
+            width: 32px;
+            height: 32px;
+        }
+
+        .icon2 {
+            position:relative;
+            image-rendering: pixelated;
+            margin:0px;
+            padding:0px;
+            width: 64px;
+            height: 64px;
+        }
+
     </style>
 </head>
 <body onload="resizeFunc()">
@@ -408,7 +428,7 @@
 
     <div id="drawing_canvas"> <!--キャンバス-->
         <canvas id="canvas" class="gamecanvas" width="640" height="480"></canvas>
-        <div id="scoreboard_small" style="width: 100%; background-color: white; border-radius: 5px;">
+        <div id="scoreboard_small" style="width: 100%; background-color: white; border-radius: 5px; pointer-events: none;">
         </div>
     </div>
 

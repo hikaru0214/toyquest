@@ -36,6 +36,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.score_on_guess = 400;
 
         this.allguessed = false;
+        this.painter_left = false;
     }
 
     gameupdate(io){ //ゲームループ
@@ -72,7 +73,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             return {instruction:"setword",word:word};
         }
 
-        if(this.state=="drawing"&&(this.getRemainingTime()<=0||this.allguessed)){
+        if(this.state=="drawing"&&(this.getRemainingTime()<=0||this.allguessed||this.painter_left)){
 
             this.markDrewInQueue(this.getDrawerId());
             console.log(this.drawer_queue);
@@ -156,11 +157,17 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.round=-1;
         delproperties(this.drawer_queue);
         this.timer = 0;
+
+        for(var id in this.players){
+            this.players[id].score = 0; //スコアリセット
+        }
+
     }
 
     nextTurn(io){
         this.score_on_guess = 400;
         this.allguessed=false;
+        this.painter_left = false;
         delproperties(this.scores_at_start);
         for(var id in this.players){
             this.players[id].guessed = false;
