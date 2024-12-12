@@ -446,9 +446,9 @@
             <button id="thickness_small" class="thickness_button"><div style="border-radius: 50%; width: 16px; height: 16px; background-color: black; margin: 3px; padding: 0px;"></div></button>
             <button id="thickness_thin" class="thickness_button"><div style="border-radius: 50%; width: 8px; height: 8px; background-color: black; margin: 3px; padding: 0px;"></div></button>
             <br>
-            <button id="brush" style="display: inline-block; width:48px; height: 48px; margin: 4px;"><img style="width:32px; height: 32px;" src="../img/brush.png" alt=""></button>
-            <button id="paint_bucket"style="display: inline-block; width:48px; height: 48px; margin: 4px;"><img style="width:32px; height: 32px;" src="../img/bucket.png" alt=""></button>
-            <button id="eraser" style="display: inline-block; width:48px; height: 48px; margin: 4px;"><img style="width:32px; height: 32px;" src="../img/eraser.png" alt=""></button>
+            <button id="brush" style="display: inline-block; width:48px; height: 48px; margin: 4px;"><img style="width:32px; height: 32px; pointer-events: none;" src="../img/brush.png" alt=""></button>
+            <button id="paint_bucket"style="display: inline-block; width:48px; height: 48px; margin: 4px;"><img style="width:32px; height: 32px; pointer-events: none;" src="../img/bucket.png" alt=""></button>
+            <button id="eraser" style="display: inline-block; width:48px; height: 48px; margin: 4px;"><img style="width:32px; height: 32px; pointer-events: none;" src="../img/eraser.png" alt=""></button>
             <button id="clear" style="display: inline-block; width:48px; height: 48px; margin: 4px; color: red;">削除</button>
 
             <br>
@@ -471,8 +471,7 @@
 
     </div>
 
-
-
+    <script type="text/javascript" src="../javascript/BucketFill.js"></script>
     <script type="text/javascript" src="../javascript/gameUtils.js"></script>
     <script type="text/javascript" src="../javascript/BrushDengonGame.js"></script>
     <script type="text/javascript" src="../javascript/BrushDengonClient.js"></script>

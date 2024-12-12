@@ -36,6 +36,7 @@ class FloodFill {
 
             // 塗りつぶし処理
             this.data[y][x] = this.replaceColor;
+            //console.log(this.replaceColor);
 
             // 隣接するピクセルをスタックに追加
             this.push(x, y - 1);
@@ -58,9 +59,11 @@ class FloodFill {
     }
 }
 
+/*
+
 // 初期設定
-const maxWidth = 500;
-const maxHeight = 500;
+const maxWidth = 640;
+const maxHeight = 480;
 const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
 canvas.width = maxWidth;
@@ -85,6 +88,7 @@ document.getElementById('colorPicker').addEventListener('input', (e) => {
     const color = e.target.value;
     floodFill.replaceColor = colorToRGBA(color); // RGBA形式に変換して設定
 });
+
 
 // RGBをRGBAに変換する関数
 function colorToRGBA(hex) {
@@ -163,3 +167,5 @@ function updateMatrix() {
         matrix[Math.floor(i / maxWidth)][i % maxWidth] = `${point[0]},${point[1]},${point[2]},${point[3]}`;
     }
 }
+
+*/

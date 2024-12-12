@@ -367,12 +367,33 @@ function getClientData(){
 context.fillStyle = "white";
 context.fillRect(0,0,canvas.width,canvas.height);
 
+function colorToRGBA(hex) {
+    const bigint = parseInt(hex.slice(1), 16); // 16進数から整数に変換
+    const r = (bigint >> 16) & 255; // 赤
+    const g = (bigint >> 8) & 255;  // 緑
+    const b = bigint & 255;         // 青
+    var color = `${r},${g},${b},255`;
+    return color;     // 完全不透明
+}
+
+function nonTransparentColor(rgb){
+    console.log(rgb);
+    return rgb;
+}
+
     var palette_div = document.getElementById("palette");
     var temp = palette_div.innerHTML;
     
     function setColorCallback(color){
         return function(){
             paint_color = color;
+            floodFill.replaceColor = colorNameToRGB(color);
+            console.log(colorNameToRGB(color));
+            /*
+            console.log(colorToRGBA(colorNameToRGB(color)));
+            console.log(colorToRGBA(color));
+            console.log(colorNameToRGB(color));
+            */
             console.log("color set to : "+color);
         }
     }
@@ -380,6 +401,20 @@ context.fillRect(0,0,canvas.width,canvas.height);
     palette_div.innerHTML = "パレット<br>";
     var colors = ["red","blue","aqua","yellow","green","burlywood","darkred","darkblue","skyblue",
         "darkkhaki","darkgreen","brown","#ffdbac","pink","magenta","violet","purple","#871F78","white","gainsboro","gray","black"];
+
+    function colorNameToRGB(name){
+        var tempcanvas = document.createElement('canvas');
+        var c = tempcanvas.getContext('2d');
+        c.fillStyle = name;
+        c.fillRect(0,0,1,1);
+        var temp = c.getImageData(0,0,1,1).data;
+        var r = temp[0];
+        var g = temp[1];
+        var b = temp[2];
+        var a = temp[3];
+        return `${r},${g},${b},${a}`;
+    }
+
     for(var i = 0;i < 22;i++){
         var option = "";
         if(colors[i]=="white")option="border : 1px solid black;";
@@ -402,31 +437,33 @@ context.fillRect(0,0,canvas.width,canvas.height);
         for(var i = 0;i < 22;i++){
             document.getElementById("color"+i).onclick = setColorCallback(colors[i]);
         }
-        document.getElementById("thickness_thick").onclick = function(){
-            brush_thickness = 32;
-        };
-        document.getElementById("thickness_medium").onclick = function(){
-            brush_thickness = 16;
-        };
-        document.getElementById("thickness_small").onclick = function(){
-            brush_thickness = 8;
-        };
-        document.getElementById("thickness_thin").onclick = function(){
-            brush_thickness = 4;
-        };
-        document.getElementById("paint_bucket").onclick = function(){
-            cursor_type = "bucket";
-        }
-        document.getElementById("brush").onclick = function(){
-            cursor_type = "brush";
-        }
-        document.getElementById("eraser").onclick = function(){
-            cursor_type = "eraser";
-        }
-        document.getElementById("clear").onclick = function(){
-            socket.emit("clear canvas");
-        }
+        floodFill.replaceColor = colorNameToRGB("black");
         initialized = true;
+    }
+
+    document.getElementById("thickness_thick").onclick = function(){
+        brush_thickness = 32;
+    };
+    document.getElementById("thickness_medium").onclick = function(){
+        brush_thickness = 16;
+    };
+    document.getElementById("thickness_small").onclick = function(){
+        brush_thickness = 8;
+    };
+    document.getElementById("thickness_thin").onclick = function(){
+        brush_thickness = 4;
+    };
+    document.getElementById("paint_bucket").onclick = function(){
+        cursor_type = "bucket";
+    }
+    document.getElementById("brush").onclick = function(){
+        cursor_type = "brush";
+    }
+    document.getElementById("eraser").onclick = function(){
+        cursor_type = "eraser";
+    }
+    document.getElementById("clear").onclick = function(){
+        socket.emit("clear canvas");
     }
 
 
@@ -551,6 +588,48 @@ function resizeFunc(){
     }
 }
 
+let matrix = Array.from({ length: canvas.height }, () => Array(canvas.width).fill('0,0,0,255'));
+let floodFill = new FloodFill(matrix);
+
+function updateCanvas() {
+    const imageData = context.createImageData(canvas.width, canvas.height);
+    for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+            var color = matrix[y][x].split(',').map(Number);//???
+            var index = (y * canvas.width + x) * 4;
+            imageData.data[index] = color[0];     // R
+            imageData.data[index + 1] = color[1]; // G
+            imageData.data[index + 2] = color[2]; // B
+            imageData.data[index + 3] = color[3]; // A
+        }
+    }
+    context.putImageData(imageData, 0, 0);
+}
+
+function testfill() {
+    const imageData = context.createImageData(canvas.width, canvas.height);
+    var color = "darkred";//???
+    for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+            var index = (y * canvas.width + x) * 4;
+            imageData.data[index] = color[0];     // R
+            imageData.data[index + 1] = color[1]; // G
+            imageData.data[index + 2] = color[2]; // B
+            imageData.data[index + 3] = color[3]; // A
+        }
+    }
+    context.putImageData(imageData, 0, 0);
+}
+
+function updateMatrix() {
+    var data = context.getImageData(0, 0, canvas.width, canvas.height).data;
+    for (let i = 0; i < Math.ceil(data.length / 4); i++) {
+        var start = i * 4;
+        const point = data.slice(start, start + 4);
+        matrix[Math.floor(i / canvas.width)][i % canvas.width] = `${point[0]},${point[1]},${point[2]},${point[3]}`;
+    }
+}
+
 function mouse_move(e){
     let rect = canvas.getBoundingClientRect();
     last_mouse_x = current_mouse_x;
@@ -558,13 +637,13 @@ function mouse_move(e){
     current_mouse_x = e.clientX-rect.x;
     current_mouse_y = e.clientY-rect.y;
 
-    var xd = canvas.clientWidth/640;
-    var yd = canvas.clientHeight/480;
+    var xd = canvas.clientWidth/canvas.width;
+    var yd = canvas.clientHeight/canvas.height;
 
     current_mouse_x/=xd;
     current_mouse_y/=yd;
 
-  if(mouse_pressed&&cursor_type!="bucket"){
+  if(mouse_pressed&&cursor_type=="brush"){
     socket.emit("client draw",getClientData());
   }
 }
@@ -576,8 +655,8 @@ function mouse_clicked(e){
     current_mouse_x = e.clientX-rect.x;
     current_mouse_y = e.clientY-rect.y;
 
-    var xd = canvas.clientWidth/640;
-    var yd = canvas.clientHeight/480;
+    var xd = canvas.clientWidth/canvas.width;
+    var yd = canvas.clientHeight/canvas.height;
 
     current_mouse_x/=xd;
     current_mouse_y/=yd;
@@ -592,14 +671,21 @@ socket.on("draw relay",function(data){
     context.lineWidth = data.brush_thickness;
 
     if(data.cursor_type=="bucket"){
-
+        updateMatrix();
+        //floodFill = new FloodFill(matrix);
+        var ix = parseInt(data.cx,10);
+        var iy = parseInt(data.cy,10);
+        floodFill.fill(ix,iy).then(()=>{updateCanvas();});
     }
 
     if(data.cursor_type=="brush"){
+    context.translate(0.5,0.5);
     context.beginPath();
     context.moveTo(data.lx,data.ly);
     context.lineTo(data.cx,data.cy);
     context.stroke();
+    context.translate(-0.5,-0.5);
+    //updateMatrix();
     }
 
     if(data.cursor_type=="eraser"){
@@ -608,6 +694,7 @@ socket.on("draw relay",function(data){
         context.moveTo(data.lx,data.ly);
         context.lineTo(data.cx,data.cy);
         context.stroke();
+        //updateMatrix();
     }
 
 });
@@ -618,11 +705,10 @@ socket.on("clear canvas",function(){
 
 socket.on("play sound",playsound);
 
-//Canvasでいいのでは
-document.addEventListener('mousemove',mouse_move);
-document.addEventListener('mousedown',function(e){mouse_pressed=true;});
-document.addEventListener('mouseup',function(e){mouse_pressed=false;});
-document.addEventListener('click',mouse_clicked);
+canvas.addEventListener('mousemove',mouse_move);
+canvas.addEventListener('mousedown',function(e){mouse_pressed=true;});
+canvas.addEventListener('mouseup',function(e){mouse_pressed=false;});
+canvas.addEventListener('click',mouse_clicked);
 
 const chat_input = document.getElementById('textchat');
 
