@@ -37,7 +37,7 @@ sfx["drawend"] = new Audio("../sfx/drawend.wav");
 
 for(var i in sfx){
     var sound = sfx[i];
-    sound.volume = 0.5;
+    sound.volume = 0.4;
     sound.load();
 }
 
@@ -328,7 +328,7 @@ function mixStyleColor(c1,c2,ratio){
 
 function chat(text,chat_color,background){
     var scrolledup = (chatbox.scrollHeight-chatbox.clientHeight)-chatbox.scrollTop;
-    var row_color = (chatrows%2==0)?"#cccccc":"white";
+    var row_color = (chatrows%2==0)?"#cccccc":"#f5f5f5";
     chatbox.innerHTML += '<p id="chatparagraph" style="color: '+chat_color+'; background-color: '+mixStyleColor(background,row_color,0.2)+';">'+text+'</p>';
     chatrows++;
     if(Math.abs(scrolledup)<24)chatbox.scrollTop = chatbox.scrollHeight;
@@ -453,12 +453,18 @@ function nonTransparentColor(rgb){
     };
     document.getElementById("paint_bucket").onclick = function(){
         cursor_type = "bucket";
+        var path = '../img/bucket.png';
+        canvas.style.cursor = 'url("'+path+'"), default';
     }
     document.getElementById("brush").onclick = function(){
         cursor_type = "brush";
+        var path = '../img/brush.png';
+        canvas.style.cursor = 'url("'+path+'"), default';
     }
     document.getElementById("eraser").onclick = function(){
         cursor_type = "eraser";
+        var path = '../img/eraser.png';
+        canvas.style.cursor = 'url("'+path+'"), default';
     }
     document.getElementById("clear").onclick = function(){
         socket.emit("clear canvas");
