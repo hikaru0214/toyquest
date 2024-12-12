@@ -189,7 +189,7 @@
     // キーが離された際にフラグをリセット
     window.addEventListener("keyup", (event) => {
         //stopAnimation('Walk');
-        playAnimation('feet.normal'); // アニメーションを再生
+        //playAnimation('feet.normal'); // アニメーションを再生
         if (event.code === "ArrowLeft") {
             isMovingLeft = false;
             event.preventDefault();
@@ -228,6 +228,9 @@
     function moveCamera() {
         if(pageload&&camera.position.y>=3){//ロード時にカメラをy:3まで下げる
         camera.position.y -= 0.1;
+        if(model){
+        model.rotation.y -= 0.01;
+        }
         }
         if (isMovingLeft) {
             //camera.position.x -= 0.1;
@@ -328,10 +331,13 @@
 </head>
 <body>
     <div class="container">
-    <h3 class="player"><?php echo $_SESSION["user_name"];?></h3>
+    <!--<h3 class="player"><?php echo $_SESSION['user']['user_name'];?></h3>-->
+    <div class="player">
+    <h3>プレイヤー名</h3>
     <input type="image" src="../img/pencil_icon.png" class="pencil" onclick="">
+    </div>
 
-    <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>
+    <input type="button" class="button" onclick="location.href='../html/chariso.html'" value="チャリ走"></button>
     <input type="button" class="button2" onclick="location.href='../html/brush_dengon.html'" value="ブラシ伝言"></button>
     <input type="button" class="button3" onclick="location.href='../html/wanted_top.html'" value="あいつを探せ"></button>
 
