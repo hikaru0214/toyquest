@@ -55,10 +55,10 @@ input{
 }   
 
 .pencil{
-    width: 40px;
-    height: 40px;
+    width: 20px;
+    height: 20px;
     position: fixed;
-    top: 20%;
+    top: 23%;
     left: 19%;
     
 }
