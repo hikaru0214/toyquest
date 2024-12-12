@@ -328,12 +328,14 @@
 </head>
 <body>
     <div class="container">
-    <h3 class="player">プレイヤー名</h3>
+    <h3 class="player"><?php echo $user['user_id']; ?></h3>
     <input type="image" src="../img/pencil_icon.png" class="pencil" onclick="">
 
     <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>
     <input type="button" class="button2" onclick="location.href='../html/brush_dengon.html'" value="ブラシ伝言"></button>
     <input type="button" class="button3" onclick="location.href='../html/wanted_top.html'" value="あいつを探せ"></button>
+
+    <input type="text" class="text">
 
     <input type="image" src="../img/notice_icon.png" class="notice" onclick="location.href=''" value="お知らせ"></button>
     <input type="image" src="../img/friend_icon.png" class="friend" onclick="location.href=''" value="フレンド"></button>
