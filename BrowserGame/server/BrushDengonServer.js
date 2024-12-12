@@ -179,12 +179,14 @@ io.on('connection', (socket) => {
         }
         if(message=="game start"){
             var didstart = game.gameStart();
-            socket.emit("chat message",{name:"*server*",message:didstart});
+            io.to(room_name).emit("chat message",{name:"*server*",message:didstart});
+            return;
         }
 
         if(message=="skip painter"){
             game.painterSkip();
-            socket.emit("chat message",{name:"*server*",message:"painter skipped"});
+            io.to(room_name).emit("chat message",{name:"*server*",message:"painter skipped"});
+            return;
         }
 
         if(isCorrect(secretword[room],message)){

@@ -43,9 +43,9 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(this.state=="standby"){
             if(this.getPlayerCount()>=this.minimum_players){
                 this.state = "roundstart";
-                return "started";;
+                return "game started";;
             }else{
-                return "not enough players";
+                return "not enough players to start";
             }
         }
         return "game already started"
