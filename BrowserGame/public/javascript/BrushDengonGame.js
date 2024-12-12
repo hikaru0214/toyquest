@@ -51,7 +51,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         return "game already started"
     }
 
-    roundSkip(){
+    painterSkip(){
         this.markDrewInQueue(this.getDrawerId());
         console.log(this.drawer_queue);
         this.state = "drawend";
