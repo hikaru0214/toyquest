@@ -332,8 +332,10 @@
 <body>
     <div class="container">
     <!--<h3 class="player"><?php echo $_SESSION['user']['user_name'];?></h3>-->
-    <h3 class="player">プレイヤー名</h3>
+    <div class="player">
+    <h3>プレイヤー名</h3>
     <input type="image" src="../img/pencil_icon.png" class="pencil" onclick="">
+    </div>
 
     <input type="button" class="button" onclick="location.href='../html/chariso.html'" value="チャリ走"></button>
     <input type="button" class="button2" onclick="location.href='../html/brush_dengon.html'" value="ブラシ伝言"></button>
