@@ -189,6 +189,12 @@ io.on('connection', (socket) => {
             return;
         }
 
+        if(message=="game reset"){
+            game.resetGame();
+            io.to(room_name).emit("chat message",{name:"*server*",message:"game reset"});
+            return;
+        }
+
         if(isCorrect(secretword[room],message)){
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].Guess(id);
