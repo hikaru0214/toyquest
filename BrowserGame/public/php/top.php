@@ -328,7 +328,7 @@
 </head>
 <body>
     <div class="container">
-    <h3 class="player"><?php $user['user_id'] ?></h3>
+    <?php echo "<h3 class='player'>".$user['user_id']."</h3>"; ?>
     <input type="image" src="../img/pencil_icon.png" class="pencil" onclick="">
 
     <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>
