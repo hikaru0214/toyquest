@@ -189,7 +189,7 @@
     // キーが離された際にフラグをリセット
     window.addEventListener("keyup", (event) => {
         //stopAnimation('Walk');
-        playAnimation('feet.normal'); // アニメーションを再生
+        //playAnimation('feet.normal'); // アニメーションを再生
         if (event.code === "ArrowLeft") {
             isMovingLeft = false;
             event.preventDefault();
@@ -228,6 +228,9 @@
     function moveCamera() {
         if(pageload&&camera.position.y>=3){//ロード時にカメラをy:3まで下げる
         camera.position.y -= 0.1;
+        if(model){
+        model.rotation.y -= 0.01;
+        }
         }
         if (isMovingLeft) {
             //camera.position.x -= 0.1;
