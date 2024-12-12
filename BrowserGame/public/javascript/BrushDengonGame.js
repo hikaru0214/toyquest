@@ -51,6 +51,12 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         return "game already started"
     }
 
+    roundSkip(){
+        this.markDrewInQueue(this.getDrawerId());
+        console.log(this.drawer_queue);
+        this.state = "drawend";
+    }
+
     gameupdate(io){ //ゲームループ
         const room_name = "room_"+this.room_id;
 

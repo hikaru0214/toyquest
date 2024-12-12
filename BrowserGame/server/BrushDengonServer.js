@@ -179,8 +179,14 @@ io.on('connection', (socket) => {
         }
         if(message=="game start"){
             var didstart = game.gameStart();
-            socket.emit("chat message",didstart);
+            socket.emit("chat message",{name:"*server*",message:didstart});
         }
+
+        if(message=="skip painter"){
+            game.painterSkip();
+            socket.emit("chat message",{name:"*server*",message:"painter skipped"});
+        }
+
         if(isCorrect(secretword[room],message)){
             //socket.emit(); 正解通知をチャットに送る
             gamerooms[room].Guess(id);
