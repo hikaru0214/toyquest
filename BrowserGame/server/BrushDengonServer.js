@@ -44,23 +44,16 @@ const themes = [
     "イヌ",
     "ウシ",
     "ウマ",
-    "オス",
     "カバ",
     "クマ",
     "サイ",
     "サル",
     "シカ",
     "ゾウ",
-    "トド",
     "トラ",
-    "ヌー",
     "ネコ",
-    "バク",
     "ヒト",
-    "ヒヒ",
     "ブタ",
-    "ホモ",
-    "メス",
     "ヤギ",
     "ラバ",
     "ラマ",
@@ -76,7 +69,7 @@ const themes = [
     "ききゅう",
     "きゅうきゅうしゃ",
     "くるま",
-    "じてんしゅ",
+    "じてんしゃ",
     "しょうぼうしゃ",
     "しんかんせん",
     "タクシー",
@@ -183,6 +176,10 @@ io.on('connection', (socket) => {
                 io.to(i).emit("chat message guessed",{name:name,message:message});
             }
             return;
+        }
+        if(message=="game start"){
+            var didstart = game.gameStart();
+            socket.emit("chat message",didstart);
         }
         if(isCorrect(secretword[room],message)){
             //socket.emit(); 正解通知をチャットに送る
