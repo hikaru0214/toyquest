@@ -387,8 +387,6 @@ function nonTransparentColor(rgb){
     function setColorCallback(color){
         return function(){
             paint_color = color;
-            floodFill.replaceColor = colorNameToRGB(color);
-            console.log(colorNameToRGB(color));
             /*
             console.log(colorToRGBA(colorNameToRGB(color)));
             console.log(colorToRGBA(color));
@@ -669,6 +667,7 @@ socket.on("draw relay",function(data){
     context.lineCap = "round";
     context.strokeStyle = data.paint_color;
     context.lineWidth = data.brush_thickness;
+    floodFill.replaceColor = colorNameToRGB(data.paint_color);
 
     if(data.cursor_type=="bucket"){
         updateMatrix();
