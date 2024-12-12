@@ -329,6 +329,7 @@
 <body>
     <div class="container">
     <h3 class="player">プレイヤー名</h3>
+    <input type="image" src="../img/pencil_icon.png" class="pencil" onclick="">
 
     <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>
     <input type="button" class="button2" onclick="location.href='../html/brush_dengon.html'" value="ブラシ伝言"></button>
