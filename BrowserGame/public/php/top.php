@@ -370,11 +370,10 @@
         echo "</td></tr>";
         }
         
-        if($row['user_id']==4){
+        if($row['user_id']==$_SESSION['user']['user_id']){
             if($Rank<=10){
             $userRank_in=true;
             }
-            $username=$row['user_name'];
             $userRank=$Rank;
             $user_score=$row['total_score'];
             }
@@ -389,11 +388,11 @@
 
         if($userRank_in==true){
             echo "<tr><td>".$userRank;
-            echo "</td><td>あなた(".$username.")</td><td>".$user_score;
+            echo "</td><td>あなた(".$_SESSION['user']['user_name'].")</td><td>".$user_score;
             echo "</td></tr>";
         }else{
             echo "<tr><td>圏外";
-            echo "</td><td>あなた(".$username.")</td><td>".$user_score;
+            echo "</td><td>あなた(".$_SESSION['user']['user_name'].")</td><td>".$user_score;
             echo "</td></tr>";
         }
         ?>
