@@ -403,7 +403,9 @@
             foreach ($sql as $row) {
                 $user_score = $row['total_score'];
             }
-            
+            if($user_score==null){
+                $user_score=0;
+            }
             echo "<tr><td>圏外";
             echo "</td><td>あなた(".$_SESSION['user']['user_name'].")</td><td>".$user_score;
             echo "</td></tr>";
