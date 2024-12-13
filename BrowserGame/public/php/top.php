@@ -393,12 +393,8 @@
         }else{
             /**$sql = $pdo->prepare('SELECT COUNT(*) FROM Score WHERE user_id = ?');
             $sql->execute([$_SESSION['user']['user_id']]);
-            // データが存在しない場合に INSERT を実行
-            if ($sql->fetchColumn() == 0) {
-                $insert = $pdo->prepare('INSERT INTO Score (game_id, user_id, score) VALUES ("0", ?, "0")');
-                $insert->execute([$_SESSION['user']['user_id']]);
-            }
-            $sql = $pdo->prepare(
+            if (!$sql->fetchColumn() == 0) {
+                $sql = $pdo->prepare(
                 'SELECT Score.user_id, SUM(Score.score) AS total_score, User.user_name
                 FROM Score
                 JOIN User ON Score.user_id = User.user_id
@@ -410,7 +406,7 @@
             foreach ($sql as $row) {
                 $user_score = $row['total_score'];
             }
-            if(!$user_score){
+            }else{
                 $user_score=0;
             }*/
             $user_score=0;
