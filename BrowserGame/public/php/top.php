@@ -391,6 +391,13 @@
             echo "</td><td>あなた(".$_SESSION['user']['user_name'].")</td><td>".$user_score;
             echo "</td></tr>";
         }else{
+            $sql = $pdo->prepare('SELECT COUNT(*) FROM Score WHERE user_id = ?');
+            $sql->execute([$_SESSION['user']['user_id']]);
+            // データが存在しない場合に INSERT を実行
+            if ($sql->fetchColumn() == 0) {
+                $insert = $pdo->prepare('INSERT INTO Score (game_id, user_id, score) VALUES ("0", ?, "0")');
+                $insert->execute([$_SESSION['user']['user_id']]);
+            }
             $sql = $pdo->prepare(
                 'SELECT Score.user_id, SUM(Score.score) AS total_score, User.user_name
                 FROM Score
