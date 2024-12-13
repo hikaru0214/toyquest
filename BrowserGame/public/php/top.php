@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <title>ホーム</title>
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="manifest" href="../json/ToyQuest.json">
+    <link rel="manifest" href="../json/ToyQuestver.1.2.json">
     <script type="importmap">
     {
         "imports": {
@@ -391,7 +391,7 @@
             echo "</td><td>あなた(".$_SESSION['user']['user_name'].")</td><td>".$user_score;
             echo "</td></tr>";
         }else{
-            /**$sql = $pdo->prepare('SELECT COUNT(*) FROM Score WHERE user_id = ?');
+            $sql = $pdo->prepare('SELECT COUNT(*) FROM Score WHERE user_id = ?');
             $sql->execute([$_SESSION['user']['user_id']]);
             if (!$sql->fetchColumn() == 0) {
                 $sql = $pdo->prepare(
@@ -408,8 +408,7 @@
             }
             }else{
                 $user_score=0;
-            }*/
-            $user_score=0;
+            }
             echo "<tr><td>圏外";
             echo "</td><td>あなた(".$_SESSION['user']['user_name'].")</td><td>".$user_score;
             echo "</td></tr>";
