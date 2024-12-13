@@ -391,7 +391,7 @@
             echo "</td><td>あなた(".$_SESSION['user']['user_name'].")</td><td>".$user_score;
             echo "</td></tr>";
         }else{
-            $sql = $pdo->prepare('SELECT COUNT(*) FROM Score WHERE user_id = ?');
+            /**$sql = $pdo->prepare('SELECT COUNT(*) FROM Score WHERE user_id = ?');
             $sql->execute([$_SESSION['user']['user_id']]);
             // データが存在しない場合に INSERT を実行
             if ($sql->fetchColumn() == 0) {
@@ -412,7 +412,8 @@
             }
             if(!$user_score){
                 $user_score=0;
-            }
+            }*/
+            $user_score=0;
             echo "<tr><td>圏外";
             echo "</td><td>あなた(".$_SESSION['user']['user_name'].")</td><td>".$user_score;
             echo "</td></tr>";
