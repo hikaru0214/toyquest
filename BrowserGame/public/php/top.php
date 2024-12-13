@@ -403,7 +403,7 @@
             foreach ($sql as $row) {
                 $user_score = $row['total_score'];
             }
-            if($user_score==null){
+            if(!$user_score){
                 $user_score=0;
             }
             echo "<tr><td>圏外";
