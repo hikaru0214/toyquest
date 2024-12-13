@@ -331,9 +331,8 @@
 </head>
 <body>
     <div class="container">
-    <!--<h3 class="player"><?php echo $_SESSION['user']['user_name'];?></h3>-->
     <div class="player">
-    <h3>プレイヤー名</h3>
+    <h3><?php echo $_SESSION['user']['user_name'];?></h3>
     <input type="image" src="../img/pencil_icon.png" class="pencil" onclick="">
     </div>
 
