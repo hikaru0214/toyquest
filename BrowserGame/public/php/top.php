@@ -391,6 +391,13 @@
             echo "</td><td>あなた(".$_SESSION['user']['user_name'].")</td><td>".$user_score;
             echo "</td></tr>";
         }else{
+            $sql=$pdo->prepare('SELECT Score.user_id, SUM(Score.score) AS total_score, User.user_name 
+            FROM Score WHERE Score.user_id=? User.user_id=?JOIN User ON Score.user_id = User.user_id 
+            GROUP BY Score.user_id ORDER BY total_score DESC');
+            $sql->execute($_SESSION['user']['user_id']);
+            foreach($sql as $row) {
+                $user_score=$row['total_score'];
+            }
             echo "<tr><td>圏外";
             echo "</td><td>あなた(".$_SESSION['user']['user_name'].")</td><td>".$user_score;
             echo "</td></tr>";
