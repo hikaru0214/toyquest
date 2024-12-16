@@ -6,24 +6,24 @@
     <title>Three.js ドットエフェクトの実装</title>
     <link rel="stylesheet" href="../css/index.css">
     <script type="importmap">
-    {
-        "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.module.js",
-            "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/loaders/GLTFLoader.js",
-            "three/examples/jsm/loaders/FBXLoader.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/loaders/FBXLoader.js",
-            "three/examples/jsm/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/EffectComposer.js",
-            "three/examples/jsm/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/RenderPass.js",
-            "three/examples/jsm/postprocessing/ShaderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/ShaderPass.js"
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.module.js",
+                "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/loaders/GLTFLoader.js",
+                "three/examples/jsm/loaders/FBXLoader.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/loaders/FBXLoader.js",
+                "three/examples/jsm/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/EffectComposer.js",
+                "three/examples/jsm/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/RenderPass.js",
+                "three/examples/jsm/postprocessing/ShaderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/ShaderPass.js"
+            }
         }
-    }
-    </script>
-    <script type="module">
-    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
-    import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-    import { FBXLoader } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/loaders/FBXLoader.js';
-    import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-    import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
-    import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+        </script>
+        <script type="module">
+            import * as THREE from "three";
+            import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
+            import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+            import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+            import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+            import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 
     // シーン、カメラ、レンダラーの設定
     const width = window.innerWidth;
@@ -55,7 +55,6 @@
 
 
     // GLTFモデルの読み込み。GLTFLoaderのインポートが必要
-    /**
     let fbx; // GLTFオブジェクトを格納する変数
     let mixer; // アニメーションミキサー
     var model = null;
@@ -98,76 +97,9 @@
         function (error) {
             console.error('Error loading the GLTF model:', error);
         }
-    );**/
+    );
 
-    let fbx; // FBXオブジェクトを格納する変数
-let mixer; // アニメーションミキサー
-var model = null;
 
-const loader = new FBXLoader();
-loader.load(
-    "../models/ToyQuest.fbx", // 読み込むFBXファイルのパス
-    function (loadedFbx) {
-        fbx = loadedFbx;
-        model = fbx; // FBXではモデル自体が直接返されるのでそのまま使用
-        model.scale.set(0.1, 0.1, 0.1);
-        model.position.set(0, 0, 0);
-        model.rotation.set(0, 0, 0);
-
-        model.traverse(function (node) {
-            // 必要に応じて特定のノードに処理を適用
-        });
-
-        scene.add(model);
-        camera.lookAt(model.position); // カメラがモデルに注目するようにする
-        
-
-        // ログにアニメーションクリップ名を出力
-        console.log(fbx.animations.map(clip => clip.name));
-
-        // アニメーションミキサーを作成
-        mixer = new THREE.AnimationMixer(model);
-
-        // 各アニメーションクリップを取得して再生
-        const clip1 = fbx.animations.find(clip => clip.name === '01_rightarm.greet');
-        // mixer.clipAction(clip1).play();
-
-        const clip2 = fbx.animations.find(clip => clip.name === '02_leftarm.walk');
-        // mixer.clipAction(clip2).play();
-
-        const clip3 = fbx.animations.find(clip => clip.name === '03_chest.normal');
-        // mixer.clipAction(clip3).play();
-
-        const clip4 = fbx.animations.find(clip => clip.name === '04_waist.normal');
-        // mixer.clipAction(clip4).play();
-
-        const clip5 = fbx.animations.find(clip => clip.name === 'アーマチュア|05_feet.normal');
-        mixer.clipAction(clip5).play();
-
-        /**
-        "01_rightarm.greet"
-        "01_rightarm.normal"
-        "01_rightarm.run"
-        "01_rightarm.walk"
-        "02_leftarm.normal"
-        "02_leftarm.run"
-        "02_leftarm.walk"
-        "03_chest.normal"
-        "03_chest.run" 
-        "03_chest.walk"
-        "04_waist.normal"
-        "04_waist.run"
-        "05_feet.normal"
-        "05_feet.run"
-        "05_feet.walk"
-        */
-    },
-    undefined,
-    function (error) {
-        console.log("Animations:", fbx.animations);
-        console.error('Error loading the FBX model:', error);
-    }
-);
     
     
 
