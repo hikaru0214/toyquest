@@ -453,12 +453,12 @@ function nonTransparentColor(rgb){
     };
     document.getElementById("paint_bucket").onclick = function(){
         cursor_type = "bucket";
-        var path = '../img/bucket.png';
+        var path = '../img/bucket_cursor.png';
         canvas.style.cursor = 'url("'+path+'"), default';
     }
     document.getElementById("brush").onclick = function(){
         cursor_type = "brush";
-        var path = '../img/brush.png';
+        var path = '../img/brush_cursor.png';
         canvas.style.cursor = 'url("'+path+'"), default';
     }
     document.getElementById("eraser").onclick = function(){
@@ -647,6 +647,8 @@ function mouse_move(e){
     current_mouse_x/=xd;
     current_mouse_y/=yd;
 
+    //document.getElementById("canvas_cursor").style;
+
   if(mouse_pressed&&cursor_type=="brush"){
     socket.emit("client draw",getClientData());
   }
@@ -673,31 +675,35 @@ socket.on("draw relay",function(data){
     context.lineCap = "round";
     context.strokeStyle = data.paint_color;
     context.lineWidth = data.brush_thickness;
-    floodFill.replaceColor = colorNameToRGB(data.paint_color);
+    context.imageSmoothingEnabled = false;
+    context.antiAlias = false;
+
+    var cx = parseInt(data.cx,10);
+    var cy = parseInt(data.cy,10);
+
+    var lx = parseInt(data.lx,10);
+    var ly = parseInt(data.ly,10);
 
     if(data.cursor_type=="bucket"){
+        floodFill.replaceColor = colorNameToRGB(data.paint_color);
         updateMatrix();
         //floodFill = new FloodFill(matrix);
-        var ix = parseInt(data.cx,10);
-        var iy = parseInt(data.cy,10);
-        floodFill.fill(ix,iy).then(()=>{updateCanvas();});
+        floodFill.fill(cx,cy).then(()=>{updateCanvas();});
     }
 
     if(data.cursor_type=="brush"){
-    context.translate(0.5,0.5);
     context.beginPath();
-    context.moveTo(data.lx,data.ly);
-    context.lineTo(data.cx,data.cy);
+    context.moveTo(lx,ly);
+    context.lineTo(cx,cy);
     context.stroke();
-    context.translate(-0.5,-0.5);
     //updateMatrix();
     }
 
     if(data.cursor_type=="eraser"){
         context.strokeStyle = "white";
         context.beginPath();
-        context.moveTo(data.lx,data.ly);
-        context.lineTo(data.cx,data.cy);
+        context.moveTo(lx,ly);
+        context.lineTo(cx,cy);
         context.stroke();
         //updateMatrix();
     }
