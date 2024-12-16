@@ -121,6 +121,10 @@ loader.load(
         scene.add(model);
         camera.lookAt(model.position); // カメラがモデルに注目するようにする
 
+        fbx.animations.forEach((clip) => {
+        clip.name = clip.name.replace(/^アーマチュア\|/, ''); // 正規表現で置換
+        });
+
         // ログにアニメーションクリップ名を出力
         console.log(fbx.animations.map(clip => clip.name));
 
