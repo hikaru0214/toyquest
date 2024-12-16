@@ -120,10 +120,7 @@ loader.load(
 
         scene.add(model);
         camera.lookAt(model.position); // カメラがモデルに注目するようにする
-
-        fbx.animations.forEach((clip) => {
-        clip.name = clip.name.replace(/^アーマチュア\|/, ''); // 正規表現で置換
-        });
+        
 
         // ログにアニメーションクリップ名を出力
         console.log(fbx.animations.map(clip => clip.name));
@@ -144,7 +141,7 @@ loader.load(
         const clip4 = fbx.animations.find(clip => clip.name === '04_waist.normal');
         // mixer.clipAction(clip4).play();
 
-        const clip5 = fbx.animations.find(clip => clip.name === '05_feet.normal');
+        const clip5 = fbx.animations.find(clip => clip.name === 'アーマチュア|05_feet.normal');
         mixer.clipAction(clip5).play();
 
         /**
