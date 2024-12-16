@@ -91,15 +91,15 @@ if (!isset($_SESSION['username'], $_SESSION['mailaddress'], $_SESSION['password'
         <form action="signup-ok.php" method="post">
             <div class="form-group">
                 <label for="username">ユーザーネーム</label>
-                <input type="text" name="username" value="<?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>">
+                <input type="text" name="username" value="<?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>"readonly>
             </div>
             <div class="form-group">
                 <label for="mailaddress">メールアドレス</label>
-                <input type="mailaddress" name="mailaddress" value="<?php echo htmlspecialchars($_SESSION['mailaddress'], ENT_QUOTES, 'UTF-8'); ?>">
+                <input type="mailaddress" name="mailaddress" value="<?php echo htmlspecialchars($_SESSION['mailaddress'], ENT_QUOTES, 'UTF-8'); ?>"readonly>
             </div>
             <div class="form-group">
                 <label for="password">パスワード</label>
-                <input type="password" name="password" value="<?php echo str_repeat('*', strlen($_SESSION['password']));  ?>">
+                <input type="password" name="password" value="<?php echo str_repeat('*', strlen($_SESSION['password']));  ?>"readonly>
             </div>
             <button type="submit" class="login-btn">登録</button>
         </form>
