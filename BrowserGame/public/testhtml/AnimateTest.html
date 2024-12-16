@@ -55,12 +55,12 @@
 
 
     // GLTFモデルの読み込み。GLTFLoaderのインポートが必要
-    let fbx; // GLTFオブジェクトを格納する変数
+    let gltf; // GLTFオブジェクトを格納する変数
     let mixer; // アニメーションミキサー
     var model = null;
-    const loader =  new FBXLoader();
+    const loader =  new GLTFLoader();
     loader.load(
-        "../models/ToyQuest.fbx",
+        "../models/ToyQuest.gltf",
         function (loadedGltf) {
             gltf = loadedGltf;
             model = gltf.scene;
