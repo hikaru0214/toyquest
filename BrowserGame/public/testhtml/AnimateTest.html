@@ -163,6 +163,7 @@ loader.load(
     },
     undefined,
     function (error) {
+        console.log("Animations:", fbx.animations);
         console.error('Error loading the FBX model:', error);
     }
 );
