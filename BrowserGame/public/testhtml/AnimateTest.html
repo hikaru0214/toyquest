@@ -74,6 +74,17 @@
 
             console.log(gltf.animations.map(clip => clip.name));
 
+            const clipName = action.getClip().name;
+
+            // 完全に停止しているかの条件
+            if (action.paused || action.weight === 0 || action.time === 0) {
+                console.log(`- ${clipName}: Stopped`);
+            } else if (action.isRunning()) {
+                console.log(`- ${clipName}: Running`);
+            } else {
+                console.log(`- ${clipName}: Inactive`);
+            }
+
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
 
 
