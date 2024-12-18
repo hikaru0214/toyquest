@@ -15,7 +15,7 @@ function getObjSize(obj){
 }
 
 class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを用意する
-    constructor(room_id){
+    constructor(room_id,access){
         this.room_id = room_id;
         this.player_limit = 7; //プレイヤー数制限
         this.minimum_players = 2; //最小プレイヤー数
@@ -26,7 +26,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.hints = 2; //ヒント(文字の一つを表示する)
         this.drawer_queue = {}; //描き手キュー,IDを保存,(ラウンド開始時に居たプレイヤーのみ)
         this.players = {};
-        this.access = "public"; //部屋アクセスタイプ　0(公開) 1(プライベート)
+        this.access = access; //部屋アクセスタイプ　0(公開) 1(プライベート)
         this.state = "standby"; //部屋状態 //standby待機中 , roundstart,ラウンド中,
         this.timer = 0;
 
@@ -58,7 +58,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     gameupdate(io){ //ゲームループ
-        const room_name = "room_"+this.room_id;
+        const room_name = this.room_id;
 
         if(this.state=="roundstart"){ //最初のラウンドと続くラウンドをスタートする
             this.round++;
@@ -182,7 +182,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             this.scores_at_start[id] = {id:id,score:current_score};
         }
 
-        var room_name = "room_"+this.room_id;
+        var room_name = this.room_id;
         var painter = this.getPlayerById(this.getDrawerId());
         
         painter.guessed = true;
