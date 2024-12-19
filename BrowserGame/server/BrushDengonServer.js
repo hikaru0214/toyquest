@@ -312,5 +312,9 @@ const updateInterval = 1000.0/15.0;
 setInterval(update,updateInterval);
 
 setInterval(function(){
-    console.log(gamerooms);
+    var roomnames = [];
+    for(var r in gamerooms){
+        roomnames.push(r);
+    }
+    console.log(roomnames);
 },1000);
