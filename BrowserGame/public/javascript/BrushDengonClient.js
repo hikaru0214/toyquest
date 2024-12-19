@@ -4,7 +4,18 @@ let own_id = "";
 let client_name = getCookie('username');
 let clientGame = null;
 
-console.log(window.location.search);
+var GETParameters = {};
+
+var getval = window.location.search.substring(1).split("&");
+
+for(var v of getval){
+    var temp = v.split("=");
+    var pname = temp[0];
+    var pvalue = temp[1];
+    GETParameters[pname] = pvalue;
+}
+
+console.log(GETParameters['roomid']);
 
 var ol_timer = 0;
 var ol_timespan = 0;
