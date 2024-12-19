@@ -152,7 +152,12 @@ socket.on('connection established',(data)=>{
     console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
     own_id = data.id;
     var name = client_name;
-    socket.emit('return player data',{name});
+    var hasRoomId = Object.hasOwn(GETParameters,"roomid");
+    if(hasRoomId){
+        socket.emit('join room',{name:name,roomid:GETParameters["roomid"]});
+    }else{
+        socket.emit('return player data',{name});
+    }
 });
 
 socket.on('player join',(name)=>{

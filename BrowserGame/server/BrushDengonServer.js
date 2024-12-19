@@ -148,7 +148,6 @@ function getAvailableRoomName(){
 io.on('connection', (socket) => {
     var id = socket.id;
     var room = getAvailableRoomName();
-    var room_name = room;
     var ipaddress = socket.handshake.address;
 
     var gamedata = gamerooms[room];
@@ -157,16 +156,40 @@ io.on('connection', (socket) => {
     var wordhint = gamedata.wordhint;
 
     console.log('a user connected, id : '+id+" ipaddress : "+ipaddress);
-    //io.to(id).emit('connection established',id);
     socket.emit('connection established',{id,room});
 
-    socket.on('return player data',(data)=>{
-        socket.join(room_name);
+    socket.on('return player data',(data)=>{//すでに部屋に入っていた時の処理が必要かも
+        room = getAvailableRoomName();
+        socket.join(room);
         game.addPlayer(id,{name:data.name,score:0});
-        socket.broadcast.to(room_name).emit("player join",data.name);
+        socket.broadcast.to(room).emit("player join",data.name);
         socket.emit('game init',JSON.stringify(game));
-        socket.broadcast.to(room_name).emit("game update",JSON.stringify(game));
-        io.to(room_name).emit("notify in chat",{message:(data.name+"が入室しました!"),color:"#00ff00",background:"#ffffff"});
+        socket.broadcast.to(room).emit("game update",JSON.stringify(game));
+        io.to(room).emit("notify in chat",{message:(data.name+"が入室しました!"),color:"#00ff00",background:"#ffffff"});
+        console.log("player "+data.name+" joined in the room "+room);
+    });
+
+    socket.on('join room',(data)=>{//すでに部屋に入っていた時の処理が必要かも
+
+        var roomAlreadyExist = Object.hasOwn(gamerooms,data.roomid);
+
+        room = data.roomid;
+
+        if(!roomAlreadyExist){
+            gamerooms[room] = {game:new Game(room,"private"),secretword:"",wordhint:""};
+        }
+
+        gamedata = gamerooms[room];
+        game = gamedata.game;
+        secretword = gamedata.secretword;
+        wordhint = gamedata.wordhint;
+
+        socket.join(room);
+        game.addPlayer(id,{name:data.name,score:0});
+        socket.broadcast.to(room).emit("player join",data.name);
+        socket.emit('game init',JSON.stringify(game));
+        socket.broadcast.to(room).emit("game update",JSON.stringify(game));
+        io.to(room).emit("notify in chat",{message:(data.name+"が入室しました!"),color:"#00ff00",background:"#ffffff"});
         console.log("player "+data.name+" joined in the room "+room);
     });
 
@@ -183,57 +206,57 @@ io.on('connection', (socket) => {
         }
         if(message=="game start"){
             var didstart = game.gameStart();
-            io.to(room_name).emit("chat message",{name:"*server*",message:didstart});
+            io.to(room).emit("chat message",{name:"*server*",message:didstart});
             return;
         }
 
         if(message=="skip painter"){
             game.painterSkip();
-            io.to(room_name).emit("chat message",{name:"*server*",message:"painter skipped"});
+            io.to(room).emit("chat message",{name:"*server*",message:"painter skipped"});
             return;
         }
 
         if(message=="game reset"){
             game.resetGame();
-            io.to(room_name).emit("chat message",{name:"*server*",message:"game reset"});
+            io.to(room).emit("chat message",{name:"*server*",message:"game reset"});
             return;
         }
 
         if(isCorrect(secretword,message)){
             //socket.emit(); 正解通知をチャットに送る
             game.Guess(id);
-            io.to(room_name).emit("notify in chat",{message:(name+"が正解しました!"),color:"#3abe3a",background:"#3abe3a"});
-            io.to(room_name).emit("play sound","guess");
+            io.to(room).emit("notify in chat",{message:(name+"が正解しました!"),color:"#3abe3a",background:"#3abe3a"});
+            io.to(room).emit("play sound","guess");
             socket.emit("get word",secretword);
             socket.emit("confetti");
         }else{
-            io.to(room_name).emit("chat message",{name:name,message:message});
+            io.to(room).emit("chat message",{name:name,message:message});
         }
     });
 
     socket.on("client draw",(data)=>{
         
         if(game.state=="standby"||game.isDrawing(id)){
-            io.to(room_name).emit("draw relay",data);
+            io.to(room).emit("draw relay",data);
         }
     });
 
     socket.on("clear canvas",(data)=>{
         if(game.state=="standby"||game.isDrawing(id)){
-            io.to(room_name).emit("clear canvas");
+            io.to(room).emit("clear canvas");
         }
     });
 
     socket.on('disconnect', () => {
       console.log('user disconnected');
       if(game.isDrawing(id))game.painter_left=true;
-      io.to(room_name).emit("notify in chat",{message:(game.getPlayerById(id).name+"が退室しました。"),color:"#ff0000",background:"#be3a00"});
+      io.to(room).emit("notify in chat",{message:(game.getPlayerById(id).name+"が退室しました。"),color:"#ff0000",background:"#be3a00"});
       game.removePlayer(id);
       if(game.getPlayerCount()<game.minimum_players){
         game.resetGame(io);
       }
-      socket.broadcast.to(room_name).emit("game update",JSON.stringify(game));
-      io.to(room_name).emit("player disconnect",id);
+      socket.broadcast.to(room).emit("game update",JSON.stringify(game));
+      io.to(room).emit("player disconnect",id);
     });
 });
 
