@@ -4,6 +4,8 @@ let own_id = "";
 let client_name = getCookie('username');
 let clientGame = null;
 
+console.log(window.location.search);
+
 var ol_timer = 0;
 var ol_timespan = 0;
 var ol_elementId = "";

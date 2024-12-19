@@ -36,7 +36,7 @@
 
     <div id="title_menu">
     <a href="http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html"><button>プレイ</button></a>
-    <a href="http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html"></a><button>部屋作成</button></a>
+    <button id="createroom">部屋作成</button>
     </div>
 
     <div id="player_profile" style="color: black;">
@@ -46,21 +46,34 @@
 
     <script>
 
-function getCookie(cname) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  for(let i = 0; i <ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
+    const characters = "abcdefghijklmnopqrstuvwxy0123456789";
+    function getRandomString(length){ //ランダム文字列
+        var x = "";
+        for(var i = 0;i < length;i++){
+            var uppercase = Math.random()*2;
+            var randomindex = Math.random()*characters.length;
+            var randomcharacter = characters.substring(randomindex,randomindex+1);
+            x+=(uppercase==0) ? randomcharacter : randomcharacter.toUpperCase();
+        }
+        return x;
     }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
+
+
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
     }
-  }
-  return "";
-}
 
         var data = getCookie('username');
         if(data)document.getElementById('player_name').value = data;
@@ -73,6 +86,11 @@ function getCookie(cname) {
             player_name = document.getElementById('player_name').value;
             document.cookie = "username="+player_name;
             console.log("player_name set to : "+player_name);
+        };
+
+        document.getElementById('createroom').onclick = function(){
+            var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html/?roomid="+getRandomString(7);
+            window.location.href = href;
         };
     </script>
     
