@@ -310,3 +310,7 @@ function update(){
 
 const updateInterval = 1000.0/15.0;
 setInterval(update,updateInterval);
+
+setInterval(function(){
+    console.log(gamerooms);
+},1000);
