@@ -148,6 +148,7 @@ function getAvailableRoomName(){
 io.on('connection', (socket) => {
     var id = socket.id;
     var room = getAvailableRoomName();
+    var joined = false;
     var ipaddress = socket.handshake.address;
 
     var gamedata = gamerooms[room];
@@ -166,9 +167,11 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('return player data',(data)=>{//すでに部屋に入っていた時の処理が必要かも
+    socket.on('return player data',function(data){//すでに部屋に入っていた時の処理が必要かも
+        if(joined)return;
         room = getAvailableRoomName();
         socket.join(room);
+        joined = true;
         game.addPlayer(id,{name:data.name,score:0});
         socket.broadcast.to(room).emit("player join",data.name);
         socket.emit('game init',JSON.stringify(game));
@@ -177,7 +180,8 @@ io.on('connection', (socket) => {
         console.log("player "+data.name+" joined in the room "+room);
     });
 
-    socket.on('join room',(data)=>{//すでに部屋に入っていた時の処理が必要かも
+    socket.on('join room',function(data){//すでに部屋に入っていた時の処理が必要かも
+        if(joined)return;
 
         var roomAlreadyExist = Object.hasOwn(gamerooms,data.roomid);
 
@@ -193,6 +197,7 @@ io.on('connection', (socket) => {
         wordhint = gamedata.wordhint;
 
         socket.join(room);
+        joined = true;
         game.addPlayer(id,{name:data.name,score:0});
         socket.broadcast.to(room).emit("player join",data.name);
         socket.emit('game init',JSON.stringify(game));
@@ -202,6 +207,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('textchat',function(message){
+        if(!joined)return;
         var name = game.getPlayerById(id).name;
         message = escapeHtml(message);
         console.log(name+" : "+message);
@@ -242,21 +248,23 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on("client draw",(data)=>{
-        
+    socket.on("client draw",function(data){
+        if(!joined)return;
         if(game.state=="standby"||game.isDrawing(id)){
             io.to(room).emit("draw relay",data);
         }
     });
 
-    socket.on("clear canvas",(data)=>{
+    socket.on("clear canvas",function(data){
+        if(!joined)return;
         if(game.state=="standby"||game.isDrawing(id)){
             io.to(room).emit("clear canvas");
         }
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', function(){
       console.log('user disconnected');
+      if(!joined)return;
       if(game.isDrawing(id))game.painter_left=true;
       io.to(room).emit("notify in chat",{message:(game.getPlayerById(id).name+"が退室しました。"),color:"#ff0000",background:"#be3a00"});
       game.removePlayer(id);
