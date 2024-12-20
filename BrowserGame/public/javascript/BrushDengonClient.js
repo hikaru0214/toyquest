@@ -15,8 +15,6 @@ for(var v of getval){
     GETParameters[pname] = pvalue;
 }
 
-console.log(GETParameters['roomid']);
-
 var ol_timer = 0;
 var ol_timespan = 0;
 var ol_elementId = "";
@@ -152,9 +150,10 @@ socket.on('connection established',(data)=>{
     console.log("connection established with server! this is my id : "+data.id+" your room index is : "+data.room);
     own_id = data.id;
     var name = client_name;
-    var hasRoomId = Object.hasOwn(GETParameters,"roomid");
+    var rid = getCookie("roomid");
+    var hasRoomId = rid!="";
     if(hasRoomId){
-        socket.emit('join room',{name:name,roomid:GETParameters["roomid"]});
+        socket.emit('join room',{name:name,roomid:rid});
     }else{
         socket.emit('return player data',{name});
     }

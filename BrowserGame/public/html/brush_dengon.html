@@ -58,6 +58,13 @@
         return x;
     }
 
+    function setCookie(cname,cvalue,expirems){
+        var val = cname+"="+cvalue+";";
+        var date = new Date();
+        date.setTime(date.getTime()+expirems);
+        var exp = "expires="+date.toUTCString()+";";
+        document.cookie = cname+"="+cvalue+" "+exp+" path=/;";
+    }
 
     function getCookie(cname) {
         let name = cname + "=";
@@ -89,7 +96,10 @@
         };
 
         document.getElementById('createroom').onclick = function(){
-            var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html?roomid="+getRandomString(7);
+            //var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html?roomid="+getRandomString(7);
+
+            var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html";
+            setCookie("roomid",getRandomString(7),1000*3);
             window.location.href = href;
         };
     </script>
