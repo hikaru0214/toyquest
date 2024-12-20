@@ -32,11 +32,17 @@
 </head>
 <body style=" background-color: white; color:white;">
 
+    <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
+
     <img src="../img/BrushDengon.png" alt="" id="title">
 
     <div id="title_menu">
-    <a href="http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html"><button>プレイ</button></a>
+        <input id="rid" type="text" placeholder="部屋ID">
+        <br>
+    <button id="play">プレイ</button>
     <button id="createroom">部屋作成</button>
+    <br>
+    <p id="error-message" style="color: red; background-color: white;"></p>
     </div>
 
     <div id="player_profile" style="color: black;">
@@ -45,6 +51,8 @@
     </div>
 
     <script>
+
+    var socket = io.connect('http://52.68.111.88:7000');
 
     const characters = "abcdefghijklmnopqrstuvwxy0123456789";
     function getRandomString(length){ //ランダム文字列
@@ -89,18 +97,72 @@
         var avatar_mouth = 0;
         var avatar_color = 0;
 
+        const error = document.getElementById("error-message");
+
         document.getElementById('profile_save').onclick = function(){
             player_name = document.getElementById('player_name').value;
             document.cookie = "username="+player_name;
             console.log("player_name set to : "+player_name);
+            error.innerHTML = "";
         };
+
+        function IdValidation(id){
+            if(rid.length<5){
+                return "部屋IDは5文字以上でなければなりません";;
+            }
+            var alphabetnum = true;
+            for(var i = 0;i < rid.length;i++){
+                if(characters.indexOf(rid.toLowerCase().substring(i,i+1))==-1)alphabetnum=false;
+            }
+            if(!alphabetnum){
+                return "部屋IDは英数字でなければなりません";
+            }
+            return true;
+        }
+
+        document.getElementById('play').onclick = function(){
+            error.innerHTML = "";
+            var rid = document.getElementById("rid").value;
+            if(rid==""){
+                window.location.href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html";
+                return;
+            }
+            var validation = IdValidation(rid);
+            if(validation){
+                socket.emit('search room',rid);
+            }else{
+                error.innerHTML = validation;
+            }
+        }
+
+        socket.on('room exists',function(rid){
+            var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html";
+            setCookie("roomid",rid,1000*3);
+            window.location.href = href;
+        });
+
+        socket.on('room doesnt exist',function(rid){
+            error.innerHTML = "部屋が存在しません　部屋ID:"+rid;
+        });
 
         document.getElementById('createroom').onclick = function(){
             //var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html?roomid="+getRandomString(7);
 
             var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html";
-            setCookie("roomid",getRandomString(7),1000*3);
-            window.location.href = href;
+            var rid = document.getElementById("rid").value;
+            if(rid==""){
+                setCookie("roomid",getRandomString(7),1000*3);
+                window.location.href = href;
+                return;
+            }
+
+            var validation = IdValidation(rid);
+            if(validation){
+                setCookie("roomid",rid,1000*3);
+                window.location.href = href;
+            }else{
+                error.innerHTML = validation;
+            }
         };
     </script>
     

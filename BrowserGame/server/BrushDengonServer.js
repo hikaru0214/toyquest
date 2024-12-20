@@ -158,6 +158,14 @@ io.on('connection', (socket) => {
     console.log('a user connected, id : '+id+" ipaddress : "+ipaddress);
     socket.emit('connection established',{id,room});
 
+    socket.on('search room',(rid)=>{
+        if(Object.hasOwn(gamerooms,rid)){
+            socket.emit("room exists",rid);
+        }else{
+            socket.emit("room doesnt exist",rid);
+        }
+    });
+
     socket.on('return player data',(data)=>{//すでに部屋に入っていた時の処理が必要かも
         room = getAvailableRoomName();
         socket.join(room);
