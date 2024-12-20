@@ -25,7 +25,7 @@ function getCookie(cname) {
         c = c.substring(1);
       }
       if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
+        return c.substring(name.length, c.length).split(" ")[0];
       }
     }
     return "";

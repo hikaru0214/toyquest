@@ -575,6 +575,8 @@ function update(){
     }
     }
 
+    console.log(getCookie("roomid"));
+
     overlay_context.clearRect(0,0,overlay_canvas.width,overlay_canvas.height);
 
     for(var i = 0;i < confettis.length;i++){
