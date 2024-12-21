@@ -328,9 +328,10 @@ const updateInterval = 1000.0/15.0;
 setInterval(update,updateInterval);
 
 setInterval(function(){
-    var roomnames = [];
+    var out = "";
     for(var r in gamerooms){
-        roomnames.push(r);
+        var game = gamerooms[r].game;
+        out+="["+r+" : "+game.getPlayerCount()+"/"+game.player_limit+"]";
     }
-    console.log(roomnames);
+    console.log(out);
 },1000);
