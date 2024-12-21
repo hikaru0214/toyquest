@@ -175,7 +175,7 @@ socket.on('game init',(game)=>{
 document.getElementById("idcopy").onclick = function(){
     var gameid = document.getElementById("roomid");
     gameid.select();
-    gameid.setSelectionRange(0,9999);
+    //gameid.setSelectionRange(0,9999);
 
     navigator.clipboard.writeText(gameid.value);
 
@@ -185,7 +185,7 @@ document.getElementById("idcopy").onclick = function(){
 document.getElementById("urlcopy").onclick = function(){
     var gameurl = document.getElementById("roomurl");
     gameurl.select();
-    gameurl.setSelectionRange(0,9999);
+    //gameurl.setSelectionRange(0,9999);
 
     navigator.clipboard.writeText(gameurl.value);
 
