@@ -293,8 +293,6 @@ socket.on("show_client_overlay_timed",function(data){
 
             var scores = data.results.scores;
 
-            console.log(scores);
-
             var result = [];
 
             for(var id in scores){
@@ -302,13 +300,9 @@ socket.on("show_client_overlay_timed",function(data){
                 result.push({name:s.name,score:s.score});
             }
 
-            console.log(result);
-
             result = result.sort(function(a,b){
                 return b.score - a.score;
             });
-
-            console.log(result);
 
             var index = 1;
             var rank = 1;
@@ -598,8 +592,6 @@ function update(){
         ol_timer = -1;
     }
     }
-
-    console.log(getCookie("roomid"));
 
     overlay_context.clearRect(0,0,overlay_canvas.width,overlay_canvas.height);
 
