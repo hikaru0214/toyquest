@@ -165,8 +165,32 @@ socket.on('player join',(name)=>{
 
 socket.on('game init',(game)=>{
     clientGame = receiveObject(game,Game);
+    var gameid = document.getElementById("roomid");
+    var gameurl = document.getElementById("roomurl");
+    gameid.value = clientGame.room_id;
+    gameurl.value = "http://52.68.111.88/BrowserGame/public/html/brush_dengon.html?roomid="+clientGame.room_id;
     updateScoreBoard();
 });
+
+document.getElementById("idcopy").onclick = function(){
+    var gameid = document.getElementById("roomid");
+    gameid.select();
+    gameid.setSelectionRange(0,9999);
+
+    navigator.clipboard.writeText(gameid.value);
+
+    alert("部屋IDがコピーされました");
+}
+
+document.getElementById("urlcopy").onclick = function(){
+    var gameurl = document.getElementById("roomurl");
+    gameurl.select();
+    gameurl.setSelectionRange(0,9999);
+
+    navigator.clipboard.writeText(gameurl.value);
+
+    alert("部屋URLがコピーされました");
+}
 
 socket.on('game update',(game)=>{
     clientGame = receiveObject(game,Game);

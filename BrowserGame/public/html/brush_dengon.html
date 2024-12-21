@@ -53,6 +53,20 @@
     <script src="../javascript/gameUtils.js"></script>
 
     <script>
+
+    var GETParameters = {};
+
+    var getval = window.location.search.substring(1).split("&");
+
+    for(var v of getval){
+        var temp = v.split("=");
+        var pname = temp[0];
+        var pvalue = temp[1];
+        GETParameters[pname] = pvalue;
+    }
+
+    document.getElementById("rid").value = GETParameters["roomid"];
+
     eraseCookie("roomid");
 
     var socket = io.connect('http://52.68.111.88:7000');
