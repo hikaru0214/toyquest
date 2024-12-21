@@ -61,7 +61,7 @@
     function getRandomString(length){ //ランダム文字列
         var x = "";
         for(var i = 0;i < length;i++){
-            var uppercase = Math.random()*2;
+            var uppercase = parseInt(Math.random()*2,10);
             var randomindex = Math.random()*characters.length;
             var randomcharacter = characters.substring(randomindex,randomindex+1);
             x+=(uppercase==0) ? randomcharacter : randomcharacter.toUpperCase();
