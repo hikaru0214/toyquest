@@ -65,7 +65,7 @@
         GETParameters[pname] = pvalue;
     }
 
-    document.getElementById("rid").value = GETParameters["roomid"];
+    if(Object.hasOwn(GETParameters,"roomid"))document.getElementById("rid").value = GETParameters["roomid"];
 
     eraseCookie("roomid");
 
