@@ -53,11 +53,7 @@
     <script src="../javascript/gameUtils.js"></script>
 
     <script>
-    eraseCookie("userid");
     eraseCookie("roomid");
-    eraseCookie("test1");
-    eraseCookie("test2");
-    eraseCookie("test3");
 
     var socket = io.connect('http://52.68.111.88:7000');
 
@@ -87,10 +83,6 @@
             document.cookie = "username="+player_name;
             console.log("player_name set to : "+player_name);
             error.innerHTML = "";
-
-            setCookie("test1","value1",10);
-            setCookie("test2","value2",10);
-            setCookie("test3","value3",10);
         };
 
         function IdValidation(rid){
@@ -122,13 +114,13 @@
             }
         }
 
-        socket.on('room exists',function(rid){
+        socket.on('search room exists',function(rid){
             var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html";
             setCookie("roomid",rid,1000*3);
             window.location.href = href;
         });
 
-        socket.on('room doesnt exist',function(rid){
+        socket.on('search room doesnt exist',function(rid){
             error.innerHTML = "部屋が存在しません　部屋ID:"+rid;
         });
 
@@ -145,12 +137,21 @@
 
             var validation = IdValidation(rid);
             if(validation=="valid"){
-                setCookie("roomid",rid,1000*7);
-                window.location.href = href;
+                socket.emit('search create room',rid);
             }else{
                 error.innerHTML = validation;
             }
         };
+
+        socket.on('create room exists',function(rid){
+            error.innerHTML = "部屋作成：部屋がすでに存在します　部屋ID:"+rid;
+        });
+
+        socket.on('create room doesnt exist',function(rid){
+            var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html";
+            setCookie("roomid",rid,1000*7);
+            window.location.href = href;
+        });
 
         setInterval(function(){
             console.log(document.cookie);

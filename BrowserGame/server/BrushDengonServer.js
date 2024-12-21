@@ -161,9 +161,17 @@ io.on('connection', (socket) => {
 
     socket.on('search room',(rid)=>{
         if(Object.hasOwn(gamerooms,rid)){
-            socket.emit("room exists",rid);
+            socket.emit("search room exists",rid);
         }else{
-            socket.emit("room doesnt exist",rid);
+            socket.emit("search room doesnt exist",rid);
+        }
+    });
+
+    socket.on('search create room',(rid)=>{
+        if(Object.hasOwn(gamerooms,rid)){
+            socket.emit("create room exists",rid);
+        }else{
+            socket.emit("create room doesnt exist",rid);
         }
     });
 
