@@ -153,14 +153,14 @@
             var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html";
             var rid = document.getElementById("rid").value;
             if(rid==""){
-                setCookie("roomid",getRandomString(7),1000*3);
+                setCookie("roomid",getRandomString(7),1000*7);
                 window.location.href = href;
                 return;
             }
 
             var validation = IdValidation(rid);
             if(validation){
-                setCookie("roomid",rid,1000*3);
+                setCookie("roomid",rid,1000*7);
                 window.location.href = href;
             }else{
                 error.innerHTML = validation;
