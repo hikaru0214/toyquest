@@ -50,9 +50,15 @@
         <button id="profile_save">保存</button>
     </div>
 
+    <script src="../javascript/gameUtils.js"></script>
+
     <script>
 
-    setCookie("roomid","",-1000);
+    setCookie("roomid","fdasf",1000);
+
+    eraseCookie("test1");
+    eraseCookie("test2");
+    eraseCookie("test3");
 
     var socket = io.connect('http://52.68.111.88:7000');
 
@@ -66,30 +72,6 @@
             x+=(uppercase==0) ? randomcharacter : randomcharacter.toUpperCase();
         }
         return x;
-    }
-
-    function setCookie(cname,cvalue,expirems){
-        var val = cname+"="+cvalue+";";
-        var date = new Date();
-        date.setTime(date.getTime()+expirems);
-        var exp = "expires="+date.toUTCString()+";";
-        document.cookie = cname+"="+cvalue+" "+exp+" path=/;";
-    }
-
-    function getCookie(cname) {
-        let name = cname + "=";
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(';');
-        for(let i = 0; i <ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
     }
 
         var data = getCookie('username');
@@ -106,6 +88,10 @@
             document.cookie = "username="+player_name;
             console.log("player_name set to : "+player_name);
             error.innerHTML = "";
+
+            setCookie("test1","value1",10);
+            setCookie("test2","value2",10);
+            setCookie("test3","value3",10);
         };
 
         function IdValidation(rid){
@@ -166,6 +152,11 @@
                 error.innerHTML = validation;
             }
         };
+
+        setInterval(function(){
+            console.log(document.cookie);
+        },1000/15);
+
     </script>
     
 </body>
