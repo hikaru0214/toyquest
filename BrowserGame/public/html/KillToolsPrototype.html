@@ -178,6 +178,7 @@ camera.rotation.order = "YXZ";
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( gamewidth, gameheight );
+renderer.setPixelRatio(0.5);
 document.body.appendChild( renderer.domElement );
 
 window.addEventListener('resize', () => {
