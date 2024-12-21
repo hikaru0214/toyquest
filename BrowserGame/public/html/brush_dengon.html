@@ -104,7 +104,7 @@
             if(!alphabetnum){
                 return "部屋IDは英数字でなければなりません";
             }
-            return true;
+            return "valid";
         }
 
         document.getElementById('play').onclick = function(){
@@ -115,7 +115,7 @@
                 return;
             }
             var validation = IdValidation(rid);
-            if(validation){
+            if(validation=="valid"){
                 socket.emit('search room',rid);
             }else{
                 error.innerHTML = validation;
@@ -144,7 +144,7 @@
             }
 
             var validation = IdValidation(rid);
-            if(validation){
+            if(validation=="valid"){
                 setCookie("roomid",rid,1000*7);
                 window.location.href = href;
             }else{
