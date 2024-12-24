@@ -77,7 +77,7 @@
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
 
 
-            const clip1=gltf.animations.find(clip=>clip.name==='01_rightarm.greet');
+            const clip1=gltf.animations.find(clip=>clip.name==='01_rightarm.normal');
             mixer.clipAction(clip1).play();
 
             const clip2=gltf.animations.find(clip=>clip.name==='02_leftarm.walk');
@@ -91,6 +91,25 @@
 
             const clip5=gltf.animations.find(clip=>clip.name==='05_feet.normal');
             mixer.clipAction(clip5).play();
+
+            /**
+            "01_rightarm.greet"
+            "01_rightarm.normal"
+            "01_rightarm.run"
+            "01_rightarm.walk"
+            "02_leftarm.normal"
+            "02_leftarm.run"
+            "02_leftarm.walk"
+            "03_chest.normal"
+            "03_chest.run"
+            "03_chest.walk"
+            "04_waist.normal"
+            "04_waist.run"
+            "05_feet.default"
+            "05_feet.normal"
+            "05_feet.run"
+            "05_feet.walk"
+            * /
             
         },
         undefined,
