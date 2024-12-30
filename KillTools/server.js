@@ -10,10 +10,10 @@ const io = new Server(server);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-app.use(express.static('/public'));
+app.use(express.static(join(__dirname,'public')));
 
-app.get('/KillTools',(req,res) => {
-    res.sendFile('server.js');
+app.get('/game',(req,res) => {
+    res.sendFile(join(__dirname,'game.html'));
 });
 
 io.on('connection',(socket)=>{
