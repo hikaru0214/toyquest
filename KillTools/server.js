@@ -12,7 +12,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use(express.static(join(__dirname,'public')));
 
-app.get('/game',(req,res) => {
+app.get('/kt',(req,res) => {
     res.sendFile(join(__dirname,'game.html'));
 });
 
