@@ -1,46 +1,25 @@
-const options = {
-    cors: {
-        origin: '*',
-    }
-};
+import express from 'express';
+import {createServer} from 'node:http';
+import { fileURLToPath } from 'node:url';
+import {dirname,join} from 'node:path';
+import { Server } from 'socket.io';
 
-const io = require("socket.io")(6060,options);
+const app = express();
+const server = createServer(app);
+const io = new Server(server);
 
-const Game = require('../public/javascript/KillToolsGame.js');
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const games = {};
+app.use(express.static(join(__dirname,'../public')));
 
-io.on("connection",(socket)=>{
-    console.log("user connected");
-    var id = socket.id;
-    var joinedgame = "";
+app.get('/KillTools',(req,res) => {
+    res.sendFile(join(__dirname,'../public/html/KillTools.html'));
+});
 
-    socket.on("create game",function(gamename){
-        if(games.hasOwnProperty(gamename)){
-            socket.emit("create error","game already exists : "+gamename);
-            return;
-        }else if(gamename==""){
-            socket.emit("create error","empty game name");
-            return;
-        }
-        console.log("game "+gamename+" created!");
-        games[gamename] = {gamename:gamename};
-        joinedgame = gamename;
-        socket.join(gamename);
-        socket.emit("game created");
-    });
+io.on('connection',(socket)=>{
+    console.log('a user connected');
+});
 
-    socket.on("join game",function(gamename){
-        if(games.hasOwnProperty(gamename)){
-            joinedgame = gamename;
-            socket.join(gamename);
-        }else{
-
-        }
-    });
-
-    socket.on("disconnect",()=>{
-        socket.leave(joinedgame);
-        console.log("user disconnected");
-    }); 
+server.listen(6060,()=>{
+    console.log("server is running");
 });
