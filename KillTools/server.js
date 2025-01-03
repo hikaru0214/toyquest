@@ -10,7 +10,9 @@ const io = new Server(server);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-app.use(express.static(join(__dirname,'public')));
+app.use(express.static(join(__dirname,'/public')));
+app.use(express.static(join(__dirname,'/node_modules/three')));
+app.use(express.static(join(__dirname,'/node_modules/socket.io')));
 
 app.get('/kt',(req,res) => {
     res.sendFile(join(__dirname,'game.html'));

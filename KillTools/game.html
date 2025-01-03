@@ -4,10 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <style>
+        body{
+            image-rendering: pixelated;
+        }
+        #screen {
+            position: fixed;
+            left: 50%;
+            transform: translate(-50%,0%);
+            background-color: black;
+            width: 640px;
+            height: 480px;
+            padding: 0px;
+            margin: 0px;
+        }
+        #crosshair {
+            position: fixed;
+            margin: 0px;
+            padding: 0px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            font-size: 24px;
+            color: #FFFFFFAA;
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports":{
+                "three":"/build/three.module.js",
+                "three/addons/":"/examples/jsm/"
+            }
+        }
+    </script>
 </head>
 <body>
+    <h2 style="text-align: center;">Three.js WebGL</h2>
 
-    <h1>テスト</h1>
+    <script src="/client-dist/socket.io.js"></script>
+
+    <!--<script src="cl_input.js"></script>
+    <script type="module" src="cl_main.js"></script>
+    -->
+
+    <div id="screen">
+        <p id="crosshair">+</p>
+    </div>
     
 </body>
 </html>
