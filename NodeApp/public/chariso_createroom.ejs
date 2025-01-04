@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ゲームルーム作成</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            
+        }
+        .container {
+            width: 50%;
+            padding: 100px;
+           
+           
+        }
+        .container h2 {
+            text-align: center;
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        .back-button {
+            display: block;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #000;
+            font-size: 20px;
+            
+        }
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: block;
+        }
+        select, input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            font-size: 30px;
+            box-sizing: border-box;
+        }
+        .checkbox-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .checkbox-group label {
+            font-size: 14px;
+        }
+        .create-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a onclick="history.back()" class="back-button">← BACK</a>
+        <h2>ゲームルーム作成</h2>
+        <form action="/rooms?entry=2&roomName=" method="get">
+            <label for="participants">参加人数</label>
+            <select id="participants" name="entry">
+                <option value="2">2人</option>
+                <option value="3">3人</option>
+                <option value="4">4人</option>
+            </select>
+
+            <!-- <label for="room-name">ルーム名</label>
+            <input type="text" id="roomName" name="roomName" placeholder="ルーム名を入力"> -->
+            
+            <input type="hidden" id="roomName" name="roomName">
+            
+
+            <div class="checkbox-group">
+                <label>
+                    <!-- <input type="checkbox" name="room-type" id="checkbox" value="private" onchange="togglePasswordForm()"> 鍵部屋を作る -->
+                    <!-- <input type="password" name="password" id="password" style="display: none;"> -->
+                </label>
+            </div>
+
+            <label for="url">URL</label>
+            <input type="text" id="url" placeholder="URLを入力">
+
+            <button type="submit" class="create-button">作成</button>
+        </form>
+    </div>
+    <script>
+        const serverData = {
+            userInfo: "<%= userInfo %>"
+        };
+        
+    </script>
+    <script>
+        let roomName = "";
+        // ルーム名生成
+        window.load = generateRoom();
+        // function togglePasswordForm(){
+        //     let checkbox = document.getElementById("checkbox").checked;
+        //     let input = document.getElementById("password");
+        //     if(checkbox == true){
+        //         input.style.display = "inline";
+        //     }else {
+        //         input.style.display = "none";
+        //         input.value = "";              
+        //     }
+        // }
+
+        function generateRandomString(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        function generateRoom(){
+            roomName = generateRandomString(16);
+            let room = document.getElementById("roomName");
+            room.value += roomName;
+            localStorage["roomName"] = roomName;
+            let form = document.querySelector("form");
+            let url = document.getElementById("url");
+            console.log(form.action);
+            form.action += roomName;
+            url.value = form.action;
+        }
+
+        document.getElementById("participants").addEventListener("change", function(e){
+            console.log(e.target.value);
+            let url = document.getElementById("url");
+            url.value = `https://special-spork-695g9qg957935954-3000.app.github.dev/rooms?entry=${e.target.value}&roomName=${roomName}`;
+        });
+
+    </script>
+</body>
+</html>

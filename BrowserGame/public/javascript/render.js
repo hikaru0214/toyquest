@@ -8,7 +8,9 @@ class Render{
 
     // 描画する時にキャラクター以外のオブジェクトをその差分分動かす
     setOffset(){
+        console.log(OwnID)
         let OwnInstance = game.player.find(player => player.socketID == OwnID);
+        console.log(OwnInstance)
         this.xOffset = OwnInstance.x - 40;
         // Yだけカメラの速度を変える
         let desiredY = OwnInstance.y;
@@ -44,14 +46,26 @@ class Render{
                 this.ctx.fillStyle = player.styleColor;
                 // Gameクラスのplayerを使う
                 this.ctx.fillRect(player.x-this.xOffset, player.y-this.getYoffset(), player.width, player.height);
+            }else if(player.isOverFlg == true && player.socketID === OwnID){
+                // 自分がゲームオーバーした場合
+                // リザルトの描画
+                render.drawResult(game);
             }
         }
     }
     // スコアを描画する関数
     drawScore(game) {
+        let score = game.player.find(player => player.socketID == OwnID).score;
         this.ctx.font = '24px Arial'; // フォントサイズとフォントファミリーを設定
         this.ctx.fillStyle = 'black'; // テキストの色を設定
         this.ctx.textAlign = 'right'; // テキストの配置を右揃えに
-        this.ctx.fillText(`Score: ${game.score}`, canvas.width - 40, 30); // 右端から10px、上から30pxの位置に描画
+        this.ctx.fillText(`Score: ${score}`, canvas.width - 40, 30); // 右端から10px、上から30pxの位置に描画
+    }
+
+    drawResult(game){
+        const result = document.getElementById("result");
+        let score = game.player.find(player => player.socketID == OwnID).score;
+        result.style.display = "block";
+        document.getElementById("score").innerHTML = "走行距離： "+ score +"m";
     }
 }

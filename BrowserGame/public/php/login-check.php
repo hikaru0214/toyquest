@@ -1,5 +1,8 @@
 <?php
 session_start();
+// Redisに保存するためのクラス
+$redis = new Redis();
+
 // トークン確認
 if (!isset($_SESSION['access_token'])) {
     echo '<h1>エラー</h1>';
@@ -39,6 +42,13 @@ if (count($err) === 0) {
                 'user_name' => $user['user_name'],
                 'mailaddress' => $user['mailaddress']
             ];
+            // セッションIDを生成
+            $sessionId = session_id();
+            setcookie("sessionId", $sessionId, time()+60*60*24);
+            // Redisサーバーに接続
+            $redis->connect('127.0.0.1', 6379);
+            // データをセット
+            $redis->set($sessionId, json_encode($_SESSION['user']));
             header('Location: rogocontrol.php');
             exit;
         } else {

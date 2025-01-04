@@ -96,13 +96,14 @@ unset($_SESSION['err'],$_SESSION['input']);
 
             <div class="form-group">
                 <label for="mailaddress">メールアドレス</label>
-                <input type="email" name="mailaddress" value="<?php echo htmlspecialchars($mailaddress, ENT_QUOTES, 'UTF-8'); ?>">
+                <input type="email" name="mailaddress" id="email" value="<?php echo htmlspecialchars($mailaddress, ENT_QUOTES, 'UTF-8'); ?>">
             </div>
             <div class="form-group">
                 <label for="password">パスワード</label>
                 <input type="password" name="password">
             </div>
             <button type="submit" class="login-btn">ログイン</button>
+        </form>
         <div class="links">
             <a href="change_password.php">パスワードを忘れた方</a>
             <a href="signup.php">新規</a>

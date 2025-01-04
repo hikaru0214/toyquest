@@ -1,4 +1,4 @@
-<?php require '../dbConnect/dbconnect.php'; ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -7,16 +7,13 @@
     <title>Document</title>
 </head>
 <body>
-    <?php 
-        $stmt = $pdo->query('select * from User')->fetchAll();
-        foreach ($stmt as $row) {
-            echo $row['user_id'] . '<br>';
-        }
-        // ini_set('display_errors', 1);
-        // ini_set('display_startup_errors', 1);
-        // error_reporting(E_ALL);
-        // 意図的なエラーを発生
-        phpinfo();
-    ?>
+<?php
+$redis = new Redis();
+$redis->connect('127.0.0.1', 6379);
+
+$redis->set('key', 'value');
+echo $redis->get('key');
+phpinfo();
+?>
 </body>
 </html>

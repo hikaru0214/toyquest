@@ -25,15 +25,20 @@ app.use(express.static('../public'));
 // favicon.icoリクエストを無視
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
-// ゲーム画面のルーティング
+// シングル用画面
+app.get('/single', (req, res) => {
+    // 参加人数を取得
+    entry_member = 1;
+    res.sendFile(join(__dirname, '../public/html/SinglebicycleRunning.html'));
+});
+// マルチ用画面
 app.get('/:entry_member', (req, res) => {
     // 参加人数を取得
     entry_member = req.params.entry_member;
-    res.sendFile(join(__dirname, '../public/html/bicycleRunning.html'));
+    res.sendFile(join(__dirname, '../public/html/MultibicycleRunning.html'));
 });
 
 io.on('connection', (socket) => {
-    
     // ルームに参加
     socket.on("joinRoom", (roomId) => {
         // ルームを取得
@@ -67,7 +72,6 @@ io.on('connection', (socket) => {
         // Gameインスタンスを送信
         // 新しく参加者が追加されたGameインスタンスを再度送信
         io.to(roomId).emit("Init-Entity", gameInstance);
-        
         console.log(socket.id+"が"+roomId+"に入室しました")
     });    
 
@@ -79,15 +83,22 @@ io.on('connection', (socket) => {
         gameInstance.jumpProcess(socket.id, keyState);
     });
 
-    socket.on("disconnect", () => {
-        
+    socket.on("disconnect", async () => {
         let disconnectId = socket.roomId;
-        // Gameインスタンスを削除
-        gameRoom.removeGameRoom(disconnectId);
+        // ルームインスタンスを取得
+        let GameInstance = gameRoom.rooms.find(room => room.roomID === disconnectId);
+        // ルームを取得
+        const room = io.sockets.adapter.rooms.get(disconnectId);
+        const numClients = room === undefined ? 1 : room.size;
+        // ルーム内の参加者の数
+        if(numClients === 1){
+            // 最後の一人だったら部屋を削除
+            gameRoom.removeGameRoom(disconnectId);
+        }
+        // 退出プレイヤーインスタンス削除
+        GameInstance.removePlayer(socket.id);
         // ルーム退出処理
         socket.leave(disconnectId);
-        // 1フレームごとの更新処理を停止
-        console.log(socket.id+"が退出")
     });
 
 });

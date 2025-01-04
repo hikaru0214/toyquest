@@ -1,0 +1,18 @@
+insert into gamedatabase.`User`(user_name,mailaddress,password,`set_filePath`) values 
+    ('John Doe','john.doe@example.com','securepassword123','/path/to/file1')
+  , ('Jane Smith','jane.smith@example.com','anothersecurepassword','/path/to/file2')
+  , ('test','test@test.com','$2y$10$o8JzJLk7Q/3PoaIYPUi9X..m4oTR1qdoDmHzvte4cIgJ7xRLgrqvm',null)
+  , ('圏外太郎','kengai@kengai.com','aaa',null)
+  , ('G.T','Gold@Tiger.com','GT',null)
+  , (':(','aa@bb.com','ab',null)
+  , (':D','cc@dd.com','cd',null)
+  , ('りんご','apple@apple.com','$2y$10$SehTZNtkBR0XtsBCkBJmn.sqgLW9FEz99cngBt2FjIVg35VkDu/G2',null)
+  , ('ToyQuest','Toy@Quest.com','toyquest',null)
+  , ('チャーリー','chari@chari.com','chari',null)
+  , ('gameUser','game@game.com','game',null)
+  , ('test2','test2@test2.com','$2y$10$Jv6zufzSJ7SiJj8/o5ZROO0GptqytOs.K07z1fMySawd4PJjOS9JS',null)
+  , ('ごりら','gori@gorira.com','$2y$10$tfpX8Pb7rMoJm.D1fSJBuOgzVTioH13Pjp/E8lVb8Vjz3l0GDpFvm',null)
+  , ('a','a@a.com','$2y$10$l/wW7foNRBPDgJTZVhD/CurWIyejLaIFbxKnMADGqN99Y1mSjOc6K',null)
+  , ('あいうえお','aiueo@aiueo.com','$2y$10$hX.2xBfxFTtjs9QZI6nBeuh7dPyZlKEyOxjbQRmVyRoH/eITrRuCG',null)
+  , ('ひかる','hikaru@gmail.com','$2y$10$hsuX0J4WWPsZJaoZ3m/XJuPFHsTWb23Q1jcqkzVdYtP8DuoQ893ju',null)
+  , ('yoshida','asojoho@outlook.com','$2y$10$XYXF9wufj8fLnOJ1ld.u4uPN7YPInBmdRpyMJnTGIO7KdulPmbvX.',null);
