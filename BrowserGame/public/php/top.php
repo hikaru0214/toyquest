@@ -330,7 +330,7 @@
     <div class="container">
     <h3 class="player">プレイヤー名</h3>
 
-    <input type="button" class="button" onclick="location.href='rogocontrol.php'" value="チャリ走"></button>
+    <input type="button" class="button" onclick="location.href='./chariso.php'" value="チャリ走"></button>
     <input type="button" class="button2" onclick="location.href='../html/brush_dengon.html'" value="ブラシ伝言"></button>
     <input type="button" class="button3" onclick="location.href='../html/wanted_top.html'" value="あいつを探せ"></button>
 

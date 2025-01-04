@@ -12,11 +12,13 @@ class Game{
         this.gravity = 0.8;
         // ゲーム開始フラグ
         this.isStartFlg = false;
+        // 参加人数
+        this.entry = ""
     }
 
     // プレイヤーの初期設定
-    initPlayer(socketID, Player){
-        this.player.push(new Player(socketID, 0, 350, 15, 15, 0, -15));
+    initPlayer(socketID, Player, userName){
+        this.player.push(new Player(socketID, userName, 0, 350, 15, 15, 0, -15));
     }
 
     // 足場の初期設定

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <script src="/socket.io/socket.io.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    .container {
+        text-align: center;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: fixed; 
+        top: 25%; 
+        left: 40%;
+    }
+    .back-button {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 20px;
+    }
+    .back-button a{
+        text-decoration: none;
+    }
+    h2 {
+        font-size: 36px;
+        margin-bottom: 20px;
+    }
+    .player-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 2px solid;
+        padding: 30px;
+        margin: 5px 0;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .player-1 { border-color: red; color: white;-webkit-text-stroke:1px red; }
+    .player-2 { border-color: blue; color: white;-webkit-text-stroke:1px blue; }
+    .player-3 { border-color: yellow; color: white;-webkit-text-stroke:1px yellow; }
+    .player-4 { border-color: green; color: white;-webkit-text-stroke:1px green; }
+</style>
+</head>
+<body>
+    <div id="container" class="container" style="display: flex;">
+        <a href="#" class="back-button">← BACK</a>
+        <h2>ルーム1111111</h2>
+        <div id="player-list"></div>
+        <!-- <button class="start-button">スタート</button> -->
+    </div>
+    <div id="result" name="result" style="display: none; border: 2px solid black; position: fixed; top: 25%; left: 40%; padding: 2% 8% 3% 8%; background-color: white;">
+        <h1>GAME OVER</h1>
+        <h2 style="margin: auto;">ベスト更新</h2>
+        <h3 id="score"></h3>
+        <div><button >スタート</button></div>
+        <div><button >キャンセル</button></div>
+    </div>
+    <script>
+        const serverData = {
+            name: "<%= userName %>"
+        };
+    </script>
+    <canvas id="gameCanvas" width="1450" height="700"></canvas>
+    <script type="text/javascript" src="./js/render.js"></script>
+    <script type="text/javascript" src="./js/gameClient.js"></script>
+    <script type="text/javascript" src="./js/main.js"></script>
+</body>
+</html>

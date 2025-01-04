@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -58,19 +59,31 @@
 </head>
 <body>
     <div class="top">
-        <a href="top.html">TOP</a>
+        <a onclick="history.back()">TOP</a>
     </div>
     <div class="how">
         <a href="top.html">HOW TO PLAY</a>
     </div>
     
     <h1>チャリ走</h1>
-
+    <?php 
+    $redis = new Redis();
+    echo $redis->get(session_id());
+    ?>
     <div class="buttons">
-        <!-- <div class="button"><a href="http://52.68.111.88:3000/1">1PLAYER</a></div> -->
-        <div class="button"><a href="https://special-spork-695g9qg957935954-3000.app.github.dev/single">1PLAYER</a></div>
+        <div class="button">
+            <form action="https://super-orbit-979v7jg77j7v2pvx7-3000.app.github.dev/single" method="post">
+                <input type="hidden" name="userInfo" value="">
+                <button type="submit">1PLAYER</button>
+            </form>
+        </div>
         <div class="button">MULTI BATTLE</div>
-        <div class="button"><a href="https://special-spork-695g9qg957935954-3000.app.github.dev/createRoom">CREATE ROOM</a></div>
+        <div class="button">
+            <form action="https://super-orbit-979v7jg77j7v2pvx7-3000.app.github.dev/createRoom" method="post">
+                <input type="hidden" name="userInfo" value="<?= session_id() ?>">
+                <button type="submit">CREATE ROOM</button>
+            </form>
+        </div>
     </div>
 </body>
 </html>

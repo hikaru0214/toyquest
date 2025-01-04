@@ -66,7 +66,7 @@
 </head>
 <body>
     <div class="container">
-        <a href="./chariso.html" class="back-button">← BACK</a>
+        <a onclick="history.back()" class="back-button">← BACK</a>
         <h2>ゲームルーム作成</h2>
         <form action="/rooms?entry=2&roomName=" method="get">
             <label for="participants">参加人数</label>
@@ -95,6 +95,12 @@
             <button type="submit" class="create-button">作成</button>
         </form>
     </div>
+    <script>
+        const serverData = {
+            userInfo: "<%= userInfo %>"
+        };
+        
+    </script>
     <script>
         let roomName = "";
         // ルーム名生成

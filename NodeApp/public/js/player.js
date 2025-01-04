@@ -1,7 +1,8 @@
 // const DBservice = require('DBservice.js');
 class Player{
-    constructor(socketID,x,y,width,height,velocityY,jumpStrength){
+    constructor(socketID, userName, x, y, width, height, velocityY, jumpStrength){
         this.socketID = socketID;
+        this.userName = userName;
         this.x = x;
         this.y = y;
         this.width = width;

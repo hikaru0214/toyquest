@@ -9,9 +9,9 @@ let OwnID = null;
 let game = null;
 
 let roomId = localStorage.getItem("roomName");
-
+localStorage["userName"] = serverData.name;
 // ルームに参加する
-socket.emit('joinRoom', roomId);
+socket.emit('joinRoom', roomId, localStorage.getItem("userName"));
 
 // 自分のIDを受け取る
 socket.on("sendID", (id) => {
@@ -32,8 +32,8 @@ socket.on("Init-Entity", (entity) => {
 
     for(let i = 0;i<game.player.length;i++){
         joinMember += `<div class="player-box player-2">
-            <span>プレイヤー2</span>
-            <span>名前</span>
+            <span>プレイヤー${i+1}</span>
+            <span>${game.player[i].userName}</span>
         </div>`;
     }
     if(param !== "/single"){

@@ -6,11 +6,15 @@ class GameRoom{
     }
 
     // room配列にGameクラスのインスタンスを追加（地形とGameインスタンスは一つのルームで共有する）
-    addGameRoom(Game, roomId, Terrain){
+    addGameRoom(Game, roomId){
         let instance = new Game(roomId);
-        // 地形の初期設定
-        instance.initTerrain(Terrain);
         this.rooms.push(instance);
+    }
+
+    // 地形の設定
+    setTerrain(TargetInstance, Terrain){
+        // 地形の初期設定
+        TargetInstance.initTerrain(Terrain);
     }
 
     getGameInstance(roomId){
