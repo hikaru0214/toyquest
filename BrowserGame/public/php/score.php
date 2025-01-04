@@ -158,7 +158,7 @@
 </head>
 <body>
 <?php
-    $user = $_SESSION['user']; // セッションからユーザー情報を取得
+    $user = $_SESSION['user']['user_id']; // セッションからユーザー情報を取得
     // 初期設定
     $selectedGame = isset($_POST['rankingu']) ? $_POST['rankingu'] : '総合スコア';
     $showMyScore = isset($_POST['show_my_score']) ? true : false;
@@ -167,7 +167,7 @@
     try {
         // SQL生成
         if ($showMyScore) {
-            if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+            if (!isset($_SESSION['user_id'])) {
                 throw new Exception("ログインが必要です。");
             }
             // 自分のスコア取得
@@ -182,6 +182,7 @@
             $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
             $stmt->execute();
             $myScores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $scores = $myScores; // テーブルに表示するデータをマイスコアに変更
         }
         if ($showFriendScore) {
             if (!isset($_SESSION['user_id'])) {
@@ -216,7 +217,7 @@
                 WHERE Score.game_id IN (1, 2, 3) 
                 GROUP BY User.user_id, User.user_name 
                 ORDER BY total_score DESC
-                LIMIT 50
+                
             ";
         } else {
             $gameMapping = [
@@ -247,6 +248,7 @@
         exit;
     }
     
+    error_log("User ID: " . ($_SESSION['user_id'] ?? '未設定'));
     ?>
 
     <a href="top.php" class="back-button">戻る</a>

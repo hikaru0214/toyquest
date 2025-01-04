@@ -15,6 +15,19 @@ class ImageLoader { //超テキトーに書いた画像読み込みを簡単に�
 
 module.exports = ImageLoader;
 
+    function eraseCookie(cname){
+      document.cookie = cname+'=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+
+    function setCookie(cname,cvalue,expirems){
+        var val = cname+"="+cvalue+";";
+        var date = new Date();
+        date.setTime(date.getTime()+expirems);
+        var exp = "expires="+date.toUTCString()+";";
+        document.cookie = val+" "+exp+" path=/;";
+    }
+
+
 function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);

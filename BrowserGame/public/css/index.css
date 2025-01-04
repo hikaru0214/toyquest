@@ -54,6 +54,13 @@ input{
     top:18%;
 }   
 
+.pencil{
+    width: 25px;
+    height: 25px;
+    position: fixed;
+    top: 24%;
+    left: 17%;
+}
 
 .notice{
     width: 40px;

@@ -32,11 +32,17 @@
 </head>
 <body style=" background-color: white; color:white;">
 
+    <script src="https://cdn.socket.io/4.8.0/socket.io.min.js" integrity="sha384-OoIbkvzsFFQAG88r+IqMAjyOtYDPGO0cqK5HF5Uosdy/zUEGySeAzytENMDynREd" crossorigin="anonymous"></script>
+
     <img src="../img/BrushDengon.png" alt="" id="title">
 
     <div id="title_menu">
-    <a href="http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html"><button>プレイ</button></a>
-    <a href="http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html"></a><button>部屋作成</button></a>
+        <input id="rid" type="text" placeholder="部屋ID">
+        <br>
+    <button id="play">プレイ</button>
+    <button id="createroom">部屋作成</button>
+    <br>
+    <p id="error-message" style="color: red; background-color: white;"></p>
     </div>
 
     <div id="player_profile" style="color: black;">
@@ -44,23 +50,38 @@
         <button id="profile_save">保存</button>
     </div>
 
+    <script src="../javascript/gameUtils.js"></script>
+
     <script>
 
-function getCookie(cname) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  for(let i = 0; i <ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
+    var GETParameters = {};
+
+    var getval = window.location.search.substring(1).split("&");
+
+    for(var v of getval){
+        var temp = v.split("=");
+        var pname = temp[0];
+        var pvalue = temp[1];
+        GETParameters[pname] = pvalue;
     }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
+
+    if(Object.hasOwn(GETParameters,"roomid"))document.getElementById("rid").value = GETParameters["roomid"];
+
+    eraseCookie("roomid");
+
+    var socket = io.connect('http://52.68.111.88:7000');
+
+    const characters = "abcdefghijklmnopqrstuvwxy0123456789";
+    function getRandomString(length){ //ランダム文字列
+        var x = "";
+        for(var i = 0;i < length;i++){
+            var uppercase = parseInt(Math.random()*2,10);
+            var randomindex = Math.random()*characters.length;
+            var randomcharacter = characters.substring(randomindex,randomindex+1);
+            x+=(uppercase==0) ? randomcharacter : randomcharacter.toUpperCase();
+        }
+        return x;
     }
-  }
-  return "";
-}
 
         var data = getCookie('username');
         if(data)document.getElementById('player_name').value = data;
@@ -69,11 +90,87 @@ function getCookie(cname) {
         var avatar_mouth = 0;
         var avatar_color = 0;
 
+        const error = document.getElementById("error-message");
+
         document.getElementById('profile_save').onclick = function(){
             player_name = document.getElementById('player_name').value;
             document.cookie = "username="+player_name;
             console.log("player_name set to : "+player_name);
+            error.innerHTML = "";
         };
+
+        function IdValidation(rid){
+            if(rid.length<5){
+                return "部屋IDは5文字以上でなければなりません";;
+            }
+            var alphabetnum = true;
+            for(var i = 0;i < rid.length;i++){
+                if(characters.indexOf(rid.toLowerCase().substring(i,i+1))==-1)alphabetnum=false;
+            }
+            if(!alphabetnum){
+                return "部屋IDは英数字でなければなりません";
+            }
+            return "valid";
+        }
+
+        document.getElementById('play').onclick = function(){
+            error.innerHTML = "";
+            var rid = document.getElementById("rid").value;
+            if(rid==""){
+                window.location.href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html";
+                return;
+            }
+            var validation = IdValidation(rid);
+            if(validation=="valid"){
+                socket.emit('search room',rid);
+            }else{
+                error.innerHTML = validation;
+            }
+        }
+
+        socket.on('search room exists',function(rid){
+            var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html";
+            setCookie("roomid",rid,1000*3);
+            window.location.href = href;
+        });
+
+        socket.on('search room doesnt exist',function(rid){
+            error.innerHTML = "部屋が存在しません　部屋ID:"+rid;
+        });
+
+        document.getElementById('createroom').onclick = function(){
+            //var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html?roomid="+getRandomString(7);
+
+            var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html";
+            var rid = document.getElementById("rid").value;
+            if(rid==""){
+                setCookie("roomid",getRandomString(7),1000*7);
+                window.location.href = href;
+                return;
+            }
+
+            var validation = IdValidation(rid);
+            if(validation=="valid"){
+                socket.emit('search create room',rid);
+            }else{
+                error.innerHTML = validation;
+            }
+        };
+
+        socket.on('create room exists',function(rid){
+            error.innerHTML = "部屋作成：部屋がすでに存在します　部屋ID:"+rid;
+        });
+
+        socket.on('create room doesnt exist',function(rid){
+            var href = "http://52.68.111.88/BrowserGame/public/html/brush_dengon_draw.html";
+            setCookie("roomid",rid,1000*7);
+            window.location.href = href;
+        });
+
+        setInterval(function(){
+            console.log(document.cookie);
+        },1000/15);
+
     </script>
     
 </body>

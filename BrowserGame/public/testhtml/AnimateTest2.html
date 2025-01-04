@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Three.js ドットエフェクトの実装</title>
+    <link rel="stylesheet" href="../css/index.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.module.js",
+                "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/loaders/GLTFLoader.js",
+                "three/examples/jsm/loaders/FBXLoader.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/loaders/FBXLoader.js",
+                "three/examples/jsm/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/EffectComposer.js",
+                "three/examples/jsm/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/RenderPass.js",
+                "three/examples/jsm/postprocessing/ShaderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/ShaderPass.js"
+            }
+        }
+        </script>
+        <script type="module">
+            import * as THREE from "three";
+            import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
+            import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+            import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+            import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+            import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+        
+
+    // シーン、カメラ、レンダラーの設定
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color("#00ffff");//ワールドの背景色を変更
+
+    const camera = new THREE.PerspectiveCamera(65, width / height, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({
+        antialias: true
+    });
+    renderer.setSize(width, height);
+    document.body.appendChild( renderer.domElement );
+
+    
+    // カメラの位置設定
+    camera.position.set(0, 0, 10);
+    
+
+    // ライトの追加
+    const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff,5);
+    directionalLight.position.set(0, 2, 2);
+    scene.add(directionalLight);
+
+
+    // GLTFモデルの読み込み。GLTFLoaderのインポートが必要
+    /**
+    let fbx; // GLTFオブジェクトを格納する変数
+    let mixer; // アニメーションミキサー
+    var model = null;
+    const loader =  new FBXLoader();
+    loader.load(
+        "../models/ToyQuest.fbx",
+        function (loadedGltf) {
+            gltf = loadedGltf;
+            model = gltf.scene;
+            model.scale.set(0.1,0.1,0.1);
+            model.position.set(0, 0, 0);
+            model.rotation.set(0, 0, 0);
+            model.traverse(function (node) {
+            });
+            scene.add(model);
+            camera.lookAt(model.position);//カメラがモデルに注目するようにする
+
+            console.log(gltf.animations.map(clip => clip.name));
+
+            mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
+
+
+            const clip1=gltf.animations.find(clip=>clip.name==='01_rightarm.greet');
+            //mixer.clipAction(clip1).play();
+
+            const clip2=gltf.animations.find(clip=>clip.name==='02_leftarm.walk');
+            //mixer.clipAction(clip2).play();
+
+            const clip3=gltf.animations.find(clip=>clip.name==='03_chest.normal');
+            //mixer.clipAction(clip3).play();
+
+            const clip4=gltf.animations.find(clip=>clip.name==='04_waist.normal');
+            //mixer.clipAction(clip4).play();
+
+            const clip5=gltf.animations.find(clip=>clip.name==='05_feet.normal');
+            mixer.clipAction(clip5).play();
+            
+        },
+        undefined,
+        function (error) {
+            console.error('Error loading the GLTF model:', error);
+        }
+    );**/
+
+    let fbx; // FBXオブジェクトを格納する変数
+let mixer; // アニメーションミキサー
+var model = null;
+
+const loader = new FBXLoader();
+loader.load(
+    "../models/ToyQuest.fbx", // 読み込むFBXファイルのパス
+    function (loadedFbx) {
+        fbx = loadedFbx;
+        model = fbx; // FBXではモデル自体が直接返されるのでそのまま使用
+        model.scale.set(0.01, 0.01, 0.01);
+        model.position.set(0, 0, 0);
+        model.rotation.set(0, 0, 0);
+
+        model.traverse(function (node) {
+            if (node.isMesh) {
+                node.castShadow = true;
+                node.receiveShadow = true;
+            }
+        });
+
+        scene.add(model);
+        camera.lookAt(model.position); // カメラがモデルに注目するようにする
+        
+        console.log(fbx.animations.map(clip => clip.name)); // アニメーションクリップ名を出力
+
+        // アニメーションミキサーを作成
+        mixer = new THREE.AnimationMixer(model);
+
+        // 各アニメーションクリップを取得して再生
+        const clip1 = fbx.animations.find(clip => clip.name === 'アーマチュア|01_rightarm.greet');
+        mixer.clipAction(clip1).play();
+
+        const clip2 = fbx.animations.find(clip => clip.name === 'アーマチュア|02_leftarm.walk');
+        mixer.clipAction(clip2).play();
+
+        const clip3 = fbx.animations.find(clip => clip.name === 'アーマチュア|03_chest.normal');
+        mixer.clipAction(clip3).play();
+
+        const clip4 = fbx.animations.find(clip => clip.name === 'アーマチュア|04_waist.normal');
+        mixer.clipAction(clip4).play();
+
+        const clip5 = fbx.animations.find(clip => clip.name === 'アーマチュア|05_feet.normal');
+        mixer.clipAction(clip5).play();
+
+    },
+    undefined,
+    function (error) {
+        console.error('Error loading the FBX model:', error);
+    }
+);
+
+// アニメーションの名前を指定して停止する関数
+function stopAnimation(name) {
+    const clip = fbx.animations.find(clip => clip.name === name);
+    if (clip) {
+        const action = mixer.clipAction(clip);
+        action.paused = true;
+    } else {
+        console.error(`アニメーション "${name}" が見つかりません`);
+    }
+}
+
+// アニメーションの再開関数
+function restartAnimation(name) {
+    const clip = fbx.animations.find(clip => clip.name === name);
+    if (clip) {
+        const action = mixer.clipAction(clip);
+        action.paused = false;
+    } else {
+        console.error(`アニメーション "${name}" が見つかりません`);
+    }
+}
+
+// キーの押下状態を管理するフラグ
+let isMovingLeft = false;
+
+window.addEventListener("keydown", (event) => {
+    if (event.code === "Space") {
+        rogofadeout = true;
+        event.preventDefault(); // スペースキーのデフォルト動作を無効化
+    }
+});
+
+const clock = new THREE.Clock();
+function animate() {
+    const delta = clock.getDelta();
+    if (mixer) mixer.update(delta); // アニメーションの更新
+    if (model) model.rotation.y += 0.01;
+
+    renderer.render(scene, camera);
+    checkOrientation();
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+document.body.style.overflow = 'hidden'; // ページのスクロール無効
+function defaultZoom() {
+    document.body.style.zoom = "100%";
+}
+defaultZoom();
+
+function checkOrientation() {
+    const isLandscape = window.innerWidth > window.innerHeight;
+    const caveat = document.getElementById("caveat");
+    if (!isLandscape) caveat.classList.remove("hidden");
+    else caveat.classList.add("hidden");
+}
+
+window.addEventListener("orientationchange", () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+});
+
+
+    
+    
+    </script>
+
+</head>
+<body>
+    <div class="container">
+    <div class="hidden" id="caveat">
+    <img src="../img/backcaveat.png" class="backcaveatimg">
+    <img src="../img/caveat.png" class="caveatimg">
+    </div>
+    </div>
+</body>
+</html>

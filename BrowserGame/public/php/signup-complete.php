@@ -2,12 +2,12 @@
 session_start();
 
 // トークン確認
-/*if (!isset($_SESSION['access_token'])) {
+if (!isset($_SESSION['access_token'])) {
     echo '<h1>エラー</h1>';
     echo '<p>このページは直接アクセスできません。</p>';
     echo '<a href="login.php">ログインページへ</a>';
     exit;
-}*/
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -17,7 +17,7 @@ session_start();
     <title>登録完了</title>
     <style>
         body {
-            background-image:url(../img/wanted_top.jpg);
+            background-image:url(../img/login.jpg);
             background-size:cover;
             background-attachment: fixed;
             background-position: center center;
@@ -45,7 +45,7 @@ session_start();
 </head>
 <body>
     <div class="container">
-        <h1>ユーザー登録が完了しました。</hi>
+        <h1>ユーザー登録が完了しました。</h1>
     <div class="links">
         <a href="login.php">ログインページへ</a>
     </div>

@@ -15,46 +15,50 @@ function getObjSize(obj){
 }
 
 class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを用意する
-    constructor(room_id){
+    constructor(room_id,access){
         this.room_id = room_id;
-        this.player_limit = 4; //プレイヤー数制限
+        this.player_limit = 7; //プレイヤー数制限
         this.minimum_players = 2; //最小プレイヤー数
-        this.time_limit = 20; //時間制限
+        this.time_limit = 60; //時間制限
         this.draw_start_time = 0;
         this.round = -1; //ラウンドカウンター
-        this.rounds = 2; //ラウンド数
+        this.rounds = 3; //ラウンド数
         this.hints = 2; //ヒント(文字の一つを表示する)
         this.drawer_queue = {}; //描き手キュー,IDを保存,(ラウンド開始時に居たプレイヤーのみ)
-        this.words = [
-            "シャワー",
-            "きょうしつ",
-            "せんせい",
-            "だつぜい",
-            "シャンプー",
-            "マシュマロ",
-            "バーベキュー",
-            "マクドナルド",
-            "パソコン",
-            "えんぴつ",
-            "スケートボード"
-        ]; //お題
         this.players = {};
-        this.access = "public"; //部屋アクセスタイプ　0(公開) 1(プライベート)
+        this.access = access; //部屋アクセスタイプ　0(公開) 1(プライベート)
         this.state = "standby"; //部屋状態 //standby待機中 , roundstart,ラウンド中,
         this.timer = 0;
 
         this.paint_history = []; //ペインターが書いている途中でゲッサーが入室した場合ゲッサーにそれまでの絵のデータをおくる
 
         this.scores_at_start = {};
+        this.score_on_guess = 400;
+
+        this.allguessed = false;
+        this.painter_left = false;
     }
 
-    gameupdate(io){ //ゲームループ
-        const room_name = "room_"+this.room_id;
+    gameStart(){
         if(this.state=="standby"){
             if(this.getPlayerCount()>=this.minimum_players){
                 this.state = "roundstart";
+                return "game started";;
+            }else{
+                return "not enough players to start";
             }
         }
+        return "game already started"
+    }
+
+    painterSkip(){
+        this.markDrewInQueue(this.getDrawerId());
+        console.log(this.drawer_queue);
+        this.state = "drawend";
+    }
+
+    gameupdate(io){ //ゲームループ
+        const room_name = this.room_id;
 
         if(this.state=="roundstart"){ //最初のラウンドと続くラウンドをスタートする
             this.round++;
@@ -69,7 +73,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             io.to(room_name).emit("clear canvas");
             var painterName = this.getPlayerById(this.getDrawerId()).name;
             console.log("next painter is : "+painterName);
-            io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3,painterName:painterName})
+            io.to(room_name).emit("show_client_overlay_timed",{id:"painternotice",time:3,painterName:painterName});
             this.setTimer();
             this.state = "painternotice";
         }
@@ -78,10 +82,12 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
             io.to(room_name).emit("clear canvas");
             this.state = "drawing";
             var word = this.nextTurn(io);
+            this.setTimer(); //ヒントのタイマー
+            io.to(room_name).emit("play sound","drawstart");
             return {instruction:"setword",word:word};
         }
 
-        if(this.state=="drawing"&&this.getRemainingTime()<=0){
+        if(this.state=="drawing"&&(this.getRemainingTime()<=0||this.allguessed||this.painter_left)){
 
             this.markDrewInQueue(this.getDrawerId());
             console.log(this.drawer_queue);
@@ -93,7 +99,6 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         if(this.state=="drawend"){
             this.state = "word reveal and result"
             this.setTimer();
-
             var results = {};
             for(var id in this.players){
                 var p = this.players[id];
@@ -103,6 +108,8 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
                 }
                 results[id] = {name:p.name,score:earned_score};
             }
+
+            io.to(room_name).emit("play sound","drawend");
 
             return {instruction:"reveal_and_result",data:results};
         }
@@ -156,29 +163,35 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         this.round=-1;
         delproperties(this.drawer_queue);
         this.timer = 0;
+
+        for(var id in this.players){
+            this.players[id].score = 0; //スコアリセット
+            this.players[id].guessed = false;
+        }
+
     }
 
     nextTurn(io){
+        this.score_on_guess = 400;
+        this.allguessed=false;
+        this.painter_left = false;
         delproperties(this.scores_at_start);
-
         for(var id in this.players){
             this.players[id].guessed = false;
             var current_score = this.players[id].score;
             this.scores_at_start[id] = {id:id,score:current_score};
         }
 
-        var room_name = "room_"+this.room_id;
-        var secretword = "";
-        secretword = this.words[parseInt((Math.random()*this.words.length),10)];
-        console.log("next word for room "+this.room_id+" is : "+secretword);
+        var room_name = this.room_id;
         var painter = this.getPlayerById(this.getDrawerId());
+        
+        painter.guessed = true;
 
-        io.to(room_name).emit("message to everyone in room",painter.name+"が筆を手にした！");
-        io.to(room_name).emit("get word",this.hiddenWord(secretword));
-        io.to(this.getDrawerId()).emit("get word",secretword);
+        io.to(room_name).emit("notify in chat",{message:painter.name+"が筆を手にした！",color:"#00FF00"});
+
         this.setStartTime();
         io.to(room_name).emit("game update",JSON.stringify(this));
-        return secretword;
+        return "";
     }
 
     setStartTime(){
@@ -236,17 +249,35 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
     }
 
     markDrewInQueue(id){
-        this.drawer_queue[id].drew = true;
+        if(this.drawer_queue.hasOwnProperty(id))this.drawer_queue[id].drew = true;
     }
 
     getPlayerById(id){
         return this.players[id];
     }
 
-    addScore(id,score){
+    Guess(id){
         if(this.players[id].guessed)return;
-        this.players[id].score+=score;
+        var score_gain = this.score_on_guess-((this.time_limit-this.getRemainingTime())/10)*25; //回答時間に10秒かかると25点ずつ減っていく
+        if(score_gain<=100)score_gain=100;
+        this.players[id].score+=parseInt(score_gain); //回答者にポイント付与
         this.players[id].guessed=true;
+        if(this.score_on_guess>=100)this.score_on_guess-=75;
+        this.players[this.getDrawerId()].score+=parseInt(score_gain*0.5); //描き手にポイント付与
+        if(this.AllIdOfGuessed().length == this.getPlayerCount())this.allguessed=true;
+    }
+    
+    Guessed(id){
+        return this.players[id].guessed;
+    }
+
+    AllIdOfGuessed(){
+        var ids = [];
+        for(var id in this.players){
+            var p = this.players[id];
+            if(p.guessed)ids.push(id);
+        }
+        return ids;
     }
 
     getPlayerCount(){ //プレイヤーカウント
@@ -255,7 +286,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
 
     addPlayer(player_id,player_obj){ //プレイヤー追加
         if(Object.hasOwn(this.players,player_id))return false;
-        this.players[player_id] = {id:player_id,name:player_obj.name,score:0,guessed:false};
+        this.players[player_id] = {id:player_id,name:player_obj.name,score:0,guessed:false,ready:false};
         return true;
     }
 
@@ -275,7 +306,7 @@ class Game{ //ゲームクラス、部屋ごとにゲームオブジェクトを
         var x = "";
         var arr = Array.from(str);
         for(var i = 0;i < str.length;i++){
-            x+=(arr[i]!=" ")?"_":" ";
+            x+=((arr[i]!=" ")?"_":" ");
         }
         return x;
     }

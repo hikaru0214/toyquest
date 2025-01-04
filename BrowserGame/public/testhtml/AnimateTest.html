@@ -6,22 +6,24 @@
     <title>Three.js ドットエフェクトの実装</title>
     <link rel="stylesheet" href="../css/index.css">
     <script type="importmap">
-    {
-        "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.module.js",
-            "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/loaders/GLTFLoader.js",
-            "three/examples/jsm/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/EffectComposer.js",
-            "three/examples/jsm/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/RenderPass.js",
-            "three/examples/jsm/postprocessing/ShaderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/ShaderPass.js"
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.module.js",
+                "three/examples/jsm/loaders/GLTFLoader.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/loaders/GLTFLoader.js",
+                "three/examples/jsm/loaders/FBXLoader.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/loaders/FBXLoader.js",
+                "three/examples/jsm/postprocessing/EffectComposer.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/EffectComposer.js",
+                "three/examples/jsm/postprocessing/RenderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/RenderPass.js",
+                "three/examples/jsm/postprocessing/ShaderPass.js": "https://cdn.jsdelivr.net/npm/three@0.167.0/examples/jsm/postprocessing/ShaderPass.js"
+            }
         }
-    }
-    </script>
-    <script type="module">
-    import * as THREE from "three";
-    import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-    import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-    import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
-    import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+        </script>
+        <script type="module">
+            import * as THREE from "three";
+            import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
+            import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+            import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+            import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+            import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 
     // シーン、カメラ、レンダラーの設定
     const width = window.innerWidth;
@@ -40,7 +42,7 @@
 
     
     // カメラの位置設定
-    camera.position.set(0, 0, 5);
+    camera.position.set(0, 0, 2);
     
 
     // ライトの追加
@@ -53,13 +55,12 @@
 
 
     // GLTFモデルの読み込み。GLTFLoaderのインポートが必要
-    
     let gltf; // GLTFオブジェクトを格納する変数
     let mixer; // アニメーションミキサー
     var model = null;
-    const loader = new GLTFLoader();
+    const loader =  new GLTFLoader();
     loader.load(
-        "../models/animateblend2.glb",
+        "../models/ToyQuest.glb",
         function (loadedGltf) {
             gltf = loadedGltf;
             model = gltf.scene;
@@ -72,39 +73,43 @@
             camera.lookAt(model.position);//カメラがモデルに注目するようにする
 
             console.log(gltf.animations.map(clip => clip.name));
+
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
-            const clip1=gltf.animations.find(clip=>clip.name==='feet.run');
+
+
+            const clip1=gltf.animations.find(clip=>clip.name==='01_rightarm.normal');
             mixer.clipAction(clip1).play();
 
-            const clip2=gltf.animations.find(clip=>clip.name==='chest.run');
-            mixer.clipAction(clip2).play();
+            const clip2=gltf.animations.find(clip=>clip.name==='02_leftarm.walk');
+            //mixer.clipAction(clip2).play();
 
-            const clip3=gltf.animations.find(clip=>clip.name==='waist.run');
-            mixer.clipAction(clip3).play();
+            const clip3=gltf.animations.find(clip=>clip.name==='03_chest.normal');
+            //mixer.clipAction(clip3).play();
 
-            const clip4=gltf.animations.find(clip=>clip.name==='rightarm.greet');
-            mixer.clipAction(clip4).play();
+            const clip4=gltf.animations.find(clip=>clip.name==='04_waist.normal');
+            //mixer.clipAction(clip4).play();
 
-            const clip5=gltf.animations.find(clip=>clip.name==='leftarm.run');
+            const clip5=gltf.animations.find(clip=>clip.name==='05_feet.normal');
             mixer.clipAction(clip5).play();
-            
             /**
-            "chest.normal"
-            "chest.run" 
-            "chest.walk"
-            "feet.normal"
-            "feet.run"
-            "leftarm.normal"
-            "leftarm.run"
-            "leftarm.walk"
-            "rightarm.greet"
-            "rightarm.normal"
-            "rightarm.run"
-            "rightarm.walk"
-            "waist.normal"
-            "waist.run"
-            "feet.walk"
-            */
+            "01_rightarm.greet"
+            "01_rightarm.normal"
+            "01_rightarm.run"
+            "01_rightarm.walk"
+            "02_leftarm.normal"
+            "02_leftarm.run"
+            "02_leftarm.walk"
+            "03_chest.normal"
+            "03_chest.run"
+            "03_chest.walk"
+            "04_waist.normal"
+            "04_waist.run"
+            "05_feet.default"
+            "05_feet.normal"
+            "05_feet.run"
+            "05_feet.walk"
+            **/
+            
         },
         undefined,
         function (error) {
@@ -112,6 +117,8 @@
         }
     );
 
+
+    
     
 
 

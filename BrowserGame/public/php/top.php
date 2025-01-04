@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <title>ホーム</title>
     <link rel="stylesheet" href="../css/index.css">
-    <link rel="manifest" href="../json/ToyQuest.json">
+    <link rel="manifest" href="../json/ToyQuestver.1.2.json">
     <script type="importmap">
     {
         "imports": {
@@ -189,7 +189,7 @@
     // キーが離された際にフラグをリセット
     window.addEventListener("keyup", (event) => {
         //stopAnimation('Walk');
-        playAnimation('feet.normal'); // アニメーションを再生
+        //playAnimation('feet.normal'); // アニメーションを再生
         if (event.code === "ArrowLeft") {
             isMovingLeft = false;
             event.preventDefault();
@@ -228,6 +228,9 @@
     function moveCamera() {
         if(pageload&&camera.position.y>=3){//ロード時にカメラをy:3まで下げる
         camera.position.y -= 0.1;
+        if(model){
+        model.rotation.y -= 0.01;
+        }
         }
         if (isMovingLeft) {
             //camera.position.x -= 0.1;
@@ -328,11 +331,16 @@
 </head>
 <body>
     <div class="container">
-    <h3 class="player">プレイヤー名</h3>
+    <div class="player">
+    <h3><?php echo $_SESSION['user']['user_name'];?></h3>
+    <input type="image" src="../img/pencil_icon.png" class="pencil" onclick="">
+    </div>
 
-    <input type="button" class="button" onclick="location.href='./chariso.php'" value="チャリ走"></button>
+    <input type="button" class="button" onclick="location.href='../html/chariso.html'" value="チャリ走"></button>
     <input type="button" class="button2" onclick="location.href='../html/brush_dengon.html'" value="ブラシ伝言"></button>
     <input type="button" class="button3" onclick="location.href='../html/wanted_top.html'" value="あいつを探せ"></button>
+
+    
 
     <input type="image" src="../img/notice_icon.png" class="notice" onclick="location.href=''" value="お知らせ"></button>
     <input type="image" src="../img/friend_icon.png" class="friend" onclick="location.href=''" value="フレンド"></button>
@@ -362,11 +370,10 @@
         echo "</td></tr>";
         }
         
-        if($row['user_id']==4){
+        if($row['user_id']==$_SESSION['user']['user_id']){
             if($Rank<=10){
             $userRank_in=true;
             }
-            $username=$row['user_name'];
             $userRank=$Rank;
             $user_score=$row['total_score'];
             }
@@ -381,16 +388,34 @@
 
         if($userRank_in==true){
             echo "<tr><td>".$userRank;
-            echo "</td><td>あなた(".$username.")</td><td>".$user_score;
+            echo "</td><td>あなた(".$_SESSION['user']['user_name'].")</td><td>".$user_score;
             echo "</td></tr>";
         }else{
+            $sql = $pdo->prepare('SELECT COUNT(*) FROM Score WHERE user_id = ?');
+            $sql->execute([$_SESSION['user']['user_id']]);
+            if (!$sql->fetchColumn() == 0) {
+                $sql = $pdo->prepare(
+                'SELECT Score.user_id, SUM(Score.score) AS total_score, User.user_name
+                FROM Score
+                JOIN User ON Score.user_id = User.user_id
+                WHERE Score.user_id = ?
+                GROUP BY Score.user_id, User.user_name
+                ORDER BY total_score DESC'
+            );
+            $sql->execute([$_SESSION['user']['user_id']]);
+            foreach ($sql as $row) {
+                $user_score = $row['total_score'];
+            }
+            }else{
+                $user_score=0;
+            }
             echo "<tr><td>圏外";
-            echo "</td><td>あなた(".$username.")</td><td>".$user_score;
+            echo "</td><td>あなた(".$_SESSION['user']['user_name'].")</td><td>".$user_score;
             echo "</td></tr>";
         }
         ?>
     </table>
-
+    <form>
     <div class="hidden" id="caveat">
     <img src="../img/backcaveat.png" class="backcaveatimg">
     <img src="../img/caveat.png" class="caveatimg">
