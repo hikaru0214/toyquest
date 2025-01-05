@@ -67,8 +67,8 @@
     
     <h1>チャリ走</h1>
     <?php 
-    $redis = new Redis();
-    echo $redis->get(session_id());
+    // $redis = new Redis();
+    // echo $redis->get(session_id());
     ?>
     <div class="buttons">
         <div class="button">
