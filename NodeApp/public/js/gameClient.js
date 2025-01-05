@@ -9,6 +9,8 @@ let OwnID = null;
 let game = null;
 
 let roomId = localStorage.getItem("roomName");
+// こっちでCookieを飛ばせばいいのでは？
+console.log(document.cookie);
 localStorage["userName"] = serverData.name;
 // ルームに参加する
 socket.emit('joinRoom', roomId, localStorage.getItem("userName"));

@@ -59,6 +59,12 @@
         <div><button >キャンセル</button></div>
     </div>
     <canvas id="gameCanvas" width="1450" height="700"></canvas>
+    <script>
+        const serverData = {
+            id: "<%= userId %>",
+            name: "<%= userName %>"
+        };
+    </script>
     <script type="text/javascript" src="./js/render.js"></script>
     <script type="text/javascript" src="./js/gameClient.js"></script>
     <script type="text/javascript" src="./js/main.js"></script>

@@ -37,8 +37,6 @@ app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 // シングル用画面
 app.post('/single', (req, res) => {
-    // POSTしたユーザー名をGameインスタンスに格納
-    const name = req.body.userName;
     // 参加人数を取得
     entry_member = 1;
     res.render(join(__dirname, './public/SinglebicycleRunning'),{ userName: name });
@@ -46,16 +44,18 @@ app.post('/single', (req, res) => {
 
 // ルーム作成画面から
 app.post('/createRoom', (req, res) => {
-    // POSTしたユーザー名をGameインスタンスに格納
-    const InfoId = req.body.userInfo;
-    res.sendFile(join(__dirname, './public/chariso_createroom'),{ userInfo: InfoId });
+    res.sendFile(join(__dirname, './public/chariso_createroom'));
 });
 
 // URLからアクセスする人もentryパラメタを設定する
 app.get('/rooms', (req, res) => {
+    // POSTしたユーザー名をGameインスタンスに格納
+    const userId = req.cookies.userId;
+    const name = req.cookies.userName;
+
     // 参加人数を取得
     entry_member = req.query.entry;
-    res.sendFile(join(__dirname, './public/MultibicycleRunning.html'));
+    res.sendFile(join(__dirname, './public/MultibicycleRunning'), { userInfo: {id: userId, name: name}});
 });
 
 io.on('connection', (socket) => {
