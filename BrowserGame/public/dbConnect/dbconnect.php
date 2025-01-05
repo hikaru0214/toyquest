@@ -1,12 +1,12 @@
 <?php
-// const SERVER = 'gamedb.cxsa4yusutqg.ap-northeast-1.rds.amazonaws.com';
-// const DBNAME = 'gamedatabase';
-// const USER = 'root';
-// const PASS = 'myrdspassword';
-const SERVER = 'mysql';
-const DBNAME = 'testdb';
+const SERVER = 'gamedb.cxsa4yusutqg.ap-northeast-1.rds.amazonaws.com';
+const DBNAME = 'gamedatabase';
 const USER = 'root';
-const PASS = 'rootpassword';
+const PASS = 'myrdspassword';
+// const SERVER = 'mysql';
+// const DBNAME = 'testdb';
+// const USER = 'root';
+// const PASS = 'rootpassword';
 
 
 $connect = 'mysql:host=' . SERVER . ';dbname=' . DBNAME . ';charset=utf8';
