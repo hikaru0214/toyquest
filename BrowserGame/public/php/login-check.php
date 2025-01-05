@@ -44,7 +44,7 @@ if (count($err) === 0) {
             ];
             // セッションIDを生成
             $sessionId = session_id();
-            setcookie("sessionId", $_SESSION['user'], time()+60*60*24);
+            setcookie("sessionId", $_SESSION['user'], time()+60*60*24, "/");
             // Redisサーバーに接続
             // $redis->connect('127.0.0.1', 6379);
             // // データをセット
