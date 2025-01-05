@@ -72,14 +72,14 @@
     ?>
     <div class="buttons">
         <div class="button">
-            <form action="https://super-orbit-979v7jg77j7v2pvx7-3000.app.github.dev/single" method="post">
+            <form action="http://52.68.111.88/game/single" method="post">
                 <input type="hidden" name="userInfo" value="">
                 <button type="submit">1PLAYER</button>
             </form>
         </div>
         <div class="button">MULTI BATTLE</div>
         <div class="button">
-            <form action="https://super-orbit-979v7jg77j7v2pvx7-3000.app.github.dev/createRoom" method="post">
+            <form action="http://52.68.111.88/game/createRoom" method="post">
                 <input type="hidden" name="userInfo" value="<?= session_id() ?>">
                 <button type="submit">CREATE ROOM</button>
             </form>
