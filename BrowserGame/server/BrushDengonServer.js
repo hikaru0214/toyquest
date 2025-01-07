@@ -314,12 +314,12 @@ function update(){
         var response = game.gameupdate(io);
 
         var swlength = 5;
-        if(game.state=="drawing")swlength = secretword.length;
+        if(game.state=="drawing")swlength = gamerooms[roomname].secretword.length;
         if(game.state=="drawing"&&game.getTimer((game.time_limit/swlength)*1.3)<=0){
             game.setTimer();
-            wordhint = revealAndMerge(wordhint,secretword);
-            io.to(roomname).emit("get word",wordhint);
-            io.to(game.getDrawerId()).emit("get word",secretword);
+            gamerooms[roomname].wordhint = revealAndMerge(wordhint,secretword);
+            io.to(roomname).emit("get word",gamerooms[roomname].wordhint);
+            io.to(game.getDrawerId()).emit("get word",gamerooms[roomname].secretword);
         }
 
         switch(response.instruction){
@@ -328,8 +328,9 @@ function update(){
                 sw = themes[parseInt((Math.random()*themes.length),10)];
                 console.log("next word for room "+roomname+" is : "+sw);
                 gamerooms[roomname].secretword = sw;
-                wordhint = game.hiddenWord(secretword);
-                io.to(roomname).emit("get word",wordhint);
+                secretword = gamerooms[roomname].secretword;
+                gamerooms[roomname].wordhint = game.hiddenWord(secretword);
+                io.to(roomname).emit("get word",gamerooms[roomname].wordhint);
                 io.to(game.getDrawerId()).emit("get word",sw);
                 break;
             case "reveal_and_result":
