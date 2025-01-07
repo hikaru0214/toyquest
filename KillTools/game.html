@@ -10,12 +10,22 @@
             image-rendering: pixelated;
         }
         #screen {
-            position: fixed;
+            position: relative;
             left: 50%;
             transform: translate(-50%,0%);
             background-color: black;
             width: 640px;
             height: 480px;
+            padding: 0px;
+            margin: 0px;
+        }
+        #main {
+            position: fixed;
+            left: 50%;
+            transform: translate(-50%,0%);
+            background-color: gray;
+            width: 50%;
+            height: 90%;
             padding: 0px;
             margin: 0px;
         }
@@ -40,16 +50,22 @@
     </script>
 </head>
 <body>
-    <h2 style="text-align: center;">Three.js WebGL</h2>
 
     <script src="/client-dist/socket.io.js"></script>
 
-    <!--<script src="cl_input.js"></script>
-    <script type="module" src="cl_main.js"></script>
-    -->
+    <script src="./src/cl_input.js"></script>
+    <script type="module" src="./src/cl_main.js"></script>
+
+    <div id="main">
+
+    <h2 style="text-align: center;">Three.js WebGL</h2>
 
     <div id="screen">
         <p id="crosshair">+</p>
+    </div>
+
+    <div style="position: fixed; left:50%; transform: translate(-50%);"><input type="text"><button>接続</button></div>
+
     </div>
     
 </body>

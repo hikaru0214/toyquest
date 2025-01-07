@@ -215,7 +215,14 @@ io.on('connection', (socket) => {
     });
 
     socket.on('textchat',function(message){
+
         if(!joined)return;
+
+        gamedata = gamerooms[room];
+        game = gamedata.game;
+        secretword = gamedata.secretword;
+        wordhint = gamedata.wordhint;
+
         var name = game.getPlayerById(id).name;
         message = escapeHtml(message);
         console.log(name+" : "+message);
