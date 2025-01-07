@@ -282,8 +282,8 @@ io.on('connection', (socket) => {
     socket.on('disconnect', function(){
       console.log('user disconnected');
       if(!joined)return;
-      if(game.isDrawing(id))game.painter_left=true;
-      io.to(room).emit("notify in chat",{message:(game.getPlayerById(id).name+"が退室しました。"),color:"#ff0000",background:"#be3a00"});
+      if(game.isDrawing(id))gamerooms[room].game.painter_left=true;
+      io.to(room).emit("notify in chat",{message:(gamerooms[room].game.getPlayerById(id).name+"が退室しました。"),color:"#ff0000",background:"#be3a00"});
       game.removePlayer(id);
       if(game.getPlayerCount()<game.minimum_players){
         game.resetGame(io);
