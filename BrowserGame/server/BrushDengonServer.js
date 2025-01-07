@@ -251,6 +251,8 @@ io.on('connection', (socket) => {
             return;
         }
 
+        console.log(secretword+" : "+message+" : "+isCorrect(secretword,message));
+
         if(isCorrect(secretword,message)){
             //socket.emit(); 正解通知をチャットに送る
             game.Guess(id);
