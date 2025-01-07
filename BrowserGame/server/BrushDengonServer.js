@@ -327,7 +327,7 @@ function update(){
                 var sw = "";
                 sw = themes[parseInt((Math.random()*themes.length),10)];
                 console.log("next word for room "+roomname+" is : "+sw);
-                secretword = sw;
+                gamerooms[roomname].secretword = sw;
                 wordhint = game.hiddenWord(secretword);
                 io.to(roomname).emit("get word",wordhint);
                 io.to(game.getDrawerId()).emit("get word",sw);
