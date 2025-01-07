@@ -77,7 +77,7 @@
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
 
 
-            const clip1=gltf.animations.find(clip=>clip.name==='01_D_rightarm.greet');
+            const clip1=gltf.animations.find(clip=>clip.name==='01_A_rightarm.normal');
             mixer.clipAction(clip1).play();
 
             const clip2=gltf.animations.find(clip=>clip.name==='02_A_leftarm.normal');
