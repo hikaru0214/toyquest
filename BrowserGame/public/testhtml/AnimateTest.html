@@ -94,11 +94,16 @@
             const action5=mixer.clipAction(clip5);
             
             const maskBones = ['upper_armL', 'forearmL','handL','elbowL','handIKL'];
-            setEffectiveWeight(1.0);
+            action5.setEffectiveWeight(1.0);
 
             action5.getRoot().traverse((bone) => {
             if (maskBones.includes(bone.name)) {
-                action5.setEffectiveWeightForBone(bone, 0.0); // maskBonesで指定したボーンには影響を与えない
+                const tracks=action5.getClip().tracks;
+                tracks.array.forEach((track) => {
+                    if(track.name.includes(bone.name)){
+                        track.setEffectiveWeight(0.0); // maskBonesで指定したボーンには影響を与えない
+                    }
+                });
             }
             });
             action5.play();
