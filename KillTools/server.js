@@ -3,7 +3,7 @@ import {createServer} from 'node:http';
 import { fileURLToPath } from 'node:url';
 import {dirname,join} from 'node:path';
 import { Server } from 'socket.io';
-import { Game } from 'sv_game.js';
+//import { Game } from 'sv_game.js';
 
 const app = express();
 const server = createServer(app);
@@ -23,7 +23,7 @@ const rooms = {};
 
 for(var i = 0;i < 4;i++){
     var id = "room"+i;
-    rooms[id] = {id:id,game:new Game()};
+    //rooms[id] = {id:id,game:new Game()};
 }
 
 io.on('connection',(socket)=>{
