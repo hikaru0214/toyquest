@@ -1,13 +1,14 @@
 import * as THREE from 'three';
 
-class Player {
+export class Player {
     constructor(){
         this.pos = THREE.Vector3(0,0,0);
         this.dir = THREE.Vector3(0,0,0);
     }
 
     setdir(vertical,horizontal){
-
+        this.dir.y = horizontal;
+        this.dir.x = vertical;
     }
     
     move(forward,backward,left,right){
@@ -29,3 +30,4 @@ class Player {
         }
     }
 }
+
