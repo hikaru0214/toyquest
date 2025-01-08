@@ -99,7 +99,7 @@
             action5.getRoot().traverse((bone) => {
             if (maskBones.includes(bone.name)) {
                 const tracks=action5.getClip().tracks;
-                tracks.array.forEach((track) => {
+                tracks.forEach((track) => {
                     if(track.name.includes(bone.name)){
                         track.setEffectiveWeight(0.0); // maskBonesで指定したボーンには影響を与えない
                     }
