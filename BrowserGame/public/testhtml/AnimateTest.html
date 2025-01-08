@@ -90,22 +90,26 @@
             const clip4=gltf.animations.find(clip=>clip.name==='04_waist.normal');
             //mixer.clipAction(clip4).play();
 
-            const clip5=gltf.animations.find(clip=>clip.name==='05_feet.normal');
-            const action5=mixer.clipAction(clip5);
-            
-            const maskBones = ['upper_armL', 'forearmL','handL','elbowL','handIKL'];
-            action5.setEffectiveWeight(1.0);
+            const clip5 = gltf.animations.find(clip => clip.name === '05_feet.normal');
+            const action5 = mixer.clipAction(clip5);
 
+            const maskBones = ['upper_armL', 'forearmL', 'handL', 'elbowL', 'handIKL'];
+            action5.setEffectiveWeight(1.0); // 全体のアニメーションの重みを設定
+
+            // マスクするボーンのアニメーションの影響を無効化
             action5.getRoot().traverse((bone) => {
             if (maskBones.includes(bone.name)) {
-                const tracks=action5.getClip().tracks;
+                // カスタムでボーンの影響を0にするロジックが必要
+                // 以下はボーンごとの重みをカスタムで調整する例
+                const tracks = action5.getClip().tracks;
                 tracks.forEach((track) => {
-                    if(track.name.includes(bone.name)){
-                        track.setEffectiveWeight(0.0); // maskBonesで指定したボーンには影響を与えない
-                    }
+                if (track.name.includes(bone.name)) {
+                    track.setEffectiveWeight(0.0); // 該当ボーンのトラックの影響を無効化
+                }
                 });
             }
             });
+
             action5.play();
             /**
             "01_rightarm.greet"
