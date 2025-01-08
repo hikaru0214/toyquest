@@ -93,7 +93,7 @@
             const clip5 = gltf.animations.find(clip => clip.name === '05_feet.normal');
             const action5 = mixer.clipAction(clip5);
 
-            const maskBones = ['upper_armL'];
+            const maskBones = ['forearmL', 'handL', 'elbowL', 'handIKL','upper_armR', 'forearmR', 'handR', 'elbowR', 'handIKR'];
             action5.setEffectiveWeight(1.0); // 全体のアニメーションの重みを設定
 
             // マスクするボーンのアニメーションの影響を無効化
