@@ -73,6 +73,7 @@
             camera.lookAt(model.position);//カメラがモデルに注目するようにする
 
             console.log(gltf.animations.map(clip => clip.name));
+            listBones(model);
 
             mixer = new THREE.AnimationMixer(model); // アニメーションミキサーをここで作成
 
@@ -117,6 +118,14 @@
             console.error('Error loading the GLTF model:', error);
         }
     );
+
+    function listBones(object) {
+    object.traverse(function (child) {
+        if (child.isBone) {
+            console.log('Bone name:', child.name);
+        }
+    });
+    }
 
 
     
