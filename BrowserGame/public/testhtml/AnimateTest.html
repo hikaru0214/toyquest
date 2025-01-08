@@ -92,6 +92,15 @@
 
             const clip5=gltf.animations.find(clip=>clip.name==='05_feet.normal');
             const action5=mixer.clipAction(clip5);
+            
+            const maskBones = ['upper_armL', 'forearmL','handL','elbowL','handIKL'];
+            setEffectiveWeight(1.0);
+
+            action5.getRoot().traverse((bone) => {
+            if (maskBones.includes(bone.name)) {
+                action5.setEffectiveWeightForBone(bone, 0.0); // maskBonesで指定したボーンには影響を与えない
+            }
+            });
             action5.play();
             /**
             "01_rightarm.greet"
