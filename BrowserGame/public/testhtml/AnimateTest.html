@@ -102,13 +102,12 @@
             maskBones.forEach((boneName) => {
                 if (track.name.includes(boneName)) {
                 // トラックの値を無効化（固定値に設定）
-                const values = track.values;
-                for (let i = 0; i < values.length; i++) {
-                    values[i] = i % 3 === 0 ? 0 : 1; // 位置トラックの場合は(1,0,0)のように設定
+                tracks.forEach((track) => {
+                if (track.name.includes(bone.name)) {
+                    track.setEffectiveWeight(0.0); // 該当ボーンのトラックの影響を無効化
                 }
-                }
-            });
-            });
+            }
+            )};
 
             action1.play();
             action2.play();
